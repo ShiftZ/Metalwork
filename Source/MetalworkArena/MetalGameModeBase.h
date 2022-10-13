@@ -14,7 +14,7 @@ using namespace std::chrono;
 DECLARE_LOG_CATEGORY_EXTERN(LogNetwork, Log, All);
 
 UCLASS()
-class METALWORKARENA_API AMetalWorkArenaGameModeBase : public AGameModeBase
+class METALWORKARENA_API AMetalworkArenaGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
@@ -23,7 +23,7 @@ public:
 	unique_ptr<MetalCore> core;
 
 public:
-	AMetalWorkArenaGameModeBase() { PrimaryActorTick.bCanEverTick = true; }
+	AMetalworkArenaGameModeBase() { PrimaryActorTick.bCanEverTick = true; }
 	void InitGame(const FString& map_name, const FString& options, FString& error) override;
 	void Tick(float dt) override;
 };

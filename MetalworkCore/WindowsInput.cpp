@@ -20,12 +20,12 @@ WindowsInput::WindowsInput()
 		WNDCLASS window_class = {};
 		window_class.lpfnWndProc = EventHandler;
 		window_class.hInstance = GetModuleHandle(nullptr);
-		window_class.lpszClassName = L"MetalWork";
+		window_class.lpszClassName = L"Metalwork";
 
 		if (!RegisterClass(&window_class))
 			throw runtime_error(format("RegisterClass failed. Error {}", GetLastError()));
 
-		hwnd = CreateWindow(window_class.lpszClassName, L"MetalWork Input", 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr, nullptr, nullptr);
+		hwnd = CreateWindow(window_class.lpszClassName, L"Metalwork Input", 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr, nullptr, nullptr);
 		if (hwnd == nullptr)
 			throw runtime_error(format("CreateWindow failed. Error {}", GetLastError()));
 

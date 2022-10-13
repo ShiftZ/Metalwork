@@ -10,7 +10,7 @@ using namespace std;
 
 DEFINE_LOG_CATEGORY(LogNetwork);
 
-void AMetalWorkArenaGameModeBase::InitGame(const FString& map_name, const FString& options, FString& error)
+void AMetalworkArenaGameModeBase::InitGame(const FString& map_name, const FString& options, FString& error)
 {
 	AGameModeBase::InitGame(map_name, options, error);
 
@@ -61,7 +61,7 @@ void AMetalWorkArenaGameModeBase::InitGame(const FString& map_name, const FStrin
 	//core->Start();
 }
 
-void AMetalWorkArenaGameModeBase::Tick(float dt)
+void AMetalworkArenaGameModeBase::Tick(float dt)
 {
 	Super::Tick(dt);
 	//core->Step();
