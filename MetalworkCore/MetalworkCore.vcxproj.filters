@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Arena.cpp" />
+    <ClCompile Include="Vehicle.cpp" />
+    <ClCompile Include="RigidWorld.cpp" />
+    <ClCompile Include="B2World.cpp" />
+    <ClCompile Include="B2Vehicle.cpp" />
+    <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="B2Object.cpp" />
+    <ClCompile Include="CoreEngine.cpp" />
+    <ClCompile Include="WindowsInput.cpp" />
+    <ClCompile Include="b2dJson\b2dJson.cpp">
+      <Filter>b2dJson</Filter>
+    </ClCompile>
+    <ClCompile Include="b2dJson\b2dJsonImage.cpp">
+      <Filter>b2dJson</Filter>
+    </ClCompile>
+    <ClCompile Include="b2dJson\jsoncpp.cpp">
+      <Filter>b2dJson</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_time_of_impact.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_polygon_shape.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_edge_shape.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_dynamic_tree.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_distance.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_collision.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_collide_polygon.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_collide_edge.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_collide_circle.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_circle_shape.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_chain_shape.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\collision\b2_broad_phase.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\common\b2_timer.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\common\b2_stack_allocator.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\common\b2_settings.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\common\b2_math.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\common\b2_draw.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\common\b2_block_allocator.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_world_callbacks.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_world.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_wheel_joint.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_weld_joint.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_revolute_joint.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_pulley_joint.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_prismatic_joint.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_polygon_contact.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_polygon_circle_contact.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_mouse_joint.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_motor_joint.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_joint.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_island.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_gear_joint.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_friction_joint.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_fixture.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_edge_polygon_contact.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_edge_circle_contact.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_distance_joint.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_contact_solver.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_contact_manager.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_contact.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_circle_contact.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_chain_polygon_contact.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_chain_circle_contact.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\dynamics\b2_body.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Box2D\rope\b2_rope.cpp">
+      <Filter>Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="asio\impl\src.hpp">
+      <Filter>asio</Filter>
+    </ClCompile>
+    <ClCompile Include="Network.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Arena.h" />
+    <ClInclude Include="Vehicle.h" />
+    <ClInclude Include="RigidWorld.h" />
+    <ClInclude Include="B2World.h" />
+    <ClInclude Include="B2Vehicle.h" />
+    <ClInclude Include="Weapon.h" />
+    <ClInclude Include="B2Object.h" />
+    <ClInclude Include="CoreEngine.h" />
+    <ClInclude Include="WindowsInput.h" />
+    <ClInclude Include="b2dJson\b2dJson.h">
+      <Filter>b2dJson</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D\dynamics\b2_polygon_contact.h">
+      <Filter>Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D\dynamics\b2_polygon_circle_contact.h">
+      <Filter>Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D\dynamics\b2_island.h">
+      <Filter>Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D\dynamics\b2_edge_polygon_contact.h">
+      <Filter>Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D\dynamics\b2_edge_circle_contact.h">
+      <Filter>Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D\dynamics\b2_contact_solver.h">
+      <Filter>Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D\dynamics\b2_circle_contact.h">
+      <Filter>Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D\dynamics\b2_chain_polygon_contact.h">
+      <Filter>Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Box2D\dynamics\b2_chain_circle_contact.h">
+      <Filter>Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="toolbox\vectorx.h">
+      <Filter>toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="toolbox\vector4.h">
+      <Filter>toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="toolbox\vector3.h">
+      <Filter>toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="toolbox\vector2.h">
+      <Filter>toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="toolbox\queue.h">
+      <Filter>toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="Network.h" />
+    <ClInclude Include="NetworkMessages.h" />
+    <ClInclude Include="InputInterface.h" />
+    <ClInclude Include="toolbox\flat_map.h">
+      <Filter>toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="toolbox\std.h">
+      <Filter>toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="toolbox\logger.h">
+      <Filter>toolbox</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="b2dJson">
+      <UniqueIdentifier>{68081f7a-cf2c-4ef6-891d-b8a07d47d386}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Box2D">
+      <UniqueIdentifier>{693e897a-411f-4ca4-9ac5-f74996be81ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="toolbox">
+      <UniqueIdentifier>{3c9bdb83-d767-462a-a81c-07a1c65e2260}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="asio">
+      <UniqueIdentifier>{4b66464b-a61c-45c0-8744-c28128aa8a57}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
