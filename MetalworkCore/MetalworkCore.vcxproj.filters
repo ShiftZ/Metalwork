@@ -226,6 +226,7 @@
     <ClInclude Include="toolbox\logger.h">
       <Filter>toolbox</Filter>
     </ClInclude>
+    <ClInclude Include="CoreDefinitions.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="b2dJson">

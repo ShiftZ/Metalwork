@@ -9,6 +9,8 @@ using namespace std;
 
 void AArenaActor::AttachToObject(RigidObject* object)
 {
+	this->object = object;
+
 	UDataTable* models = LoadObject<UDataTable>(nullptr, L"/Game/ModelParts");
 
 	auto MakeComponent = [&](RigidBody* body)
@@ -29,8 +31,6 @@ void AArenaActor::AttachToObject(RigidObject* object)
 		if (part.get() != object->root) MakeComponent(part.get());
 
 	SyncPose();
-
-	this->object = object;
 }
 
 void AArenaActor::SyncPose()
@@ -45,6 +45,6 @@ void AArenaActor::SyncPose()
 void AArenaActor::Tick(float dt)
 {
 	Super::Tick(dt);
-	SyncPose();
+	//SyncPose();
 }
 

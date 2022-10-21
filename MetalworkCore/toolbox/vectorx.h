@@ -17,15 +17,18 @@ using vector3 = vectorx<type, 3>;
 template< typename type >
 using vector4 = vectorx<type, 4>;
 
-template< typename type, int len >
+template< typename type, int dim >
 struct super_vectorx
 {
 	union
 	{
-		type v[len];
+		type v[dim];
 		type x;
 	};
 };
+
+template< typename type, int dim >
+void is_vectorx(const vectorx<type, dim>&);
 
 template< typename type >
 struct super_vectorx<type, 2>
@@ -42,15 +45,16 @@ struct super_vectorx<type, 2>
 
 	super_vectorx( type x, type y ) : x(x), y(y) {}
 
-	template< typename unknown_t > requires requires (unknown_t v, type s) { v.x = v.y = s; }
-	super_vectorx( const unknown_t& v ) : x(v.x), y(v.y) {}
+	template< typename vec_t > requires requires (vec_t v, type s) { v.x = v.y = s; }
+	super_vectorx( const vec_t& v ) : x(v.x), y(v.y) {}
 
 	void set( type x, type y ) { this->x = x, this->y = y; }
 	void operator=( null_vector ) { y = x = 0; }
 
-	template< typename unknown_t > requires (requires (unknown_t v, type s) { v.x = v.y = s, unknown_t{s, s}; } || 
-											 requires (unknown_t v, type s) { v.X = v.Y = s, unknown_t{s, s}; })
-	operator unknown_t() const { return unknown_t{x, y}; }
+	template< typename vec_t > requires (!requires (vec_t v) { is_vectorx(v); } &&
+		(requires (vec_t v, type s) { v.x = v.y = s, vec_t{s, s}; } ||
+		 requires (vec_t v, type s) { v.X = v.Y = s, vec_t{s, s}; }))
+	operator vec_t() const { return vec_t{x, y}; }
 };
 
 template< typename type >
@@ -73,9 +77,9 @@ struct super_vectorx<type, 3>
 	void set( type x, type y, type z ) { this->x = x, this->y = y, this->z = z; }
 	void operator=( null_vector ) { z = y = x = 0; }
 
-	template< typename unknown_t > requires (requires (unknown_t v, type s) { v.x = v.y = v.z = s, unknown_t{s, s, s}; } ||
-											 requires (unknown_t v, type s) { v.X = v.Y = v.Z = s, unknown_t{s, s, s}; })
-	operator unknown_t() const { return unknown_t{x, y, z}; }
+	template< typename vec_t > requires (requires (vec_t v, type s) { v.x = v.y = v.z = s, vec_t{s, s, s}; } ||
+										 requires (vec_t v, type s) { v.X = v.Y = v.Z = s, vec_t{s, s, s}; })
+	operator vec_t() const { return vec_t{x, y, z}; }
 };
 
 template< typename type >
@@ -97,8 +101,8 @@ struct super_vectorx<type, 4>
 	void set( type x, type y, type z, type w ) { this->x = x, this->y = y, this->z = z, this->w = w; }
 	void operator=( null_vector ) { w = z = y = x = 0; }
 
-	template< typename unknown_t > requires requires (unknown_t v, type s) { v.x = v.y = v.z = v.w = s, unknown_t{s, s, s, s}; }
-	operator unknown_t() const { return unknown_t{x, y, z, w}; }
+	template< typename vec_t > requires requires (vec_t v, type s) { v.x = v.y = v.z = v.w = s, vec_t{s, s, s, s}; }
+	operator vec_t() const { return vec_t{x, y, z, w}; }
 };
 
 template< typename type, int len >
@@ -112,9 +116,6 @@ struct super_vector : super_vectorx<type, len>
 	template< typename src_type, int srclen > requires std::is_floating_point_v<type> || !std::is_floating_point_v<src_type>
 	super_vector( const super_vectorx<src_type, srclen>& src )
 	{
-		int a = srclen;
-		int b = len;
-		int m = std::min(srclen, len);
 		for (int i = 0; i < std::min(srclen, len); i++)
 			v[i] = type(src.v[i]);
 	}

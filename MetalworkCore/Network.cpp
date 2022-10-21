@@ -171,9 +171,8 @@ awaitable<void> Network::ListenUDP()
 
 					// get missed message sequence ids
 					vector<unsigned> missed(report.missing_count);
-					if (udp.available() < sizeof(unsigned) * report.missing_count)
-						throw runtime_error(format("Unexpected end of message reading vector<unsigned>"));
-					udp.receive(buffer(missed));
+					for (unsigned& missed_seqid : missed)
+						missed_seqid = buf.pop_front<unsigned>();
 
 					// resend reported missed messages
 					shared_ptr missed_pak = make_shared<package_buffer>();
@@ -291,6 +290,8 @@ void Network::Start()
 			string err = e.what();
 			DebugBreak();
 		}
+
+		DebugBreak();
 	});
 }
 
@@ -397,7 +398,7 @@ void Network::ProcessMessage(MessageVar msg, Peer& peer)
 		{
 			auto now_ms = time_point_cast<milliseconds>(steady_clock::now());
 			int ping = now_ms.time_since_epoch().count() - ping_msg.time;
-			logger.log(format("ping: {}ms", ping));
+			//logger.log(format("ping: {}ms", ping));
 
 			if (!peer.pings.empty())
 			{

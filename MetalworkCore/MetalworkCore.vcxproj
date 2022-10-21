@@ -172,6 +172,7 @@
     <ClInclude Include="Box2D\dynamics\b2_island.h" />
     <ClInclude Include="Box2D\dynamics\b2_polygon_circle_contact.h" />
     <ClInclude Include="Box2D\dynamics\b2_polygon_contact.h" />
+    <ClInclude Include="CoreDefinitions.h" />
     <ClInclude Include="CoreEngine.h" />
     <ClInclude Include="InputInterface.h" />
     <ClInclude Include="Network.h" />

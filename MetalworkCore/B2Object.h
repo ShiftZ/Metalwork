@@ -16,6 +16,7 @@ public:
 	vec3 GetPosition3D() override;
 	void JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB = nullopt) override;
 	void JoinDistant(RigidBody* with, vec2 anchor, float min, float max) override;
+	void ApplyForce(vec2 force) override;
 };
 
 class B2Object : public RigidObject

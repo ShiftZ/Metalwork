@@ -50,6 +50,11 @@ void B2Body::JoinDistant(RigidBody* with, vec2 anchor, float min, float max)
 	def.damping = 0.5;
 }
 
+void B2Body::ApplyForce(vec2 force)
+{
+	xbody->ApplyForceToCenter(force, true);
+}
+
 B2Object::B2Object(B2World* world, Json::Value model, string_view root_name)
 {
 	b2dJson json;

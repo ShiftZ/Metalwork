@@ -33,14 +33,16 @@ private:
 	steady_clock::time_point start_time;
 
 	vector<PlayerInput> inputs;
-
-	Arena arena;
+	
 	jthread arena_thread;
-	mutex arena_input_mtx;
+	mutex arena_input_mtx, arena_step_mtx;
 	condition_variable_any arena_cv;
-	vector<array<vector<vector<Arena::PlayerInput>>, 2>> arena_input; 
+	vector<Arena::StepInputs> arena_inputs;
 
 	jthread thread;
+
+public:
+	Arena arena;
 
 private:
 	void ProcessMessages();

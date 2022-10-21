@@ -210,7 +210,7 @@ public:
 			it = lower_bound(it, end(), k, value_compare());
 		else if (!left && right)
 			it = lower_bound(begin(), it, k, value_compare());
-		if (!value_compare()(k, *it)) return {it, false};
+		if (it != end() && !value_compare()(k, *it)) return {it, false};
 		it = native::emplace(it, piecewise_construct_t(), 
 			forward_as_tuple(forward<key_type>(k)), forward_as_tuple(forward<types>(args)...));
 		return {it, true};

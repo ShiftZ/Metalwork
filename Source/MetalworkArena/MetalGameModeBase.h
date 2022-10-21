@@ -1,10 +1,10 @@
 #pragma once
 
 #include <chrono>
+#include <unordered_set>
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "Arena.h"
 #include "CoreEngine.h"
 
 #include "MetalGameModeBase.generated.h"
@@ -19,8 +19,8 @@ class METALWORKARENA_API AMetalworkArenaGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	unique_ptr<Arena> arena;
 	unique_ptr<MetalCore> core;
+	unordered_set<class AArenaActor*> actors;
 
 public:
 	AMetalworkArenaGameModeBase() { PrimaryActorTick.bCanEverTick = true; }

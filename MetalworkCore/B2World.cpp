@@ -1,12 +1,16 @@
 #include "B2World.h"
 
 #include <ranges>
+#include <unordered_set>
+#include <box2d/b2_body.h>
+
 #include "Box2D/b2_World.h"
 #include "Box2D/b2_Math.h"
 
 namespace ranges = std::ranges;
 
 static unordered_map<void*, int> b2allocs;
+static unordered_set<void*> b2released;
 
 void* b2Alloc(int size)
 {
@@ -17,21 +21,34 @@ void* b2Alloc(int size)
 
 void b2Free(void* ptr)
 {
+	b2allocs.erase(ptr);
 	auto alloc = b2allocs.find(ptr);
-	if (alloc == b2allocs.end()) return;
-	b2allocs.erase(alloc);
-	operator delete(ptr);
+	if (alloc == b2allocs.end())
+	{
+		b2allocs.erase(alloc);
+		operator delete(ptr);
+	}
+	else
+		b2released.insert(ptr);
 }
 
-B2World::B2World(float step_time) : step_time(step_time)
+B2World::B2World(float step_time, float gravity) : step_time(step_time)
 {
-	xworld = make_unique<b2World>(b2Vec2(0, -10));
+	xworld = make_unique<b2World>(b2Vec2(0, gravity));
 }
 
 void B2World::Capture()
 {
+	for (void* ptr : b2released)
+	{
+		allocs.erase(ptr);
+		operator delete(ptr);
+	}
+
+	b2allocs.insert(allocs.begin(), allocs.end());
+
 	int b2allocs_size = 0;
-	for (int size : views::values(b2allocs)) 
+	for (int size : views::values(b2allocs))
 		b2allocs_size += size;
 
 	data.resize(b2allocs_size + sizeof(b2World));
@@ -52,8 +69,6 @@ void B2World::Capture()
 
 void B2World::Restore()
 {
-	if (step == captured_step || captured_step == -1) return;
-
 	for (void* ptr : views::keys(b2allocs))
 		operator delete(ptr);
 
@@ -67,8 +82,6 @@ void B2World::Restore()
 		data_ptr += size;
 	}
 	
-	b2allocs = move(allocs);
-
 	step = captured_step;
 }
 

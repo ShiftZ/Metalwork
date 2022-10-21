@@ -13,7 +13,7 @@ class B2World : public RigidWorld
 	float step_time;
 
 public:
-	B2World(float step_time);
+	B2World(float step_time, float gravity);
 	void Capture() override;
 	void Restore() override;
 	void Step();

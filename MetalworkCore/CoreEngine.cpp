@@ -5,21 +5,15 @@
 #include "std.h"
 #include "logger.h"
 
-#ifdef _WIN32
-#	include "WindowsInput.h"
-	constexpr bool windows = true;
-#else
-	constexpr bool windows = false;
-#endif
-
+#include "CoreDefinitions.h"
 #include "CoreEngine.h"
 
-#include <shared_mutex>
+#ifdef _WIN32
+#	include "WindowsInput.h"
+#endif
 
-constexpr int fps = 1;
-
-MetalCore::MetalCore(int player, unique_ptr<Network> network_src)
-	: network(move(network_src)), player(player), arena(1000 / fps)
+MetalCore::MetalCore(int player, unique_ptr<Network> network_)
+	: network(move(network_)), player(player), arena(1.f / fps)
 {
 	packaged_task init([&]
 	{
@@ -52,9 +46,10 @@ void MetalCore::ProcessMessages()
 		{
 			[&](AllReady&)
 			{
+				auto countdown_duration = 1s;
 				if (player == 0)
-					network->BeginCountdown(3s);
-				start_time = steady_clock::now() + 3s;
+					network->BeginCountdown(countdown_duration);
+				start_time = steady_clock::now() + countdown_duration;
 			},
 			[&](CountdownMsg& countdown_msg)
 			{
@@ -74,14 +69,12 @@ void MetalCore::ProcessMessages()
 				pointer.try_emplace(input_msg.seq_id, input_msg.step, input_msg.pointer);
 
 				// move clean boundry
-				auto clean_it = pointer.find(clean_seqid);
+				auto clean_it = pointer.find(clean_seqid) + 1;
 				while (clean_it != pointer.end() && clean_it->first == clean_seqid + 1)
 				{
 					++clean_seqid;
 					++clean_it;
 				}
-
-				log("InputMsg: seq({}) step({})", input_msg.seq_id, input_msg.step);
 			},
 			[](auto&){ throw logic_error("No processor for message"); }
 		};
@@ -107,27 +100,26 @@ void MetalCore::MainLoop(stop_token st)
 	}
 
 	input->Start();
+	arena.Start();
 
 	arena_thread = jthread([&](stop_token st)
 	{
 		for (;;)
 		{
-			decltype(arena_input) input;
+			decltype(arena_inputs) input;
 
-			unique_lock lock(arena_input_mtx);
-			arena_cv.wait(lock, st, [&]
+			unique_lock input_lock(arena_input_mtx);
+			arena_cv.wait(input_lock, st, [&]
 			{
-				if (arena_input.empty()) return false;
-				input = move(arena_input);
+				if (arena_inputs.empty()) return false;
+				input = move(arena_inputs);
 				return true;
 			});
 			if (st.stop_requested()) return;
 
+			unique_lock step_lock(arena_step_mtx);
 			for (auto& [clean_input, dirty_input] : input)
-			{
-				arena.CleanStep(move(clean_input));
-				arena.DirtyStep(move(dirty_input));
-			}
+				arena.Step({move(clean_input), move(dirty_input)});
 		}
 	});
 
@@ -173,9 +165,9 @@ void MetalCore::MainLoop(stop_token st)
 		// copy input to arena thread
 		{
 			unique_lock lock(arena_input_mtx);
-			auto& [clean_input, dirty_input] = arena_input.emplace_back();
+			auto& [clean_input, dirty_input] = arena_inputs.emplace_back();
 
-			for (auto& [clean_seqid, pointer_in] : inputs)
+			for (int player = 0; auto& [clean_seqid, pointer_in] : inputs)
 			{
 				auto clean_it = ranges::lower_bound(pointer_in, clean_step, less(), [](value<PointerInput> pin){ return pin->step; });
 
@@ -183,23 +175,24 @@ void MetalCore::MainLoop(stop_token st)
 				auto dirty_range = ranges::subrange(clean_it, pointer_in.end()) | views::values;
 				auto chunk_by_step = views::chunk_by([](PointerInput& a, PointerInput& b){ return a.step == b.step; });
 
-				auto& player_clean_input = clean_input.emplace_back();
-				for (auto step_inputs : clean_range | chunk_by_step)
+				for (size_t step = 0; auto step_inputs : clean_range | chunk_by_step)
 				{
-					Arena::PlayerInput& in = player_clean_input.emplace_back();
+					clean_input.resize(max(step + 1, clean_input.size()));
 					for (PointerInput& pin : step_inputs)
-						in.move += pin.position;
+						clean_input[step][player].move += pin.position;
+					++step;
 				}
 
-				auto& player_dirty_input = dirty_input.emplace_back();
-				for (auto step_inputs : dirty_range | chunk_by_step)
+				for (size_t step = 0; auto step_inputs : dirty_range | chunk_by_step)
 				{
-					Arena::PlayerInput& in = player_dirty_input.emplace_back();
+					dirty_input.resize(max(step + 1, dirty_input.size()));
 					for (PointerInput& pin : step_inputs)
-						in.move += pin.position;
+						dirty_input[step][player].move += pin.position;
+					++step;
 				}
 
 				pointer_in.erase(pointer_in.begin(), clean_it); // discard clean input
+				++player;
 			}
 
 			arena_cv.notify_one();

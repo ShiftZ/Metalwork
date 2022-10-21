@@ -43,17 +43,18 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& map_name, const FStrin
 	}
 	
 	core = make_unique<MetalCore>(player, move(network));
-	arena = make_unique<Arena>(0.02);
 
-	for (shared_ptr<Vehicle>& vehicle : arena->vehicles)
+	for (shared_ptr<Vehicle>& vehicle : core->arena.vehicles)
 	{
 		AVehicleActor* actor = GetWorld()->SpawnActor<AVehicleActor>();
 		actor->AttachToObject(vehicle->body.get());
+		actors.emplace(actor);
 
 		if (vehicle->weapon)
 		{
 			AWeaponActor* actor = GetWorld()->SpawnActor<AWeaponActor>();
 			actor->AttachToObject(vehicle->weapon->body.get());
+			actors.emplace(actor);
 		}
 	}
 
@@ -64,5 +65,8 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& map_name, const FStrin
 void AMetalworkArenaGameModeBase::Tick(float dt)
 {
 	Super::Tick(dt);
-	//core->Step();
+
+	unique_lock lock(core->arena.step_mtx);
+	for (AArenaActor* actor : actors)
+		actor->SyncPose();
 }

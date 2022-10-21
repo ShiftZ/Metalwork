@@ -39,6 +39,7 @@ public:
 	virtual vec3 GetPosition3D() = 0;
 	virtual void JoinRevolute(RigidBody* with_body, vec2 anchorA, optional<vec2> anchorB = nullopt) = 0;
 	virtual void JoinDistant(RigidBody* with, vec2 anchor, float min, float max) = 0;
+	virtual void ApplyForce(vec2 force) = 0;
 	virtual ~RigidBody() = default;
 };
 

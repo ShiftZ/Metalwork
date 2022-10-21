@@ -7,10 +7,12 @@
 #include <shared_mutex>
 #include <unordered_map>
 #include <functional>
+#include <any>
+#include <stdexcept>
 
 inline std::shared_mutex log_mutex;
 inline std::unordered_map<std::string_view, std::ofstream> log_files;
-inline std::unordered_map<int, std::function<void(std::string)>> loggers;
+inline std::unordered_map<int, std::any> loggers;
 inline std::function<void(std::string)> logger;
 
 struct format_with_location
@@ -21,15 +23,23 @@ struct format_with_location
 	format_with_location( string_type str, std::source_location loc = std::source_location::current() ) : str(str), loc(loc) {}
 };
 
-inline void reg_logger( std::function<void(std::string)> func )
+inline void add_logger( std::function<void(std::string)> func )
 {
 	logger = func;
 }
 
-template< typename log_type > requires std::is_convertible_v<log_type, int>
-void reg_logger( const log_type& type, std::function<void(std::string)> func )
+template< typename log_t, typename func_t > requires
+	requires (log_t t, func_t&& f) { int(t); std::function<void(std::string)>(std::forward<func_t>(f)); }
+void add_logger( const log_t& type, std::function<void(std::string)>&& func )
 {
-	loggers[int(type)] = std::move(func);
+	loggers[int(type)].emplace<std::function<void(std::string)>>(std::forward<func_t>(func));
+}
+
+template< typename log_t, typename func_t > requires
+	requires (log_t t, func_t&& f) { int(t); std::function<void(std::string, const log_t&)>(std::forward<func_t>(f)); }
+void add_logger( const log_t& type, func_t&& func )
+{
+	loggers[int(type)].emplace<std::function<void(std::string, const log_t&)>>(std::forward<func_t>(func));
 }
 
 template< typename... types >
@@ -40,13 +50,25 @@ void log( format_with_location fmt, types... args )
 	logger(move(msg));
 }
 
-template< typename log_type, typename... types > requires std::is_convertible_v<log_type, int>
-void log( const log_type& type, format_with_location fmt, const types&... args )
+template< typename log_t, typename... types > requires std::is_convertible_v<log_t, int>
+void log( const log_t& id, format_with_location fmt, const types&... args )
 {
 	using namespace std;
-	auto& [ignore, logger] = *loggers.find(int(type));
+	using ext_signature = void(string, const log_t&);
+
+	auto logger_it = loggers.find(int(id));
+	if (logger_it == loggers.end())
+		throw logic_error(format("No logger found for id#{}", int(id)));
+
+	auto& [ignore, logger] = *loggers.find(int(id));
+
 	string msg = format("{}: ", fmt.loc.function_name()) + vformat(fmt.str, make_format_args(args...)) + '\n';
-	logger(move(msg));
+	if (logger.type() == typeid(function<void(string)>))
+		any_cast<function<void(string)>>(logger)(move(msg));
+	else if (logger.type() == typeid(function<ext_signature>))
+		any_cast<function<void(string, const log_t&)>>(logger)(move(msg), id);
+	else
+		throw logic_error(format("Invalid log id type for id#{}", int(id)));
 }
 
 template< typename... types >
