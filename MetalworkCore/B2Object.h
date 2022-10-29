@@ -8,12 +8,13 @@
 
 class B2Object;
 
-class B2Body : public RigidBody
+class B2Body final : public RigidBody
 {
 public:
 	B2Body(RigidObject* object, b2Body* body);
 	vec2 GetPosition() override;
 	vec3 GetPosition3D() override;
+	float GetAngle() override;
 	void JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB = nullopt) override;
 	void JoinDistant(RigidBody* with, vec2 anchor, float min, float max) override;
 	void ApplyForce(vec2 force) override;

@@ -27,7 +27,7 @@ Vehicle::Vehicle(Arena* arena, string_view model_name)
 
 void Vehicle::AttachWeapon(shared_ptr<Weapon> weapon)
 {
-	body->root->JoinRevolute(weapon->body->root, nullvec, -weapon->body->root_shift);
+	body->root->JoinRevolute(weapon->body->root, {0, -2}, -weapon->body->root_shift);
 	this->weapon = move(weapon);
 }
 

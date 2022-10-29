@@ -10,7 +10,8 @@
 namespace ranges = std::ranges;
 
 static unordered_map<void*, int> b2allocs;
-static unordered_set<void*> b2released;
+static unordered_set<void*> b2releases;
+static B2World* global;
 
 void* b2Alloc(int size)
 {
@@ -21,15 +22,14 @@ void* b2Alloc(int size)
 
 void b2Free(void* ptr)
 {
-	b2allocs.erase(ptr);
 	auto alloc = b2allocs.find(ptr);
-	if (alloc == b2allocs.end())
+	if (alloc != b2allocs.end())
 	{
 		b2allocs.erase(alloc);
 		operator delete(ptr);
 	}
 	else
-		b2released.insert(ptr);
+		b2releases.insert(ptr);
 }
 
 B2World::B2World(float step_time, float gravity) : step_time(step_time)
@@ -39,11 +39,15 @@ B2World::B2World(float step_time, float gravity) : step_time(step_time)
 
 void B2World::Capture()
 {
-	for (void* ptr : b2released)
+	global = this;
+
+	for (void* ptr : b2releases)
 	{
 		allocs.erase(ptr);
 		operator delete(ptr);
 	}
+
+	b2releases.clear();
 
 	b2allocs.insert(allocs.begin(), allocs.end());
 
@@ -71,6 +75,9 @@ void B2World::Restore()
 {
 	for (void* ptr : views::keys(b2allocs))
 		operator delete(ptr);
+
+	b2allocs.clear();
+	b2releases.clear();
 
 	char* data_ptr = &data.front();
 	memcpy(xworld.get(), data_ptr, sizeof(b2World));

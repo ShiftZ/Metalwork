@@ -38,7 +38,10 @@ void AArenaActor::SyncPose()
 	ForEachComponent<USceneComponent>(false, [](USceneComponent* component)
 	{
 		if (IComponentPocket* pocket = Cast<IComponentPocket>(component))
+		{
 			component->SetWorldLocation(pocket->body->GetPosition3D() * 10);
+			component->SetWorldRotation(FRotator(pocket->body->GetAngle(), 0, 0));
+		}
 	});
 }
 

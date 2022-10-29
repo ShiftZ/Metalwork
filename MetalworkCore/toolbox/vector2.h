@@ -98,7 +98,7 @@ struct vectorx<type, 2> : super_vector<type, 2>
 	float angle() const requires std::is_floating_point_v<type> { return atan2(y, x); }
 
 	/*template< typename init_type >
-	void operator=( std::initializer_list<init_type> list ) { super_vector<type, 2>::operator=(move(list)); }*/
+	void operator=( std::initializer_list<init_type> list ) { super_vector<type, 2>::operator=(delta(list)); }*/
 };
 
 template< typename type >

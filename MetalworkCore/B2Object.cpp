@@ -1,10 +1,11 @@
 #include <format>
 #include <ranges>
-#include <Box2D/b2_distance_joint.h>
+#include <numbers>
 
 #include "B2World.h"
 #include "Box2D/b2_body.h"
 #include "Box2D/b2_revolute_joint.h"
+#include <Box2D/b2_distance_joint.h>
 #include "Box2D/b2_world.h"
 
 #include "B2Object.h"
@@ -22,6 +23,11 @@ vec2 B2Body::GetPosition()
 vec3 B2Body::GetPosition3D()
 {
 	return {xbody->GetPosition().x, 0.f, xbody->GetPosition().y};
+}
+
+float B2Body::GetAngle()
+{
+	return 180.f * xbody->GetAngle() / numbers::pi;
 }
 
 void B2Body::JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB)

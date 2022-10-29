@@ -65,8 +65,8 @@ void MetalCore::ProcessMessages()
 			},
 			[&](InputMsg& input_msg)
 			{
-				auto& [clean_seqid, pointer] = inputs[sender];
-				pointer.try_emplace(input_msg.seq_id, input_msg.step, input_msg.pointer);
+				auto& [clean_seqid, pointer, _] = inputs[sender];
+				pointer.try_emplace(pointer.end(), input_msg.seq_id, input_msg.step, input_msg.pointer);
 
 				// move clean boundry
 				auto clean_it = pointer.find(clean_seqid) + 1;
@@ -134,7 +134,7 @@ void MetalCore::MainLoop(stop_token st)
 
 			while (optional<Input> in = input->GetInput())
 			{
-				auto& [seq_id, pointer] = inputs[player];
+				auto& [seq_id, pointer, _] = inputs[player];
 				pointer.try_emplace(pointer.end(), ++seq_id, step, in->pointer);
 				network->SendSeqUDP(InputMsg{seq_id, step, in->pointer});
 			}
@@ -142,7 +142,7 @@ void MetalCore::MainLoop(stop_token st)
 		while (steady_clock::now() < next_step_time);
 
 		// commit zero input
-		auto& [seq_id, pointer] = inputs[player];
+		auto& [seq_id, pointer, _] = inputs[player];
 		if (auto& [id, pin] = pointer.back(); pin.step < step)
 		{
 			vec2i pos = input->pointer; // just make sure it stays the same
@@ -154,7 +154,7 @@ void MetalCore::MainLoop(stop_token st)
 
 		// find clean step
 		int clean_step = this->step;
-		for (auto& [clean_seqid, pointer_in] : inputs)
+		for (auto& [clean_seqid, pointer_in, _] : inputs)
 			clean_step = min(clean_step, pointer_in[clean_seqid].step - 1);
 
 		if (player == 1)
@@ -167,31 +167,43 @@ void MetalCore::MainLoop(stop_token st)
 			unique_lock lock(arena_input_mtx);
 			auto& [clean_input, dirty_input] = arena_inputs.emplace_back();
 
-			for (int player = 0; auto& [clean_seqid, pointer_in] : inputs)
+			for (int player = 0; auto& [clean_seqid, pointer_in, clean_pointer] : inputs)
 			{
-				auto clean_it = ranges::lower_bound(pointer_in, clean_step, less(), [](value<PointerInput> pin){ return pin->step; });
+				auto clean_it = ranges::upper_bound(pointer_in, clean_step, less(), [](value<PointerInput> in){ return in->step; });
 
 				auto clean_range = ranges::subrange(pointer_in.begin(), clean_it) | views::values;
 				auto dirty_range = ranges::subrange(clean_it, pointer_in.end()) | views::values;
 				auto chunk_by_step = views::chunk_by([](PointerInput& a, PointerInput& b){ return a.step == b.step; });
 
-				for (size_t step = 0; auto step_inputs : clean_range | chunk_by_step)
+				vec2i pointer = clean_pointer;
+
+				for (size_t sub_step = 0; auto step_inputs : clean_range | chunk_by_step)
 				{
-					clean_input.resize(max(step + 1, clean_input.size()));
-					for (PointerInput& pin : step_inputs)
-						clean_input[step][player].move += pin.position;
-					++step;
+					clean_input.resize(max(sub_step + 1, clean_input.size()));
+					for (PointerInput& pointer_in : step_inputs)
+					{
+						clean_input[sub_step][player].move += (pointer_in.position - pointer) * 5;
+						pointer = pointer_in.position;
+					}
+					++sub_step;
 				}
 
-				for (size_t step = 0; auto step_inputs : dirty_range | chunk_by_step)
+				for (size_t sub_step = 0; auto step_inputs : dirty_range | chunk_by_step)
 				{
-					dirty_input.resize(max(step + 1, dirty_input.size()));
-					for (PointerInput& pin : step_inputs)
-						dirty_input[step][player].move += pin.position;
-					++step;
+					dirty_input.resize(max(sub_step + 1, dirty_input.size()));
+					for (PointerInput& pointer_in : step_inputs)
+					{
+						dirty_input[sub_step][player].move += (pointer_in.position - pointer) * 5;
+						pointer = pointer_in.position;
+					}
+					++sub_step;
 				}
 
-				pointer_in.erase(pointer_in.begin(), clean_it); // discard clean input
+				if (clean_it != pointer_in.begin())
+				{
+					clean_pointer = value(*(clean_it - 1))->position;
+					pointer_in.erase(pointer_in.begin(), clean_it); // discard clean input
+				}
 				++player;
 			}
 

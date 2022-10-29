@@ -80,7 +80,7 @@ static LRESULT CALLBACK EventHandler(HWND hwnd, unsigned msg, WPARAM wparam, LPA
 
 			if (raw.header.dwType == RIM_TYPEMOUSE)
 			{
-				winput->pointer += {raw.data.mouse.lLastX, raw.data.mouse.lLastY};
+				winput->pointer += {raw.data.mouse.lLastX, -raw.data.mouse.lLastY};
 
 				Input input;
 				input.pointer = winput->pointer;

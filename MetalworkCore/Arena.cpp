@@ -45,16 +45,19 @@ void Arena::Step(StepInputs inputs)
 	{
 		log(DisplayLog{1}, "Clean size: {}", inputs.clean.size());
 
-		for (flat_map<int, PlayerInput>& players_input : inputs.clean)
+		for (int substep = 0; flat_map<int, PlayerInput>& players_input : inputs.clean)
 		{
 			for (auto& [player, input] : players_input)
 			{
 				Vehicle* vehicle = vehicles[player].get();
 				vehicle->body->root->ApplyForce(input.move);
-				++player;
+
+				if (player == 0)
+					log(DisplayLog{substep}, "{}, {}", input.move.x, input.move.y);
 			}
 
 			rigid_world->Step();
+			++substep;
 		}
 
 		rigid_world->Capture();

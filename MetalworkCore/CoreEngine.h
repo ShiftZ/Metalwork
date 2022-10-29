@@ -23,6 +23,7 @@ class MetalCore
 	{
 		int clean_seqid = 0;
 		flat_map<int, PointerInput> pointer = {{0, {0, 0}}};
+		vec2i clean_pointer = 0;
 	};
 
 private:
