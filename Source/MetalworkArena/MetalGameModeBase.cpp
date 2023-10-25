@@ -1,12 +1,9 @@
-#pragma warning(disable:4456) // declaration hides previous local declaration
+#pragma warning(disable:4456 4459)
 
 #include "MetalGameModeBase.h"
 
-#include "CoreEngine.h"
-#include "VehicleActor.h"
-#include "Network.h"
-
-using namespace std;
+#include "CoreInterface.h"
+#include "VesselActor.h"
 
 DEFINE_LOG_CATEGORY(LogNetwork);
 
@@ -19,54 +16,55 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& map_name, const FStrin
 
 	int target_port = 22150 + (player + 1) % 2;
 
-	Network::Target target;
+	RemotePlayer target;
 	target.player = (player + 1) % 2;
-	target.ip = address::from_string("127.0.0.1");
+	ranges::copy("127.0.0.1", target.ip);
 	target.port = {target_port, target_port};
 
-	Network::Logger logger;
+	/*Network::Logger logger;
 
 	if (player % 2 == 1)
 	{
 		logger = {[=](string text){ UE_LOG(LogNetwork, Log, L"%s", ANSI_TO_TCHAR(text.c_str())); },
 				  [=](string text){ UE_LOG(LogNetwork, Error, L"%s", ANSI_TO_TCHAR(text.c_str())); }};
-	}
+	}*/
 
-	xfuture<unique_ptr<Network>> connection = Network::Connect({target}, player, logger);
+	vector targets = {target};
+	unique_ptr connection = INetwork::Connect(targets, player);
 
-	unique_ptr<Network> network;
-	try { network = connection.get(); }
+	unique_ptr<INetwork> network;
+	try { network = connection->Get(); }
 	catch (exception& e)
 	{
 		string err = e.what();
-		DebugBreak();
+		UE_DEBUG_BREAK();
 	}
 	
-	core = make_unique<MetalCore>(player, move(network));
+	Core = MakeUnique<MetalCore>(player, move(network));
 
-	for (shared_ptr<Vehicle>& vehicle : core->arena.vehicles)
+	for (shared_ptr<Vessel>& vessel : Core->Arena().Vessels())
 	{
 		AVehicleActor* actor = GetWorld()->SpawnActor<AVehicleActor>();
-		actor->AttachToObject(vehicle->body.get());
-		actors.emplace(actor);
+		actor->AttachToObject(vessel->body.get());
+		actors.Emplace(actor);
 
-		if (vehicle->weapon)
+		if (vessel->weapon)
 		{
 			AWeaponActor* actor = GetWorld()->SpawnActor<AWeaponActor>();
-			actor->AttachToObject(vehicle->weapon->body.get());
-			actors.emplace(actor);
+			actor->AttachToObject(vessel->weapon->body.get());
+			actors.Emplace(actor);
 		}
 	}
 
-	core->Ready();
-	//core->Start();
+	Core->Ready();
+	//Core->Start();
 }
 
 void AMetalworkArenaGameModeBase::Tick(float dt)
 {
 	Super::Tick(dt);
 
-	unique_lock lock(core->arena.step_mtx);
+	unique_lock lock(Core->arena.step_mtx);
 	for (AArenaActor* actor : actors)
 		actor->SyncPose();
 }

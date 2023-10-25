@@ -1,0 +1,77 @@
+#include "Arena.h"
+
+#include "CoreInterface.h"
+#include "Vessel.h"
+#include "B2World.h"
+#include "Weapon.h"
+
+namespace views = std::ranges::views;
+
+Arena::Arena(float step_time)
+{
+	rigid_world = make_unique<B2World>(step_time, -5);
+
+	shared_ptr<Vessel> player1 = make_shared<Vessel>(this, "dummy");
+	shared_ptr<Weapon> weapon1 = make_shared<Weapon>(this, "chain-ball");
+	player1->AttachWeapon(weapon1);
+	player1->SetPosition({-25, 0});
+
+	vessels.push_back(move(player1));
+
+	shared_ptr<Vessel> player2 = make_shared<Vessel>(this, "dummy");
+	shared_ptr<Weapon> weapon2 = make_shared<Weapon>(this, "chain-ball");
+	player2->AttachWeapon(weapon2);
+	player2->SetPosition({25, 0});
+
+	vessels.push_back(move(player2));
+}
+
+void Arena::Start()
+{
+	rigid_world->Capture();
+}
+
+void Arena::Step(StepInputs inputs)
+{
+	rigid_world->Restore();
+
+	unique_lock lock(step_mtx);
+
+	if (!inputs.clean.empty())
+	{
+		log(DisplayLog{1}, "Clean size: {}", inputs.clean.size());
+
+		for (int substep = 0; flat_map<int, PlayerInput>& players_input : inputs.clean)
+		{
+			for (auto& [player, input] : players_input)
+			{
+				Vessel* vehicle = vessels[player].get();
+				vehicle->body->root->ApplyForce(input.move);
+
+				if (player == 0)
+					log(DisplayLog{substep}, "{}, {}", input.move.x, input.move.y);
+			}
+
+			rigid_world->Step();
+			++substep;
+		}
+
+		rigid_world->Capture();
+	}
+
+	for (flat_map<int, PlayerInput>& players_input : inputs.dirty)
+	{
+		log(DisplayLog{2}, "Dirty size: {}", inputs.dirty.size());
+
+		for (auto& [player, input] : players_input)
+		{
+			Vessel* vehicle = vessels[player].get();
+			vehicle->body->root->ApplyForce(input.move);
+			++player;
+		}
+
+		rigid_world->Step();
+	}
+
+	rigid_world->Restore();
+}
