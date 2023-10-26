@@ -10,10 +10,18 @@
 #include <any>
 #include <stdexcept>
 
-inline std::shared_mutex log_mutex;
-inline std::unordered_map<std::string_view, std::ofstream> log_files;
-inline std::unordered_map<int, std::any> loggers;
-inline std::function<void(std::string)> logger;
+#if defined(LOGGER_EXPORT)
+#	define LOGGER_API inline DLLEXPORT
+#elif defined(LOGGER_IMPORT)
+#	define LOGGER_API DLLIMPORT
+#else
+#	define LOGGER_API inline
+#endif
+
+LOGGER_API std::shared_mutex log_mutex;
+LOGGER_API std::unordered_map<std::string_view, std::ofstream> log_files;
+LOGGER_API std::unordered_map<int, std::any> loggers;
+LOGGER_API std::function<void(std::string)> logger;
 
 struct format_with_location
 {

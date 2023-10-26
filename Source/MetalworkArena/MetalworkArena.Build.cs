@@ -15,5 +15,7 @@ public class MetalworkArena : ModuleRules
 
         PrivatePCHHeaderFile = "MetalworkArena.h";
         PrivateDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "Paper2D", "MetalworkCore" });
+
+        if (Target.Type == TargetType.Editor) PrivateDefinitions.Add("LOGGER_IMPORT");
     }
 }

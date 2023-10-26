@@ -25,19 +25,13 @@ public class MetalworkCore : ModuleRules
             string vcpkgRoot = Path.Combine(File.ReadAllText(vcpkgPath), "installed", vcpkgTriplet);
             
             PrivateIncludePaths.Add(Path.Combine(vcpkgRoot, "include"));
-            string vcpkgLibs;
-            if (DebugBuild)
-                vcpkgLibs = Path.Combine(vcpkgRoot, "lib") + '/';
-            else
-                vcpkgLibs = Path.Combine(vcpkgPath, "debug/lib") + '/';
+            string vcpkgLibs = Path.Combine(vcpkgRoot, "lib") + '/';
             
             PublicAdditionalLibraries.Add(vcpkgLibs + "jsoncpp.lib");
         }
 
         PublicIncludePaths.Add(ModuleDirectory);
-        PrivateDefinitions.Add("B2_SHARED");
+        if (Target.Type == TargetType.Editor) PrivateDefinitions.Add("LOGGER_EXPORT");
         PrivateDefinitions.Add("_WIN32_WINNT=0x0601"); // windows only
-
-        
     }
 }

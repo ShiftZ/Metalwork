@@ -12,7 +12,7 @@ public:
 struct RemotePlayer
 {
 	int player;
-	char ip[16];
+	string ip;
 	struct { int tcp, udp; } port;
 };
 

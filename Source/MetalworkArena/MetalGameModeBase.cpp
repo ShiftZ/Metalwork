@@ -18,7 +18,7 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& map_name, const FStrin
 
 	RemotePlayer target;
 	target.player = (player + 1) % 2;
-	ranges::copy("127.0.0.1", target.ip);
+	target.ip = "127.0.0.1";
 	target.port = {target_port, target_port};
 
 	/*Network::Logger logger;

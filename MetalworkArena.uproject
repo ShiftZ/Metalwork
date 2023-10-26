@@ -9,7 +9,8 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine", "MetalworkCore"
+				"Engine",
+				"MetalworkCore"
 			]
 		},
 		{
@@ -331,6 +332,313 @@
 			"SupportedTargetPlatforms": [
 				"Mac"
 			]
+		},
+		{
+			"Name": "N10XSourceCodeAccess",
+			"Enabled": false
+		},
+		{
+			"Name": "ActorLayerUtilities",
+			"Enabled": false
+		},
+		{
+			"Name": "AndroidFileServer",
+			"Enabled": false
+		},
+		{
+			"Name": "ACLPlugin",
+			"Enabled": false
+		},
+		{
+			"Name": "AnimationData",
+			"Enabled": false
+		},
+		{
+			"Name": "AnimationModifierLibrary",
+			"Enabled": false
+		},
+		{
+			"Name": "AppleImageUtils",
+			"Enabled": false
+		},
+		{
+			"Name": "ActorSequence",
+			"Enabled": false
+		},
+		{
+			"Name": "AssetTags",
+			"Enabled": false
+		},
+		{
+			"Name": "Metasound",
+			"Enabled": false
+		},
+		{
+			"Name": "AutomationUtils",
+			"Enabled": false
+		},
+		{
+			"Name": "BlendSpaceMotionAnalysis",
+			"Enabled": false
+		},
+		{
+			"Name": "BlueprintHeaderView",
+			"Enabled": false
+		},
+		{
+			"Name": "CameraShakePreviewer",
+			"Enabled": false
+		},
+		{
+			"Name": "ChangelistReview",
+			"Enabled": false
+		},
+		{
+			"Name": "ChaosClothEditor",
+			"Enabled": false
+		},
+		{
+			"Name": "ChaosCloth",
+			"Enabled": false
+		},
+		{
+			"Name": "ChaosNiagara",
+			"Enabled": false
+		},
+		{
+			"Name": "ChaosEditor",
+			"Enabled": false
+		},
+		{
+			"Name": "ChaosSolverPlugin",
+			"Enabled": false
+		},
+		{
+			"Name": "ChaosUserDataPT",
+			"Enabled": false
+		},
+		{
+			"Name": "ControlRigSpline",
+			"Enabled": false
+		},
+		{
+			"Name": "IKRig",
+			"Enabled": false
+		},
+		{
+			"Name": "SequencerAnimTools",
+			"Enabled": false
+		},
+		{
+			"Name": "ControlRig",
+			"Enabled": false
+		},
+		{
+			"Name": "CustomMeshComponent",
+			"Enabled": false
+		},
+		{
+			"Name": "CurveEditorTools",
+			"Enabled": false
+		},
+		{
+			"Name": "DumpGPUServices",
+			"Enabled": false
+		},
+		{
+			"Name": "Dataflow",
+			"Enabled": false
+		},
+		{
+			"Name": "Bridge",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Win64",
+				"Mac",
+				"Linux"
+			]
+		},
+		{
+			"Name": "EditorDebugTools",
+			"Enabled": false
+		},
+		{
+			"Name": "EnhancedInput",
+			"Enabled": false
+		},
+		{
+			"Name": "ExampleDeviceProfileSelector",
+			"Enabled": false
+		},
+		{
+			"Name": "GeometryCache",
+			"Enabled": false
+		},
+		{
+			"Name": "MeshPainting",
+			"Enabled": false
+		},
+		{
+			"Name": "MediaPlate",
+			"Enabled": false
+		},
+		{
+			"Name": "UVEditor",
+			"Enabled": false
+		},
+		{
+			"Name": "GeometryMode",
+			"Enabled": false
+		},
+		{
+			"Name": "GLTFExporter",
+			"Enabled": false
+		},
+		{
+			"Name": "InputDebugging",
+			"Enabled": false
+		},
+		{
+			"Name": "InterchangeEditor",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Win64",
+				"Linux",
+				"Mac"
+			]
+		},
+		{
+			"Name": "InterchangeTests",
+			"Enabled": false
+		},
+		{
+			"Name": "Interchange",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Win64",
+				"Linux",
+				"Mac"
+			]
+		},
+		{
+			"Name": "GameplayCameras",
+			"Enabled": false
+		},
+		{
+			"Name": "LevelSequenceEditor",
+			"Enabled": false
+		},
+		{
+			"Name": "NullSourceCodeAccess",
+			"Enabled": false
+		},
+		{
+			"Name": "LocalizableMessage",
+			"Enabled": false
+		},
+		{
+			"Name": "MediaPlayerEditor",
+			"Enabled": false
+		},
+		{
+			"Name": "MsQuic",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Win64",
+				"Linux",
+				"Mac"
+			]
+		},
+		{
+			"Name": "OnlineSubsystem",
+			"Enabled": false
+		},
+		{
+			"Name": "OnlineSubsystemNull",
+			"Enabled": false
+		},
+		{
+			"Name": "OnlineSubsystemUtils",
+			"Enabled": false
+		},
+		{
+			"Name": "OnlineBase",
+			"Enabled": false
+		},
+		{
+			"Name": "PixWinPlugin",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Win64"
+			]
+		},
+		{
+			"Name": "PortableObjectFileDataSource",
+			"Enabled": false
+		},
+		{
+			"Name": "ResonanceAudio",
+			"Enabled": false
+		},
+		{
+			"Name": "ProceduralMeshComponent",
+			"Enabled": false
+		},
+		{
+			"Name": "PropertyAccessNode",
+			"Enabled": false
+		},
+		{
+			"Name": "RenderDocPlugin",
+			"Enabled": false
+		},
+		{
+			"Name": "RigVM",
+			"Enabled": false
+		},
+		{
+			"Name": "SkeletalReduction",
+			"Enabled": false
+		},
+		{
+			"Name": "SoundFields",
+			"Enabled": false
+		},
+		{
+			"Name": "SpeedTreeImporter",
+			"Enabled": false
+		},
+		{
+			"Name": "ToolPresets",
+			"Enabled": false
+		},
+		{
+			"Name": "TraceDataFilters",
+			"Enabled": false
+		},
+		{
+			"Name": "TraceUtilities",
+			"Enabled": false
+		},
+		{
+			"Name": "UObjectPlugin",
+			"Enabled": false
+		},
+		{
+			"Name": "VariantManagerContent",
+			"Enabled": false
+		},
+		{
+			"Name": "VisualStudioCodeSourceCodeAccess",
+			"Enabled": false
+		},
+		{
+			"Name": "WindowsDeviceProfileSelector",
+			"Enabled": false
+		},
+		{
+			"Name": "WorldPartitionHLODUtilities",
+			"Enabled": false
 		}
 	]
 }
