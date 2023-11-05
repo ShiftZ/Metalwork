@@ -24,6 +24,7 @@ MetalCore::MetalCore(int player, unique_ptr<INetwork> net) : player(player), are
 	thread = jthread([this, &init](stop_token st)
 	{
 		init();
+		if (network) GetReady(st);
 		MainLoop(st);
 	});
 
@@ -81,7 +82,7 @@ void MetalCore::ProcessMessages()
 	}
 }
 
-void MetalCore::MainLoop(stop_token st)
+void MetalCore::GetReady(stop_token st)
 {
 	while (start_time == steady_clock::time_point())
 	{
@@ -96,7 +97,10 @@ void MetalCore::MainLoop(stop_token st)
 		if (st.stop_requested()) return;
 		ProcessMessages();
 	}
+}
 
+void MetalCore::MainLoop(stop_token st)
+{
 	input->Start();
 	arena.Start();
 
@@ -104,7 +108,7 @@ void MetalCore::MainLoop(stop_token st)
 	{
 		for (;;)
 		{
-			auto input = arena_inputs;
+			vector<Arena::StepInputs> input = arena_inputs;
 			
 			unique_lock input_lock(arena_input_mtx);
 			arena_cv.wait(input_lock, st, [&]
@@ -134,7 +138,7 @@ void MetalCore::MainLoop(stop_token st)
 			{
 				auto& [seq_id, pointer, _] = inputs[player];
 				pointer.try_emplace(pointer.end(), ++seq_id, step, in->pointer);
-				network->SendSeqUDP(InputMsg{seq_id, step, in->pointer});
+				if (network) network->SendSeqUDP(InputMsg{seq_id, step, in->pointer});
 			}
 		}
 		while (steady_clock::now() < next_step_time);
@@ -145,12 +149,12 @@ void MetalCore::MainLoop(stop_token st)
 		{
 			vec2i pos = input->pointer; // just make sure it stays the same
 			pointer.try_emplace(pointer.end(), ++seq_id, step, pos);
-			network->SendSeqUDP(InputMsg{seq_id, step, pos});
+			if (network) network->SendSeqUDP(InputMsg{seq_id, step, pos});
 		}
 
-		ProcessMessages();
+		if (network) ProcessMessages();
 
-		// find clean step
+		// find a clean step
 		int clean_step = this->step;
 		for (auto& [clean_seqid, pointer_in, _] : inputs)
 			clean_step = min(clean_step, pointer_in[clean_seqid].step - 1);
@@ -169,8 +173,11 @@ void MetalCore::MainLoop(stop_token st)
 			{
 				auto clean_it = ranges::upper_bound(pointer_in, clean_step, less(), [](value<PointerInput> in){ return in->step; });
 
+#ifndef __INTELLISENSE__ // microsoft?!
 				auto clean_range = ranges::subrange(pointer_in.begin(), clean_it) | views::values;
 				auto dirty_range = ranges::subrange(clean_it, pointer_in.end()) | views::values;
+#endif 
+
 				auto chunk_by_step = views::chunk_by([](PointerInput& a, PointerInput& b){ return a.step == b.step; });
 
 				vec2i pointer = clean_pointer;
@@ -204,6 +211,7 @@ void MetalCore::MainLoop(stop_token st)
 				}
 				++player;
 			}
+
 
 			arena_cv.notify_one();
 		}

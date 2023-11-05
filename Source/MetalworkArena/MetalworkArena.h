@@ -17,16 +17,18 @@
 #include <string>
 #include <typeindex>
 #include <unordered_map>
+#include <filesystem>
 
 #include <Engine/Engine.h>
 #include <Engine/GameInstance.h>
 #include <Engine/World.h>
 #include <GameFramework/GameModeBase.h>
 #include <Modules/ModuleManager.h>
-#include "PaperFlipbookComponent.h"
-#include "PaperSpriteComponent.h"
-#include "Engine/DataTable.h"
-#include "GameFramework/Actor.h"
+#include <PaperFlipbookComponent.h>
+#include <PaperSpriteComponent.h>
+#include <Engine/DataTable.h>
+#include <GameFramework/Actor.h>
+#include <Misc/Paths.h>
 
 #include "tools/flat_map.h"
 #include "tools/logger.h"

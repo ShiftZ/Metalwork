@@ -11,33 +11,34 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& map_name, const FStrin
 {
 	AGameModeBase::InitGame(map_name, options, error);
 
-	int player = 0;
-	FParse::Value(FCommandLine::Get(), L"player", player);
+	FString player_str;
+	FParse::Value(FCommandLine::Get(), L"player", player_str);
 
-	int target_port = 22150 + (player + 1) % 2;
+	int player = 0, players = 1;
 
-	RemotePlayer target;
-	target.player = (player + 1) % 2;
-	target.ip = "127.0.0.1";
-	target.port = {target_port, target_port};
-
-	/*Network::Logger logger;
-
-	if (player % 2 == 1)
-	{
-		logger = {[=](string text){ UE_LOG(LogNetwork, Log, L"%s", ANSI_TO_TCHAR(text.c_str())); },
-				  [=](string text){ UE_LOG(LogNetwork, Error, L"%s", ANSI_TO_TCHAR(text.c_str())); }};
-	}*/
-
-	vector targets = {target};
-	unique_ptr connection = INetwork::Connect(targets, player);
+	swscanf(*player_str, L"%d/%d", &player, &players);
+	--player;
 
 	unique_ptr<INetwork> network;
-	try { network = connection->Get(); }
-	catch (exception& e)
+
+	if (players > 1)
 	{
-		string err = e.what();
-		UE_DEBUG_BREAK();
+		int target_port = 22150 + (player + 1) % 2;
+
+		RemotePlayer target;
+		target.player = (player + 1) % 2;
+		target.ip = "127.0.0.1";
+		target.port = {target_port, target_port};
+
+		vector targets = {target};
+		unique_ptr connection = INetwork::Connect(targets, player);
+		
+		try { network = connection->Get(); }
+		catch (exception& e)
+		{
+			string err = e.what();
+			UE_DEBUG_BREAK();
+		}
 	}
 	
 	Core = MakeUnique<MetalCore>(player, move(network));

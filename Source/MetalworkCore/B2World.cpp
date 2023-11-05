@@ -11,7 +11,7 @@ B2World::B2World(float step_time, float gravity) : step_time(step_time)
 
 void B2World::Capture()
 {
-	/*for (void* ptr : b2releases)
+	for (void* ptr : b2releases)
 	{
 		allocs.erase(ptr);
 		operator delete(ptr);
@@ -38,12 +38,12 @@ void B2World::Capture()
 	}
 
 	allocs = move(b2allocs);
-	captured_step = step;*/
+	captured_step = step;
 }
 
 void B2World::Restore()
 {
-	/*for (void* ptr : views::keys(b2allocs))
+	for (void* ptr : views::keys(b2allocs))
 		operator delete(ptr);
 
 	b2allocs.clear();
@@ -59,7 +59,7 @@ void B2World::Restore()
 		data_ptr += size;
 	}
 	
-	step = captured_step;*/
+	step = captured_step;
 }
 
 void B2World::Step()

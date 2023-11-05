@@ -1,6 +1,5 @@
 #pragma once
 
-#include <stdint.h>
 #include <cstdarg>
 #include <unordered_map>
 #include <unordered_set>
@@ -48,7 +47,7 @@ struct B2_API b2JointUserData
 void* b2Alloc(int size);
 
 /// If you implement b2Alloc, you should also implement this function.
-void b2Free(void* mem);
+void b2Free(void* ptr);
 
 /// Default logging function
 B2_API void b2Log_Default(const char* string, va_list args);
@@ -62,23 +61,25 @@ inline void b2Log(const char* string, ...)
 	va_end(args);
 }
 
-#ifndef box2d_EXPORTS
-inline B2_API std::unordered_set<void*> b2releases;
-//inline B2_API std::unordered_map<void*, int> b2allocs;
-
+#if defined(B2_SHARED) && !defined(box2d_EXPORTS)
+#define INLINE_B2_API B2_API
 #else
-inline B2_API std::unordered_map<void*, int> b2allocs;
-inline B2_API std::unordered_set<void*> b2releases;
-inline void b2Free(void* mem)
+#define INLINE_B2_API inline B2_API
+#endif
+
+INLINE_B2_API std::unordered_map<void*, int> b2allocs;
+INLINE_B2_API std::unordered_set<void*> b2releases;
+
+inline void b2Free(void* ptr)
 {
-	auto alloc = b2allocs.find(mem);
+	auto alloc = b2allocs.find(ptr);
 	if (alloc != b2allocs.end())
 	{
 		b2allocs.erase(alloc);
-		operator delete(mem);
+		operator delete(ptr);
 	}
 	else
-		b2releases.insert(mem);
+		b2releases.insert(ptr);
 }
 
 inline void* b2Alloc(int size)
@@ -87,7 +88,6 @@ inline void* b2Alloc(int size)
 	b2allocs[ptr] = size;
 	return ptr;
 }
-#endif
 
 
 

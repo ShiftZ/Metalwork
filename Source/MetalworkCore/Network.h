@@ -38,13 +38,14 @@ private:
 	udp::socket udp;
 	unsigned seq_id = 1;
 	jthread thread;
-	Logger logger;
 
 	cc_queue<pair<int, MessageVar>> messages;
 	mutex message_mtx;
 	condition_variable_any message_cv;
 
 	vector<Package> packages;
+
+	NetworkLog netlog;
 
 private:
 	awaitable<void> ListenUDP();

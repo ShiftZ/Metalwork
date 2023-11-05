@@ -17,5 +17,6 @@ public class MetalworkArena : ModuleRules
         PrivateDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "Paper2D", "MetalworkCore" });
 
         if (Target.Type == TargetType.Editor) PrivateDefinitions.Add("LOGGER_IMPORT");
+        PrivateDefinitions.Add("_CRT_SECURE_NO_WARNINGS");   
     }
 }

@@ -32,11 +32,18 @@ public:
 	static unique_ptr<IMetalCore> Make(int player, unique_ptr<INetwork> net);
 };
 
-struct METALWORKCORE_API DisplayLog
+struct METALWORKCORE_API DisplayLog : log_category
 {
-	int key = -1;
+	int key;
 	float time = 10;
-	operator size_t() const { return std::type_index(typeid(DisplayLog)).hash_code(); }
+	DisplayLog(int key = -1) : key(key) {}
 };
 
-METALWORKCORE_API void add_logger( const DisplayLog&, std::function<void(std::string)>&& );
+struct METALWORKCORE_API NetworkLog : log_category
+{
+	int player;
+	NetworkLog(int player = -1) : player(player) {}
+};
+
+//METALWORKCORE_API void add_logger( const DisplayLog&, function<void(string)>&& );
+//METALWORKCORE_API void add_logger( const NetworkLog&, function<void(string)>&& );

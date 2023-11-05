@@ -12,11 +12,7 @@ static auto rethrow = [](exception_ptr e){ if (e) rethrow_exception(e); };
 
 Network::Network(span<RemotePlayer> targets, int player, stop_token st) : player(player), udp(io)
 {
-	Logger logger;
-
-	if (!logger.log) logger.log = [](string){};
-	if (!logger.error) logger.error = [](string){};
-	this->logger = logger;
+	netlog.player = player;
 
 	udp.open(udp::v4());
 	udp.bind(udp::endpoint(udp::v4(), 22150 + player % 2));
@@ -25,11 +21,15 @@ Network::Network(span<RemotePlayer> targets, int player, stop_token st) : player
 	{
 		auto listen = [&](RemotePlayer& target) -> awaitable<void>
 		{
-			tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), 22150 + player % 2));
+			int port = 22150 + player % 2;
+			tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), port));
 			steady_timer timeout(io, steady_clock::now() + 5s);
 
+			log(netlog, "Awaiting remote connection at {}.", port);
 			tcp::socket socket = co_await acceptor.async_accept(use_awaitable);
+
 			peers.emplace_back(target.player, move(socket), udp::endpoint(make_address(target.ip), target.port.udp));
+			log(netlog, "Accepted connection.");
 
 	/*		auto result = co_await (acceptor.async_accept(use_awaitable) || timeout.async_wait(use_awaitable));
 			if (!holds_alternative<tcp::socket>(result))
@@ -53,6 +53,7 @@ Network::Network(span<RemotePlayer> targets, int player, stop_token st) : player
 			{
 				try
 				{
+					log(netlog, "Connecting to {}:{}", tcp_endpoint.address().to_string(), tcp_endpoint.port());
 					co_await socket.async_connect(tcp_endpoint, use_awaitable);
 					break;
 				}
@@ -61,11 +62,12 @@ Network::Network(span<RemotePlayer> targets, int player, stop_token st) : player
 					if (e.code() != error::connection_refused) throw;
 					if (steady_clock::now() > deadline)
 						throw runtime_error(format("Remote tcp socket connection timeout ({})", target.ip));
-					logger.log("Remote connection refused. Trying again.");
+					log(netlog, "Remote connection refused. Trying again.");
 				}
 			}
 
 			peers.emplace_back(target.player, move(socket), udp::endpoint(make_address(target.ip), target.port.udp));
+			log(netlog, "Connected");
 		};
 
 		for (RemotePlayer& target : targets)
@@ -181,7 +183,7 @@ awaitable<void> Network::ListenUDP()
 		}
 		catch (exception& e)
 		{
-			logger.error("Error reading UDP package: "s + e.what());
+			log(NetworkLog(player), "Error reading UDP package: "s + e.what());
 		}
 	}
 }

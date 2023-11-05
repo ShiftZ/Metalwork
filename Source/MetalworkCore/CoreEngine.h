@@ -41,6 +41,7 @@ public:
 
 private:
 	void ProcessMessages();
+	void GetReady(stop_token st);
 	void MainLoop(stop_token st);
 
 public:

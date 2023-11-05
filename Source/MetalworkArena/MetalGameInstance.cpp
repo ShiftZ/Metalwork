@@ -4,7 +4,17 @@
 void UMetalGameInstance::Init()
 {
 	Super::Init();
-	add_logger([](string msg){ UE_LOG(LogTemp, Log, L"%s", ANSI_TO_TCHAR(msg.c_str())); });
-	add_logger(DisplayLog(), [&](string msg, const DisplayLog& id)
-		{ GetEngine()->AddOnScreenDebugMessage(id.key, id.time, FColor::Yellow, msg.c_str()); });
+	
+	if (!UE_BUILD_SHIPPING)
+	{
+		add_logger([](string msg){ UE_LOG(LogTemp, Log, L"%s", ANSI_TO_TCHAR(msg.c_str())); });
+		add_logger(DisplayLog(), [&](string msg, const DisplayLog& id)
+			{ GetEngine()->AddOnScreenDebugMessage(id.key, id.time, FColor::Yellow, msg.c_str()); });
+
+		flog_path("network", *(FPaths::ProjectLogDir() + "Network.log"), "---------------------------");
+
+		add_logger(NetworkLog(), [&](string msg, const NetworkLog& id){
+			flog("network", 'P' + to_string(id.player) + ':' + msg);
+		});
+	}
 }
