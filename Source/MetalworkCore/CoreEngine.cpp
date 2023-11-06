@@ -24,7 +24,7 @@ MetalCore::MetalCore(int player, unique_ptr<INetwork> net) : player(player), are
 	thread = jthread([this, &init](stop_token st)
 	{
 		init();
-		if (network) GetReady(st);
+		GetReady(st);
 		MainLoop(st);
 	});
 
@@ -84,16 +84,11 @@ void MetalCore::ProcessMessages()
 
 void MetalCore::GetReady(stop_token st)
 {
-	while (start_time == steady_clock::time_point())
+	if (!network) start_time = steady_clock::now();
+
+	while (start_time == steady_clock::time_point() || start_time > steady_clock::now())
 	{
 		network->WaitMessage(st);
-		if (st.stop_requested()) return;
-		ProcessMessages();
-	}
-
-	while (start_time > steady_clock::now())
-	{
-		network->WaitMessage(st, start_time);
 		if (st.stop_requested()) return;
 		ProcessMessages();
 	}
@@ -144,19 +139,19 @@ void MetalCore::MainLoop(stop_token st)
 		while (steady_clock::now() < next_step_time);
 
 		// commit zero input
-		auto& [seq_id, pointer, _] = inputs[player];
+		auto& [clean_seqid, pointer, _] = inputs[player];
 		if (auto& [id, pin] = pointer.back(); pin.step < step)
 		{
 			vec2i pos = input->pointer; // just make sure it stays the same
-			pointer.try_emplace(pointer.end(), ++seq_id, step, pos);
-			if (network) network->SendSeqUDP(InputMsg{seq_id, step, pos});
+			pointer.try_emplace(pointer.end(), ++clean_seqid, step, pos);
+			if (network) network->SendSeqUDP(InputMsg{clean_seqid, step, pos});
 		}
 
 		if (network) ProcessMessages();
 
 		// find a clean step
 		int clean_step = this->step;
-		for (auto& [clean_seqid, pointer_in, _] : inputs)
+		for (auto& [clean_seqid, pointer_in, _] : inputs | drop_nth(player))
 			clean_step = min(clean_step, pointer_in[clean_seqid].step - 1);
 
 		if (player == 1)

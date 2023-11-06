@@ -2,6 +2,7 @@
 
 #include <tuple>
 #include <memory>
+#include <ranges>
 
 template< typename type, int n = 1 >
 struct value
@@ -26,6 +27,11 @@ template< typename type, typename base >
 std::unique_ptr<type> static_pointer_cast( std::unique_ptr<base> p ) noexcept
 {
 	return std::unique_ptr<type>(static_cast<type*>(p.release()));
+}
+
+inline auto drop_nth( size_t n )
+{
+    return std::views::filter([count = 0u, n](auto&&) mutable { return count++ != n; });
 }
 
 /*namespace std::ranges::views

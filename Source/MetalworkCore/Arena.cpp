@@ -5,8 +5,6 @@
 #include "B2World.h"
 #include "Weapon.h"
 
-namespace views = std::ranges::views;
-
 Arena::Arena(float step_time)
 {
 	rigid_world = make_unique<B2World>(step_time, -5);
@@ -37,41 +35,30 @@ void Arena::Step(StepInputs inputs)
 
 	unique_lock lock(step_mtx);
 
-	if (!inputs.clean.empty())
+	// clean step
+	for (int substep = 0; flat_map<int, PlayerInput>& players_input : inputs.clean)
 	{
-		log(DisplayLog(1), "Clean size: {}", inputs.clean.size());
-
-		for (int substep = 0; flat_map<int, PlayerInput>& players_input : inputs.clean)
-		{
-			for (auto& [player, input] : players_input)
-			{
-				Vessel* vehicle = vessels[player].get();
-				vehicle->body->root->ApplyForce(input.move);
-
-				if (player == 0)
-					log(DisplayLog(substep), "{}, {}", input.move.x, input.move.y);
-			}
-
-			rigid_world->Step();
-			++substep;
-		}
-
-		rigid_world->Capture();
-	}
-
-	for (flat_map<int, PlayerInput>& players_input : inputs.dirty)
-	{
-		log(DisplayLog(2), "Dirty size: {}", inputs.dirty.size());
-
 		for (auto& [player, input] : players_input)
 		{
-			Vessel* vehicle = vessels[player].get();
-			vehicle->body->root->ApplyForce(input.move);
-			++player;
+			Vessel* vessel = vessels[player].get();
+			vessel->body->root->ApplyForce(input.move);
+		}
+
+		rigid_world->Step();
+		++substep;
+	}
+
+	rigid_world->Capture();
+
+	// dirty step
+	for (flat_map<int, PlayerInput>& players_input : inputs.dirty)
+	{
+		for (auto& [player, input] : players_input)
+		{
+			Vessel* vessel = vessels[player].get();
+			vessel->body->root->ApplyForce(input.move);
 		}
 
 		rigid_world->Step();
 	}
-
-	rigid_world->Restore();
 }

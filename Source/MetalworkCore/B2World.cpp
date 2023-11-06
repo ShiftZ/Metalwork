@@ -43,6 +43,8 @@ void B2World::Capture()
 
 void B2World::Restore()
 {
+	if (step == captured_step) return;
+
 	for (void* ptr : views::keys(b2allocs))
 		operator delete(ptr);
 
