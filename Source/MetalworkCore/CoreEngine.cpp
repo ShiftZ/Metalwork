@@ -108,7 +108,7 @@ void MetalCore::MainLoop(stop_token st)
 	{
 		for (;;)
 		{
-			vector<Arena::StepInputs> input = arena_inputs;
+			vector<Arena::StepInputs> input;
 			
 			unique_lock input_lock(arena_input_mtx);
 			arena_cv.wait(input_lock, st, [&]
@@ -211,7 +211,6 @@ void MetalCore::MainLoop(stop_token st)
 				}
 				++player;
 			}
-
 
 			arena_cv.notify_one();
 		}

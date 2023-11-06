@@ -39,7 +39,7 @@ void Arena::Step(StepInputs inputs)
 
 	if (!inputs.clean.empty())
 	{
-		log(DisplayLog{1}, "Clean size: {}", inputs.clean.size());
+		log(DisplayLog(1), "Clean size: {}", inputs.clean.size());
 
 		for (int substep = 0; flat_map<int, PlayerInput>& players_input : inputs.clean)
 		{
@@ -49,7 +49,7 @@ void Arena::Step(StepInputs inputs)
 				vehicle->body->root->ApplyForce(input.move);
 
 				if (player == 0)
-					log(DisplayLog{substep}, "{}, {}", input.move.x, input.move.y);
+					log(DisplayLog(substep), "{}, {}", input.move.x, input.move.y);
 			}
 
 			rigid_world->Step();
@@ -61,7 +61,7 @@ void Arena::Step(StepInputs inputs)
 
 	for (flat_map<int, PlayerInput>& players_input : inputs.dirty)
 	{
-		log(DisplayLog{2}, "Dirty size: {}", inputs.dirty.size());
+		log(DisplayLog(2), "Dirty size: {}", inputs.dirty.size());
 
 		for (auto& [player, input] : players_input)
 		{
