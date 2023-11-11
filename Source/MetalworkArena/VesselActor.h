@@ -8,22 +8,23 @@ class METALWORKARENA_API AArenaActor : public AActor
 {
 	GENERATED_BODY()
 
-	RigidObject* object = nullptr;
+public:
+	RigidObject* Rig = nullptr;
 
 public:
 	AArenaActor() { PrimaryActorTick.bCanEverTick = true; }
-	void AttachToObject(RigidObject* object);
+	void AttachToRig(RigidObject* Rig);
 	void SyncPose();
 	void Tick(float dt) override;
 };
 
 UCLASS()
-class METALWORKARENA_API AVehicleActor : public AArenaActor, public VehicleActor
+class METALWORKARENA_API AVesselActor : public AArenaActor, public VehicleActor
 {
 	GENERATED_BODY()
 
 public:	
-	AVehicleActor() { PrimaryActorTick.bCanEverTick = true; }
+	AVesselActor() { PrimaryActorTick.bCanEverTick = true; }
 };
 
 UCLASS()
@@ -33,6 +34,19 @@ class METALWORKARENA_API AWeaponActor : public AArenaActor
 
 };
 
+UCLASS()
+class METALWORKARENA_API APropActor : public AArenaActor
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, meta=(GetOptions="GetRigs"))
+	FName RigModel;
+
+	UFUNCTION()
+	TArray<FName> GetRigs();
+};
+
 UINTERFACE(MinimalAPI)
 class UComponentPocket : public UInterface
 {
@@ -40,11 +54,11 @@ class UComponentPocket : public UInterface
 };
 
 class IComponentPocket
-{    
+{
     GENERATED_BODY()
 
 public:
-	RigidBody* body;
+	RigidBody* Body;
 };
 
 UCLASS(Blueprintable)

@@ -45,5 +45,10 @@ struct METALWORKCORE_API NetworkLog : log_category
 	NetworkLog(int player = -1) : player(player) {}
 };
 
-//METALWORKCORE_API void add_logger( const DisplayLog&, function<void(string)>&& );
-//METALWORKCORE_API void add_logger( const NetworkLog&, function<void(string)>&& );
+class IDebugDrawer
+{
+public:
+	virtual void Circle(vec2 center, float radius) = 0;
+	virtual void Poly(span<vec2> verts) = 0;
+	virtual void Edge(vec2 A, vec2 B) = 0;
+};

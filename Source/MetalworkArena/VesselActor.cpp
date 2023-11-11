@@ -2,40 +2,40 @@
 
 #include "VesselActor.h"
 
-void AArenaActor::AttachToObject(RigidObject* object)
+void AArenaActor::AttachToRig(RigidObject* Rig)
 {
-	this->object = object;
+	this->Rig = Rig;
 
 	UDataTable* models = LoadObject<UDataTable>(nullptr, L"/Game/ModelParts");
 
-	auto MakeComponent = [&](RigidBody* body)
+	auto MakeComponent = [&](RigidBody* Body)
 	{
-		FVehicleModelPartRow* model_row = models->FindRow<FVehicleModelPartRow>(ANSI_TO_TCHAR(body->model_name.c_str()), nullptr);
-		USceneComponent* component = NewObject<USceneComponent>(this, model_row->component_class.Get());
-		component->SetupAttachment(GetRootComponent());
-		component->RegisterComponent();
-		component->SetAbsolute(true, true, true);
-		Cast<IComponentPocket>(component)->body = body;
-		return component;
+		FVehicleModelPartRow* ModelRow = models->FindRow<FVehicleModelPartRow>(ANSI_TO_TCHAR(Body->model_name.c_str()), nullptr);
+		USceneComponent* Component = NewObject<USceneComponent>(this, ModelRow->component_class.Get());
+		Component->SetupAttachment(GetRootComponent());
+		Component->RegisterComponent();
+		Component->SetAbsolute(true, true, true);
+		Cast<IComponentPocket>(Component)->Body = Body;
+		return Component;
 	};
 
-	USceneComponent* root = MakeComponent(object->root);
-	SetRootComponent(root);
+	USceneComponent* Root = MakeComponent(Rig->root);
+	SetRootComponent(Root);
 
-	for (shared_ptr<RigidBody>& part : views::values(object->parts))
-		if (part.get() != object->root) MakeComponent(part.get());
+	for (RigidBody* Part : Rig->parts | views::values | cptr)
+		if (Part != Rig->root) MakeComponent(Part);
 
 	SyncPose();
 }
 
 void AArenaActor::SyncPose()
 {
-	ForEachComponent<USceneComponent>(false, [](USceneComponent* component)
+	ForEachComponent<USceneComponent>(false, [](USceneComponent* Comp)
 	{
-		if (IComponentPocket* pocket = Cast<IComponentPocket>(component))
+		if (IComponentPocket* Pocket = Cast<IComponentPocket>(Comp))
 		{
-			component->SetWorldLocation(pocket->body->GetPosition3D() * 10);
-			component->SetWorldRotation(FRotator(pocket->body->GetAngle(), 0, 0));
+			Comp->SetWorldLocation(Pocket->Body->GetPosition() * UEScale);
+			Comp->SetWorldRotation(FRotator(Pocket->Body->GetAngle(), 0, 0));
 		}
 	});
 }
@@ -44,5 +44,18 @@ void AArenaActor::Tick(float dt)
 {
 	Super::Tick(dt);
 	//SyncPose();
+}
+
+TArray<FName> APropActor::GetRigs()
+{
+	TArray<FName> Rigs;
+
+	FString Folder = FPaths::ProjectContentDir() + L"Props";
+	TArray<FString> Files;
+	IFileManager::Get().FindFiles(Files, *Folder, L"json");
+    for (FString& File : Files)
+		Rigs.Add(*FPaths::GetBaseFilename(*File));
+
+	return Rigs;
 }
 

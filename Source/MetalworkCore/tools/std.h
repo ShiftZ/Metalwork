@@ -4,13 +4,13 @@
 #include <memory>
 #include <ranges>
 
-template< typename type, int n = 1 >
+template< typename type, int N = 1 >
 struct value
 {
 	type& val;
 
-	template< typename tuple_t > requires requires (tuple_t& t){ std::get<n>(t); }
-	value( tuple_t& t ) : val(std::get<n>(t)) {}
+	template< typename tuple_t > requires requires (tuple_t& t){ std::get<N>(t); }
+	value( tuple_t& t ) : val(std::get<N>(t)) {}
 
 	type* operator->() const { return &val; }
 	type& operator*() const { return val; }
@@ -23,6 +23,18 @@ value( tuple_t& ) -> value<std::tuple_element_t<1, tuple_t>, 1>;
 template< typename type >
 using key = value<type, 0>;
 
+template< std::ranges::input_range Range, int N > requires std::ranges::view<Range>
+struct concat : std::ranges::join_view<std::ranges::ref_view<Range[N]>>
+{
+	Range bases[N];
+
+	template< typename... Types >
+	concat( Types&&... ranges ) : std::ranges::join_view<std::ranges::ref_view<Range[N]>>(bases), bases{ranges...} {}
+};
+
+template< typename type, typename... types >
+concat( type&& range, types&&... ranges ) -> concat<std::views::all_t<type>, sizeof...(types) + 1>;
+
 template< typename type, typename base >
 std::unique_ptr<type> static_pointer_cast( std::unique_ptr<base> p ) noexcept
 {
@@ -33,6 +45,8 @@ inline auto drop_nth( size_t n )
 {
     return std::views::filter([count = 0u, n](auto&&) mutable { return count++ != n; });
 }
+
+inline auto cptr = std::views::transform([]( auto& smart ){ return smart.get(); });
 
 /*namespace std::ranges::views
 {

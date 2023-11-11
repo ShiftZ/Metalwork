@@ -4,6 +4,8 @@
 
 #include "CoreInterface.h"
 #include "VesselActor.h"
+#include "DebugDrawer.h"
+#include "EngineUtils.h"
 
 DEFINE_LOG_CATEGORY(LogNetwork);
 
@@ -43,17 +45,17 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& map_name, const FStrin
 	
 	Core = MakeUnique<MetalCore>(player, move(network));
 
-	for (shared_ptr<Vessel>& vessel : Core->Arena().Vessels())
+	for (Vessel* vessel : Core->Arena().Vessels() | cptr)
 	{
-		AVehicleActor* actor = GetWorld()->SpawnActor<AVehicleActor>();
-		actor->AttachToObject(vessel->body.get());
-		actors.Emplace(actor);
+		AVesselActor* actor = GetWorld()->SpawnActor<AVesselActor>();
+		actor->AttachToRig(vessel->body.get());
+		Actors.Emplace(actor);
 
 		if (vessel->weapon)
 		{
 			AWeaponActor* actor = GetWorld()->SpawnActor<AWeaponActor>();
-			actor->AttachToObject(vessel->weapon->body.get());
-			actors.Emplace(actor);
+			actor->AttachToRig(vessel->weapon->body.get());
+			Actors.Emplace(actor);
 		}
 	}
 
@@ -66,6 +68,10 @@ void AMetalworkArenaGameModeBase::Tick(float dt)
 	Super::Tick(dt);
 
 	unique_lock lock(Core->arena.step_mtx);
-	for (AArenaActor* actor : actors)
-		actor->SyncPose();
-}
+	for (AArenaActor* Actor : Actors)
+		Actor->SyncPose();
+
+	DebugDrawer Drawer(GetWorld());
+	for (TActorIterator<AArenaActor> Actor(GetWorld()); Actor; ++Actor)
+		(*Actor)->Rig->DrawShapes(Drawer);
+}		

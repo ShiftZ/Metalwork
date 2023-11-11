@@ -122,9 +122,9 @@ struct super_vector : super_vectorx<type, dim>
 
 	type sqlen() const
 	{
-		type result = at[0] * at[0];
+		type result = at(0) * at(0);
 		for (int i = 1; i < dim; i++)
-			result += at[i] * at[i];
+			result += at(i) * at(i);
 		return result;
 	}
 
@@ -258,149 +258,160 @@ struct super_vector : super_vectorx<type, dim>
 	operator vectorx<type, dstlen>&() const { return *(vectorx<type, dstlen>*)this; }*/
 };
 
-template< typename a_type, typename b_type, int len >
-auto operator+( const vectorx<a_type, len>& a, const vectorx<b_type, len>& b )
+template< typename a_type, typename b_type, int dim >
+auto operator+( const vectorx<a_type, dim>& a, const vectorx<b_type, dim>& b )
 {
-	vectorx<std::common_type_t<a_type, b_type>, len> result;
-	for (int i = 0; i < len; i++)
+	vectorx<std::common_type_t<a_type, b_type>, dim> result;
+	for (int i = 0; i < dim; i++)
 		result[i] = a[i] + b[i];
 	return result;
 }
 
-template< typename a_type, typename b_type, int len >
-auto operator-( const vectorx<a_type, len>& a, const vectorx<b_type, len>& b )
+template< typename a_type, typename b_type, int dim >
+auto operator-( const vectorx<a_type, dim>& a, const vectorx<b_type, dim>& b )
 {
-	vectorx<std::common_type_t<a_type, b_type>, len> result;
-	for (int i = 0; i < len; i++)
+	vectorx<std::common_type_t<a_type, b_type>, dim> result;
+	for (int i = 0; i < dim; i++)
 		result[i] = a[i] - b[i];
 	return result;
 }
 
-template< typename type, int len, typename scalar_type > requires std::is_arithmetic_v<scalar_type>
-vectorx<type, len> operator*( const vectorx<type, len>& v, scalar_type scalar )
+template< typename type, int dim, typename scalar_type > requires std::is_arithmetic_v<scalar_type>
+vectorx<type, dim> operator*( const vectorx<type, dim>& v, scalar_type scalar )
 {
-	vectorx<type, len> result;
-	for (int i = 0; i < len; i++)
+	vectorx<type, dim> result;
+	for (int i = 0; i < dim; i++)
 		result[i] = v[i] * scalar;
 	return result;
 }
 
-template< typename type, int len, typename scalar_type > requires std::is_arithmetic_v<scalar_type>
-vectorx<type, len> operator/( const vectorx<type, len>& v, scalar_type scalar )
+template< typename type, int dim, typename scalar_type > requires std::is_arithmetic_v<scalar_type>
+vectorx<type, dim> operator/( const vectorx<type, dim>& v, scalar_type scalar )
 {
-	vectorx<type, len> result;
-	for (int i = 0; i < len; i++)
+	vectorx<type, dim> result;
+	for (int i = 0; i < dim; i++)
 		result[i] = v[i] / scalar;
 	return result;
 }
 
-template< typename a_type, typename b_type, int len >
-auto operator*( const vectorx<a_type, len>& a, const vectorx<b_type, len>& b )
+template< typename a_type, typename b_type, int dim >
+auto operator*( const vectorx<a_type, dim>& a, const vectorx<b_type, dim>& b )
 {
-	vectorx<std::common_type_t<a_type, b_type>, len> result;
-	for (int i = 0; i < len; i++)
+	vectorx<std::common_type_t<a_type, b_type>, dim> result;
+	for (int i = 0; i < dim; i++)
 		result[i] = a[i] * b[i];
 	return result;
 }
 
-template< typename a_type, typename b_type, int len >
-auto operator/( const vectorx<a_type, len>& a, const vectorx<b_type, len>& b )
+template< typename a_type, typename b_type, int dim >
+auto operator/( const vectorx<a_type, dim>& a, const vectorx<b_type, dim>& b )
 {
-	vectorx<std::common_type_t<a_type, b_type>, len> result;
-	for (int i = 0; i < len; i++)
+	vectorx<std::common_type_t<a_type, b_type>, dim> result;
+	for (int i = 0; i < dim; i++)
 		result[i] = a[i] / b[i];
 	return result;
 }
 
-template< typename a_type, typename b_type, int len >
-bool operator!=( const vectorx<a_type, len>& a, const vectorx<b_type, len>& b )
+template< typename a_type, typename b_type, int dim >
+bool operator!=( const vectorx<a_type, dim>& a, const vectorx<b_type, dim>& b )
 {
 	bool result = a.x != b.x;
-	for (int i = 1; i < len; i++)
+	for (int i = 1; i < dim; i++)
 		result |= a[i] != b[i];
 	return result;
 }
 
-template< typename a_type, typename b_type, int len >
-bool operator==( const vectorx<a_type, len>& a, const vectorx<b_type, len>& b )
+template< typename a_type, typename b_type, int dim >
+bool operator==( const vectorx<a_type, dim>& a, const vectorx<b_type, dim>& b )
 {
 	bool result = a.x == b.x;
-	for (int i = 1; i < len; i++)
+	for (int i = 1; i < dim; i++)
 		result &= a[i] == b[i];
 	return result;
 }
 
-template< typename type, int len >
-type operator^( const vectorx<type, len>& a, const vectorx<type, len>& b ) { return a.dot(b); }
+template< typename type, int dim >
+type operator^( const vectorx<type, dim>& a, const vectorx<type, dim>& b ) { return a.dot(b); }
 
-template< typename type, int len >
-auto operator%( const vectorx<type, len>& a, const vectorx<type, len>& b ) { return a.cross(b); }
+template< typename type, int dim >
+auto operator%( const vectorx<type, dim>& a, const vectorx<type, dim>& b ) { return a.cross(b); }
 
-template< typename type, int len >
-vectorx<type, len> normalize( const vectorx<type, len>& v )
+template< typename type, int dim >
+vectorx<type, dim> normalize( const vectorx<type, dim>& v )
 {
-	vectorx<type, len> result;
+	vectorx<type, dim> result;
 	type k = 1 / v.length();
-	for (int i = 0; i < len; i++)
+	for (int i = 0; i < dim; i++)
 		result[i] = v[i] * k;
 	return result;
 }
 
-template< typename type, int len >
-vectorx<type, len> lerp( const vectorx<type, len>& a, const vectorx<type, len>& b, type tau )
+template< typename type, int dim >
+std::pair<vectorx<type, dim>, type> normalize_len( const vectorx<type, dim>& v )
 {
-	vectorx<type, len> result;
+	std::pair<vectorx<type, dim>, type> result;
+	result.second = v.length();
+	type k = 1 / result.second;
+	for (int i = 0; i < dim; i++)
+		result.first[i] = v[i] * k;
+	return result;
+}
+
+template< typename type, int dim >
+vectorx<type, dim> lerp( const vectorx<type, dim>& a, const vectorx<type, dim>& b, type tau )
+{
+	vectorx<type, dim> result;
 	type rt = 1 - tau;
-	for (int i = 0; i < len; i++)
+	for (int i = 0; i < dim; i++)
 		result[i] = a[i] * rt + b[i] * tau;
 	return result;
 }
 
-template< typename type, int len >
-type dot( const vectorx<type, len>& a, const vectorx<type, len>& b ) { return a.dot(b); }
+template< typename type, int dim >
+type dot( const vectorx<type, dim>& a, const vectorx<type, dim>& b ) { return a.dot(b); }
 
-template< typename type, int len >
-auto cross( const vectorx<type, len>& a, const vectorx<type, len>& b ) { return a.cross(b); }
+template< typename type, int dim >
+auto cross( const vectorx<type, dim>& a, const vectorx<type, dim>& b ) { return a.cross(b); }
 
-template< typename type, int len >
-type sqlen( const vectorx<type, len>& a, const vectorx<type, len>& b )
+template< typename type, int dim >
+type sqlen( const vectorx<type, dim>& a, const vectorx<type, dim>& b )
 {
 	type result = sqr(a.v[0] - b.v[0]);
-	for (int i = 1; i < len; i++)
+	for (int i = 1; i < dim; i++)
 		result += sqr(a.v[i] - b.v[i]);
 	return result;
 }
 
-template< typename type, int len >
-type sqlen( const vectorx<type, len>& v ) { return v.sqlen(); }
+template< typename type, int dim >
+type sqlen( const vectorx<type, dim>& v ) { return v.sqlen(); }
 
-template< typename type, int len >
-type length( const vectorx<type, len>& a, const vectorx<type, len>& b ) { return sqrt(sqlen(a, b)); }
+template< typename type, int dim >
+type length( const vectorx<type, dim>& a, const vectorx<type, dim>& b ) { return sqrt(sqlen(a, b)); }
 
-template< typename type, int len >
-type length( const vectorx<type, len>& v ) { return v.length(); }
+template< typename type, int dim >
+type length( const vectorx<type, dim>& v ) { return v.length(); }
 
-template< typename type, int len >
-vectorx<type, len> project( const vectorx<type, len>& what, const vectorx<type, len>& on )
+template< typename type, int dim >
+vectorx<type, dim> project( const vectorx<type, dim>& what, const vectorx<type, dim>& on )
 {
    return on * (dot(what, on) / on.sqlen());
 }
 
-template< typename type, int len >
-vectorx<type, len> project( const vectorx<type, len>& v, const vectorx<type, len>& a, vectorx<type, len> b )
+template< typename type, int dim >
+vectorx<type, dim> project( const vectorx<type, dim>& v, const vectorx<type, dim>& a, vectorx<type, dim> b )
 {
 	b -= a;
 	return b * (dot(v - a, b) / b.sqlen()) + a;
 }
 
-template< typename type, int len >
-vectorx<type, len> direction( const vectorx<type, len>& from, const vectorx<type, len>& to )
+template< typename type, int dim >
+vectorx<type, dim> direction( const vectorx<type, dim>& from, const vectorx<type, dim>& to )
 {
 	return normalize(to - from);
 }
 
-template< typename type, int len >
-type projection_tau( const vectorx<type, len>& of, const vectorx<type, len>& a, vectorx<type, len> b )
+template< typename type, int dim >
+type projection_tau( const vectorx<type, dim>& of, const vectorx<type, dim>& a, vectorx<type, dim> b )
 {
 	b -= a;
 	return dot(of - a, b) / b.sqlen();

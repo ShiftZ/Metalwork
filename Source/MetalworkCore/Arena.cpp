@@ -1,6 +1,5 @@
 #include "Arena.h"
 
-#include "CoreInterface.h"
 #include "Vessel.h"
 #include "B2World.h"
 #include "Weapon.h"

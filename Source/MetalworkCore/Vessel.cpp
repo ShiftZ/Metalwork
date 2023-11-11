@@ -10,7 +10,7 @@ using namespace std::filesystem;
 
 Vessel::Vessel(Arena* arena, string_view model_name)
 {
-	path model_path = "../../Content/Vehicles/"s + model_name.data() + ".json";
+	path model_path = "../../Content/Vessels/"s + model_name.data() + ".json";
 	ifstream file(model_path);
 	string json_string;
 	json_string.resize(file_size(model_path));

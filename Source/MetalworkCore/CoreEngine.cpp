@@ -25,6 +25,7 @@ MetalCore::MetalCore(int player, unique_ptr<INetwork> net) : player(player), are
 	{
 		init();
 		GetReady(st);
+		if (st.stop_requested()) return;
 		MainLoop(st);
 	});
 
@@ -75,7 +76,7 @@ void MetalCore::ProcessMessages()
 					++clean_it;
 				}
 			},
-			[](auto&){ throw logic_error("No processor for message"); }
+			[](auto&){ throw logic_error("No processor for the message"); }
 		};
 
 		visit(visitor, msg);
@@ -86,9 +87,16 @@ void MetalCore::GetReady(stop_token st)
 {
 	if (!network) start_time = steady_clock::now();
 
-	while (start_time == steady_clock::time_point() || start_time > steady_clock::now())
+	while (start_time == steady_clock::time_point())
 	{
 		network->WaitMessage(st);
+		if (st.stop_requested()) return;
+		ProcessMessages();
+	}
+
+	while (start_time > steady_clock::now())
+	{
+		network->WaitMessage(st, start_time);
 		if (st.stop_requested()) return;
 		ProcessMessages();
 	}
@@ -138,9 +146,9 @@ void MetalCore::MainLoop(stop_token st)
 		}
 		while (steady_clock::now() < next_step_time);
 
-		// commit zero input
+		// commit a zero input
 		auto& [clean_seqid, pointer, _] = inputs[player];
-		if (auto& [id, pin] = pointer.back(); pin.step < step)
+		if (pointer.empty() || pointer.back().second.step < step)
 		{
 			vec2i pos = input->pointer; // just make sure it stays the same
 			pointer.try_emplace(pointer.end(), ++clean_seqid, step, pos);
@@ -153,11 +161,6 @@ void MetalCore::MainLoop(stop_token st)
 		int clean_step = this->step;
 		for (auto& [clean_seqid, pointer_in, _] : inputs | drop_nth(player))
 			clean_step = min(clean_step, pointer_in[clean_seqid].step - 1);
-
-		if (player == 1)
-		{
-			++step; continue;
-		}
 
 		// copy input to arena thread
 		{
@@ -177,26 +180,24 @@ void MetalCore::MainLoop(stop_token st)
 
 				vec2i pointer = clean_pointer;
 
-				for (size_t sub_step = 0; auto step_inputs : clean_range | chunk_by_step)
+				for (auto [sub_step, step_inputs] : clean_range | chunk_by_step | views::enumerate)
 				{
-					clean_input.resize(max(sub_step + 1, clean_input.size()));
+					clean_input.resize(max<size_t>(sub_step + 1, clean_input.size()));
 					for (PointerInput& pointer_in : step_inputs)
 					{
 						clean_input[sub_step][player].move += (pointer_in.position - pointer) * 5;
 						pointer = pointer_in.position;
 					}
-					++sub_step;
 				}
 
-				for (size_t sub_step = 0; auto step_inputs : dirty_range | chunk_by_step)
+				for (auto [sub_step, step_inputs] : dirty_range | chunk_by_step | views::enumerate)
 				{
-					dirty_input.resize(max(sub_step + 1, dirty_input.size()));
+					dirty_input.resize(max<size_t>(sub_step + 1, dirty_input.size()));
 					for (PointerInput& pointer_in : step_inputs)
 					{
 						dirty_input[sub_step][player].move += (pointer_in.position - pointer) * 5;
 						pointer = pointer_in.position;
 					}
-					++sub_step;
 				}
 
 				if (clean_it != pointer_in.begin())
@@ -204,6 +205,7 @@ void MetalCore::MainLoop(stop_token st)
 					clean_pointer = value(*(clean_it - 1))->position;
 					pointer_in.erase(pointer_in.begin(), clean_it); // discard clean input
 				}
+
 				++player;
 			}
 
