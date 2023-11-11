@@ -91,7 +91,7 @@ void B2Body::DrawShapes(IDebugDrawer& drawer)
 	}
 }
 
-B2Object::B2Object(B2World* world, Json::Value model, string_view root_name)
+B2Object::B2Object(B2World* world, Json::Value& model, string_view root_name)
 {
 	b2dJson json;
 	json.readFromValue(model, world->xworld.get());

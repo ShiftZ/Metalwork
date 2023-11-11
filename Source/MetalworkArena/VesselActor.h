@@ -58,7 +58,7 @@ class IComponentPocket
     GENERATED_BODY()
 
 public:
-	RigidBody* Body;
+	class RigidBody* Body;
 };
 
 UCLASS(Blueprintable)
@@ -79,5 +79,5 @@ struct FVehicleModelPartRow : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<USceneComponent> component_class;
+	TSubclassOf<USceneComponent> ComponentClass;
 };

@@ -14,6 +14,7 @@ public:
 	B2World(float step_time, float gravity);
 	void Capture() override;
 	void Restore() override;
-	void Step();
+	void Step() override;
+	unique_ptr<RigidObject> MakeObject(Json::Value& model, string_view root_name) override;
 };
 

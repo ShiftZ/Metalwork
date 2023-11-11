@@ -17,7 +17,7 @@ public:
 class B2Object : public RigidObject
 {
 public:
-	B2Object(class B2World* world, Json::Value model, string_view root_name = {});
+	B2Object(class B2World* world, Json::Value& model, string_view root_name = {});
 
 	void SetPosition(vec2 position) override;
 	auto Parts() { return views::values(parts) | views::transform([](shared_ptr<RigidBody>& b){ return b->xbody; }); }

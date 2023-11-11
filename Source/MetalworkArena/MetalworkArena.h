@@ -31,6 +31,7 @@
 #include <Misc/Paths.h>
 #include <DrawDebugHelpers.h>
 #include <HAL/FileManager.h>
+#include <EngineUtils.h>
 
 #include "tools/flat_map.h"
 #include "tools/logger.h"

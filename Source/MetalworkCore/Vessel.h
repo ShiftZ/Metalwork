@@ -1,12 +1,11 @@
 #pragma once
 
-#include "RigidWorld.h"
 #include "Weapon.h"
 
 class Vessel
 {
 public:
-	unique_ptr<RigidObject> body;
+	unique_ptr<class RigidObject> body;
 	shared_ptr<Weapon> weapon;
 	class VehicleActor* actor = nullptr;
 

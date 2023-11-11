@@ -1,17 +1,18 @@
 #pragma warning(disable:4458) // declaration hides class member
 
 #include "VesselActor.h"
+#include "RigidWorld.h"
 
 void AArenaActor::AttachToRig(RigidObject* Rig)
 {
 	this->Rig = Rig;
 
-	UDataTable* models = LoadObject<UDataTable>(nullptr, L"/Game/ModelParts");
+	UDataTable* Models = LoadObject<UDataTable>(nullptr, L"/Game/ModelParts");
 
 	auto MakeComponent = [&](RigidBody* Body)
 	{
-		FVehicleModelPartRow* ModelRow = models->FindRow<FVehicleModelPartRow>(ANSI_TO_TCHAR(Body->model_name.c_str()), nullptr);
-		USceneComponent* Component = NewObject<USceneComponent>(this, ModelRow->component_class.Get());
+		FVehicleModelPartRow* ModelRow = Models->FindRow<FVehicleModelPartRow>(ANSI_TO_TCHAR(Body->model_name.c_str()), nullptr);
+		USceneComponent* Component = NewObject<USceneComponent>(this, ModelRow->ComponentClass.Get());
 		Component->SetupAttachment(GetRootComponent());
 		Component->RegisterComponent();
 		Component->SetAbsolute(true, true, true);

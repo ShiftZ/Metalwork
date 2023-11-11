@@ -16,6 +16,6 @@ public:
 
 public:
 	AMetalworkArenaGameModeBase() { PrimaryActorTick.bCanEverTick = true; }
-	void InitGame(const FString& map_name, const FString& options, FString& error) override;
-	void Tick(float dt) override;
+	void InitGame(const FString& MapName, const FString& Options, FString& Error) override;
+	void Tick(float DeltaTime) override;
 };

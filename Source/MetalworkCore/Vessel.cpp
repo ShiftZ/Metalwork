@@ -1,10 +1,7 @@
 #pragma warning(disable:4458)
 
 #include "Vessel.h"
-
 #include "Arena.h"
-#include "B2Object.h"
-#include "B2World.h"
 
 using namespace std::filesystem;
 
@@ -20,7 +17,7 @@ Vessel::Vessel(Arena* arena, string_view model_name)
 	Json::Reader reader;
 	reader.parse(json_string, jval);
 
-	body = make_unique<B2Object>((B2World*)arena->rigid_world.get(), jval, "vehicle");
+	body = arena->rigid_world->MakeObject(jval, "vehicle");
 }
 
 void Vessel::AttachWeapon(shared_ptr<Weapon> weapon)

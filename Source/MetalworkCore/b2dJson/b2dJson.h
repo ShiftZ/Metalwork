@@ -115,7 +115,7 @@ public:
     void addImage(b2dJsonImage* image);
 
     //reading functions
-    b2World* readFromValue(Json::Value worldValue, b2World *existingWorld = NULL);
+    b2World* readFromValue(Json::Value& worldValue, b2World *existingWorld = NULL);
     b2World* readFromString(std::string str, std::string& errorMsg, b2World *existingWorld = NULL);
     b2World* readFromFile(const char* filename, std::string& errorMsg, b2World* existingWorld = NULL);
 

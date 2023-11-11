@@ -5,51 +5,50 @@
 #include "CoreInterface.h"
 #include "VesselActor.h"
 #include "DebugDrawer.h"
-#include "EngineUtils.h"
 
 DEFINE_LOG_CATEGORY(LogNetwork);
 
-void AMetalworkArenaGameModeBase::InitGame(const FString& map_name, const FString& options, FString& error)
+void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& Error)
 {
-	AGameModeBase::InitGame(map_name, options, error);
+	AGameModeBase::InitGame(MapName, Options, Error);
 
-	FString player_str;
-	FParse::Value(FCommandLine::Get(), L"player", player_str);
+	FString PlayerStr;
+	FParse::Value(FCommandLine::Get(), L"player", PlayerStr);
 
-	int player = 0, players = 1;
+	int Player = 0, Players = 1;
 
-	swscanf(*player_str, L"%d/%d", &player, &players);
-	--player;
+	swscanf(*PlayerStr, L"%d/%d", &Player, &Players);
+	--Player;
 
-	unique_ptr<INetwork> network;
+	unique_ptr<INetwork> Network;
 
-	if (players > 1)
+	if (Players > 1)
 	{
-		int target_port = 22150 + (player + 1) % 2;
+		int TargetPort = 22150 + (Player + 1) % 2;
 
-		RemotePlayer target;
-		target.player = (player + 1) % 2;
-		target.ip = "127.0.0.1";
-		target.port = {target_port, target_port};
+		RemotePlayer Target;
+		Target.player = (Player + 1) % 2;
+		Target.ip = "127.0.0.1";
+		Target.port = {TargetPort, TargetPort};
 
-		vector targets = {target};
-		unique_ptr connection = INetwork::Connect(targets, player);
+		vector Targets = {Target};
+		unique_ptr Connection = INetwork::Connect(Targets, Player);
 		
-		try { network = connection->Get(); }
-		catch (exception& e)
+		try { Network = Connection->Get(); }
+		catch (exception& Ex)
 		{
-			string err = e.what();
+			string err = Ex.what();
 			UE_DEBUG_BREAK();
 		}
 	}
 	
-	Core = MakeUnique<MetalCore>(player, move(network));
+	Core = MakeUnique<MetalCore>(Player, move(Network));
 
 	for (Vessel* vessel : Core->Arena().Vessels() | cptr)
 	{
-		AVesselActor* actor = GetWorld()->SpawnActor<AVesselActor>();
-		actor->AttachToRig(vessel->body.get());
-		Actors.Emplace(actor);
+		AVesselActor* Actor = GetWorld()->SpawnActor<AVesselActor>();
+		Actor->AttachToRig(vessel->body.get());
+		Actors.Emplace(Actor);
 
 		if (vessel->weapon)
 		{
@@ -63,9 +62,9 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& map_name, const FStrin
 	//Core->Start();
 }
 
-void AMetalworkArenaGameModeBase::Tick(float dt)
+void AMetalworkArenaGameModeBase::Tick(float DeltaTime)
 {
-	Super::Tick(dt);
+	Super::Tick(DeltaTime);
 
 	unique_lock lock(Core->arena.step_mtx);
 	for (AArenaActor* Actor : Actors)

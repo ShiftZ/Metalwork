@@ -32,6 +32,8 @@
 #include <box2d/b2_distance_joint.h>
 #include <box2d/b2_revolute_joint.h>
 #include <box2d/b2_world.h>
+#include <box2d/b2_math.h>
+#include <b2_user_settings.h>
 
 #include <asio/awaitable.hpp>
 #include <asio/buffer.hpp>

@@ -977,7 +977,7 @@ void b2dJson::clear()
     m_imageToPathMap.clear();
 }
 
-b2World *b2dJson::readFromValue(Json::Value worldValue, b2World *existingWorld)
+b2World *b2dJson::readFromValue(Json::Value& worldValue, b2World *existingWorld)
 {
     return j2b2World(worldValue, existingWorld);
 }

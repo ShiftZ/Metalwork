@@ -1,8 +1,5 @@
 #include "B2World.h"
-
-#include "box2d/b2_World.h"
-#include "box2d/b2_Math.h"
-#include "b2_user_settings.h"
+#include "B2Object.h"
 
 B2World::B2World(float step_time, float gravity) : step_time(step_time)
 {
@@ -68,4 +65,9 @@ void B2World::Step()
 {
 	xworld->Step(step_time, 16, 16);
 	++step;
+}
+
+unique_ptr<RigidObject> B2World::MakeObject(Json::Value& model, string_view root_name)
+{
+	return make_unique<B2Object>(this, model, root_name);
 }

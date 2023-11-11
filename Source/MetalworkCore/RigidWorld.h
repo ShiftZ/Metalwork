@@ -1,6 +1,6 @@
 #pragma once
 
-using namespace std;
+namespace Json { class Value; }
 
 using XWorld = class b2World;
 using XBody = class b2Body;
@@ -16,6 +16,7 @@ public:
 	virtual void Capture() = 0;
 	virtual void Restore() = 0;
 	virtual void Step() = 0;
+	virtual unique_ptr<class RigidObject> MakeObject(Json::Value& model, string_view root_name) = 0;
 	virtual ~RigidWorld() = default;
 };
 
