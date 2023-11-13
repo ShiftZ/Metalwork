@@ -23,12 +23,13 @@ LOGGER_API std::function<void(std::string)> logger;
 inline std::shared_mutex log_mutex;
 inline std::unordered_map<std::string_view, std::ofstream> log_files;
 
+template< typename... types >
 struct format_with_location
 {
-	std::string str;
+	std::format_string<types...> str;
 	std::source_location loc;
-	template< typename type > requires std::is_convertible_v<type, std::string>
-	format_with_location( const type& str, std::source_location loc = std::source_location::current() ) : str(str), loc(loc) {}
+	format_with_location( std::format_string<types...> str, std::source_location loc = std::source_location::current() )
+		: str(std::move(str)), loc(std::move(loc)) {}
 };
 
 struct log_category
@@ -56,15 +57,20 @@ void add_logger( const log_t& type, func_t&& func )
 }
 
 template< typename... types >
-void log( format_with_location fmt, types... args )
+void log( format_with_location<types...> fmt, types... args )
 {
 	using namespace std;
-	string msg = format("{}: ", fmt.loc.function_name()) + vformat(fmt.str, make_format_args(args...));
+	string msg = format(fmt.str, args...);
+
+	size_t pos = msg.find("$fn");
+	if (pos != string::npos)
+		fmt.str.replace(pos, 4, fmt.loc.function_name());
+
 	logger(move(msg));
 }
 
 template< typename log_t, typename... types > requires std::is_convertible_v<log_t, size_t>
-void log( const log_t& id, format_with_location fmt, const types&... args )
+void log( const log_t& id, format_with_location<types> fmt, const types&... args )
 {
 	using namespace std;
 	using ext_signature = void(string, const log_t&);
@@ -75,11 +81,12 @@ void log( const log_t& id, format_with_location fmt, const types&... args )
 
 	auto& [_, logr] = *loggers.find(size_t(id));
 
-	size_t pos = fmt.str.find("{fn}");
+	string msg = format(fmt.str, args...);
+
+	size_t pos = msg.find("$fn");
 	if (pos != string::npos)
 		fmt.str.replace(pos, 4, fmt.loc.function_name());
 	
-	string msg = vformat(fmt.str, make_format_args(args...));
 	if (logr.type() == typeid(function<void(string)>))
 		any_cast<function<void(string)>>(logr)(move(msg));
 	else if (logr.type() == typeid(function<ext_signature>))
@@ -89,11 +96,15 @@ void log( const log_t& id, format_with_location fmt, const types&... args )
 }
 
 template< typename... types >
-void flog( std::string_view file_name, format_with_location fmt, const types&... args )
+void flog( std::string_view file_name, format_with_location<types> fmt, const types&... args )
 {
 	using namespace std;
 
-	string msg = vformat(fmt.str, make_format_args(args...)) + '\n';
+	string msg = format(fmt.str, args...) + '\n';
+
+	size_t pos = msg.find("$fn");
+	if (pos != string::npos)
+		fmt.str.replace(pos, 4, fmt.loc.function_name());
 
 	shared_lock slock(log_mutex);
 	auto file_it = log_files.find(file_name);

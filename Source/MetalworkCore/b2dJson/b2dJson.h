@@ -168,9 +168,8 @@ public:
     std::string getJointPath(b2Joint* joint);
     std::string getImagePath(b2dJsonImage* img);
 
-    ////// custom properties
-
     b2dJsonCustomProperties* getCustomPropertiesForItem(void* item, bool createIfNotExisting);
+
 protected:
     void setCustomInt(void* item, std::string propertyName, int val);
     void setCustomFloat(void* item, std::string propertyName, float val);
@@ -180,20 +179,36 @@ protected:
     void setCustomColor(void* item, std::string propertyName, b2dJsonColor4 val);
 
 public:
-//this define saves us writing out 25 functions which are almost exactly the same
-#define DECLARE_SET_CUSTOM_PROPERTY_VALUE_FUNCTIONS(ucType, lcType)\
-    void setCustom##ucType(b2Body* item, std::string propertyName, lcType val)          { m_bodiesWithCustomProperties.insert(item); setCustom##ucType((void*)item, propertyName, val); }\
-    void setCustom##ucType(b2Fixture* item, std::string propertyName, lcType val)       { m_fixturesWithCustomProperties.insert(item); setCustom##ucType((void*)item, propertyName, val); }\
-    void setCustom##ucType(b2Joint* item, std::string propertyName, lcType val)         { m_jointsWithCustomProperties.insert(item); setCustom##ucType((void*)item, propertyName, val); }\
-    void setCustom##ucType(b2dJsonImage* item, std::string propertyName, lcType val)    { m_imagesWithCustomProperties.insert(item); setCustom##ucType((void*)item, propertyName, val); }\
-    void setCustom##ucType(b2World* item, std::string propertyName, lcType val)         { m_worldsWithCustomProperties.insert(item); setCustom##ucType((void*)item, propertyName, val); }
-
-    DECLARE_SET_CUSTOM_PROPERTY_VALUE_FUNCTIONS(Int, int)
-    DECLARE_SET_CUSTOM_PROPERTY_VALUE_FUNCTIONS(Float, float)
-    DECLARE_SET_CUSTOM_PROPERTY_VALUE_FUNCTIONS(String, std::string)
-    DECLARE_SET_CUSTOM_PROPERTY_VALUE_FUNCTIONS(Vector, b2Vec2)
-    DECLARE_SET_CUSTOM_PROPERTY_VALUE_FUNCTIONS(Bool, bool)
-    DECLARE_SET_CUSTOM_PROPERTY_VALUE_FUNCTIONS(Color, b2dJsonColor4)
+    void setCustomInt(b2Body* item, std::string propertyName, int val);
+    void setCustomInt(b2Fixture* item, std::string propertyName, int val);
+    void setCustomInt(b2Joint* item, std::string propertyName, int val);
+    void setCustomInt(b2dJsonImage* item, std::string propertyName, int val);
+    void setCustomInt(b2World* item, std::string propertyName, int val);
+    void setCustomFloat(b2Body* item, std::string propertyName, float val);
+    void setCustomFloat(b2Fixture* item, std::string propertyName, float val);
+    void setCustomFloat(b2Joint* item, std::string propertyName, float val);
+    void setCustomFloat(b2dJsonImage* item, std::string propertyName, float val);
+    void setCustomFloat(b2World* item, std::string propertyName, float val);
+    void setCustomString(b2Body* item, std::string propertyName, std::string val);
+    void setCustomString(b2Fixture* item, std::string propertyName, std::string val);
+    void setCustomString(b2Joint* item, std::string propertyName, std::string val);
+    void setCustomString(b2dJsonImage* item, std::string propertyName, std::string val);
+    void setCustomString(b2World* item, std::string propertyName, std::string val);
+    void setCustomVector(b2Body* item, std::string propertyName, b2Vec2 val);
+    void setCustomVector(b2Fixture* item, std::string propertyName, b2Vec2 val);
+    void setCustomVector(b2Joint* item, std::string propertyName, b2Vec2 val);
+    void setCustomVector(b2dJsonImage* item, std::string propertyName, b2Vec2 val);
+    void setCustomVector(b2World* item, std::string propertyName, b2Vec2 val);
+    void setCustomBool(b2Body* item, std::string propertyName, bool val);
+    void setCustomBool(b2Fixture* item, std::string propertyName, bool val);
+    void setCustomBool(b2Joint* item, std::string propertyName, bool val);
+    void setCustomBool(b2dJsonImage* item, std::string propertyName, bool val);
+    void setCustomBool(b2World* item, std::string propertyName, bool val);
+    void setCustomColor(b2Body* item, std::string propertyName, b2dJsonColor4 val);
+    void setCustomColor(b2Fixture* item, std::string propertyName, b2dJsonColor4 val);
+    void setCustomColor(b2Joint* item, std::string propertyName, b2dJsonColor4 val);
+    void setCustomColor(b2dJsonImage* item, std::string propertyName, b2dJsonColor4 val);
+    void setCustomColor(b2World* item, std::string propertyName, b2dJsonColor4 val);
 
     bool hasCustomInt(void* item, std::string propertyName);
     bool hasCustomFloat(void* item, std::string propertyName);
@@ -209,35 +224,47 @@ public:
     bool getCustomBool(void* item, std::string propertyName, bool defaultVal = false);
     b2dJsonColor4 getCustomColor(void* item, std::string propertyName, b2dJsonColor4 defaultVal = b2dJsonColor4());
 
-//this define saves us writing out 20 functions which are almost exactly the same
-#define DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_VECTOR(ucType, lcType)\
-    int getBodiesByCustom##ucType(   std::string propertyName, lcType valueToMatch, std::vector<b2Body*>& bodies);\
-    int getFixturesByCustom##ucType( std::string propertyName, lcType valueToMatch, std::vector<b2Fixture*>& fixtures);\
-    int getJointsByCustom##ucType(   std::string propertyName, lcType valueToMatch, std::vector<b2Joint*>& joints);\
-    int getImagesByCustom##ucType(   std::string propertyName, lcType valueToMatch, std::vector<b2dJsonImage*>& images);
+    int getBodiesByCustomInt( std::string propertyName, int valueToMatch, std::vector<b2Body*>& bodies);
+	int getFixturesByCustomInt( std::string propertyName, int valueToMatch, std::vector<b2Fixture*>& fixtures);
+	int getJointsByCustomInt( std::string propertyName, int valueToMatch, std::vector<b2Joint*>& joints);
+	int getImagesByCustomInt( std::string propertyName, int valueToMatch, std::vector<b2dJsonImage*>& images);
+    int getBodiesByCustomFloat( std::string propertyName, float valueToMatch, std::vector<b2Body*>& bodies);
+	int getFixturesByCustomFloat( std::string propertyName, float valueToMatch, std::vector<b2Fixture*>& fixtures);
+	int getJointsByCustomFloat( std::string propertyName, float valueToMatch, std::vector<b2Joint*>& joints);
+	int getImagesByCustomFloat( std::string propertyName, float valueToMatch, std::vector<b2dJsonImage*>& images);
+    int getBodiesByCustomString( std::string propertyName, std::string valueToMatch, std::vector<b2Body*>& bodies);
+	int getFixturesByCustomString( std::string propertyName, std::string valueToMatch, std::vector<b2Fixture*>& fixtures);
+	int getJointsByCustomString( std::string propertyName, std::string valueToMatch, std::vector<b2Joint*>& joints);
+	int getImagesByCustomString( std::string propertyName, std::string valueToMatch, std::vector<b2dJsonImage*>& images);
+    int getBodiesByCustomVector( std::string propertyName, b2Vec2 valueToMatch, std::vector<b2Body*>& bodies);
+	int getFixturesByCustomVector( std::string propertyName, b2Vec2 valueToMatch, std::vector<b2Fixture*>& fixtures);
+	int getJointsByCustomVector( std::string propertyName, b2Vec2 valueToMatch, std::vector<b2Joint*>& joints);
+	int getImagesByCustomVector( std::string propertyName, b2Vec2 valueToMatch, std::vector<b2dJsonImage*>& images);
+    int getBodiesByCustomBool( std::string propertyName, bool valueToMatch, std::vector<b2Body*>& bodies);
+	int getFixturesByCustomBool( std::string propertyName, bool valueToMatch, std::vector<b2Fixture*>& fixtures);
+	int getJointsByCustomBool( std::string propertyName, bool valueToMatch, std::vector<b2Joint*>& joints);
+	int getImagesByCustomBool( std::string propertyName, bool valueToMatch, std::vector<b2dJsonImage*>& images);
 
-    DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_VECTOR(Int, int)
-    DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_VECTOR(Float, float)
-    DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_VECTOR(String, std::string)
-    DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_VECTOR(Vector, b2Vec2)
-    DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_VECTOR(Bool, bool)
-
-//this define saves us writing out 20 functions which are almost exactly the same
-#define DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_SINGLE(ucType, lcType)\
-    b2Body*         getBodyByCustom##ucType(    std::string propertyName, lcType valueToMatch);\
-    b2Fixture*      getFixtureByCustom##ucType( std::string propertyName, lcType valueToMatch);\
-    b2Joint*        getJointByCustom##ucType(   std::string propertyName, lcType valueToMatch);\
-    b2dJsonImage*   getImageByCustom##ucType(   std::string propertyName, lcType valueToMatch);
-
-    DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_SINGLE(Int, int)
-    DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_SINGLE(Float, float)
-    DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_SINGLE(String, std::string)
-    DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_SINGLE(Vector, b2Vec2)
-    DECLARE_GET_BY_CUSTOM_PROPERTY_VALUE_FUNCTIONS_SINGLE(Bool, bool)
-
-    //////
-
-
+    b2Body* getBodyByCustomInt( std::string propertyName, int valueToMatch);
+	b2Fixture* getFixtureByCustomInt( std::string propertyName, int valueToMatch);
+	b2Joint* getJointByCustomInt( std::string propertyName, int valueToMatch);
+	b2dJsonImage* getImageByCustomInt( std::string propertyName, int valueToMatch);
+    b2Body* getBodyByCustomFloat( std::string propertyName, float valueToMatch);
+	b2Fixture* getFixtureByCustomFloat( std::string propertyName, float valueToMatch);
+	b2Joint* getJointByCustomFloat( std::string propertyName, float valueToMatch);
+	b2dJsonImage* getImageByCustomFloat( std::string propertyName, float valueToMatch);
+    b2Body* getBodyByCustomString( std::string propertyName, std::string valueToMatch);
+	b2Fixture* getFixtureByCustomString( std::string propertyName, std::string valueToMatch);
+	b2Joint* getJointByCustomString( std::string propertyName, std::string valueToMatch);
+	b2dJsonImage* getImageByCustomString( std::string propertyName, std::string valueToMatch);
+    b2Body* getBodyByCustomVector( std::string propertyName, b2Vec2 valueToMatch);
+	b2Fixture* getFixtureByCustomVector( std::string propertyName, b2Vec2 valueToMatch);
+	b2Joint* getJointByCustomVector( std::string propertyName, b2Vec2 valueToMatch);
+	b2dJsonImage* getImageByCustomVector( std::string propertyName, b2Vec2 valueToMatch);
+    b2Body* getBodyByCustomBool( std::string propertyName, bool valueToMatch);
+	b2Fixture* getFixtureByCustomBool( std::string propertyName, bool valueToMatch);
+	b2Joint* getJointByCustomBool( std::string propertyName, bool valueToMatch);
+	b2dJsonImage* getImageByCustomBool( std::string propertyName, bool valueToMatch);
 
 protected:
     //member helpers

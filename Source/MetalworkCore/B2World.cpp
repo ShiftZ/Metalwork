@@ -1,9 +1,11 @@
 #include "B2World.h"
-#include "B2Object.h"
+#include "B2Body.h"
+#include "CoreDefinitions.h"
+#include "b2dJson/b2dJson.h"
 
-B2World::B2World(float step_time, float gravity) : step_time(step_time)
+B2World::B2World(float gravity)
 {
-	xworld = make_unique<b2World>(b2Vec2(0, gravity));
+	world = make_unique<b2World>(b2Vec2(0, gravity));
 }
 
 void B2World::Capture()
@@ -25,7 +27,7 @@ void B2World::Capture()
 	data.resize(b2allocs_size + sizeof(b2World));
 	char* ptr = &data.front();
 	
-	memcpy(ptr, xworld.get(), sizeof(b2World));
+	memcpy(ptr, world.get(), sizeof(b2World));
 	ptr += sizeof(b2World);
 
 	for (auto& [alloc_ptr, size] : b2allocs)
@@ -49,7 +51,7 @@ void B2World::Restore()
 	b2releases.clear();
 
 	char* data_ptr = &data.front();
-	memcpy(xworld.get(), data_ptr, sizeof(b2World));
+	memcpy(world.get(), data_ptr, sizeof(b2World));
 	data_ptr += sizeof(b2World);
 
 	for (auto& [ptr, size] : allocs)
@@ -63,11 +65,55 @@ void B2World::Restore()
 
 void B2World::Step()
 {
-	xworld->Step(step_time, 16, 16);
+	world->Step((1000 / fps) * 0.001f, 16, 16);
 	++step;
 }
 
-unique_ptr<RigidObject> B2World::MakeObject(Json::Value& model, string_view root_name)
+unordered_map<string, shared_ptr<RigidBody>> B2World::LoadModel(Json::Value& model)
 {
-	return make_unique<B2Object>(this, model, root_name);
+	unordered_map<string, shared_ptr<RigidBody>> parts;
+
+	b2dJson json;
+	json.readFromValue(model, world.get());
+
+	vector<b2Body*> bodies;
+	json.getAllBodies(bodies);
+
+	for (b2Body* body : bodies)
+	{
+		shared_ptr part = make_shared<B2Body>(body);
+		part->model_name = json.getCustomString(body, "Model");
+		parts.emplace(json.getBodyName(body), move(part));
+	}
+
+	return parts;
+}
+
+string B2World::SaveToJson()
+{
+	b2dJson b2json;
+
+	return b2json.writeToString(world.get());
+}
+
+void B2World::LoadFromJson(string_view json)
+{
+	b2dJson b2json;
+
+	Json::Value jval;
+    Json::Reader reader;
+	reader.parse(json.data(), json.data() + json.size(), jval);
+
+	b2json.readFromValue(jval, world.get());
+
+	vector<b2Body*> bodies;
+	b2json.getAllBodies(bodies);
+}
+
+B2World::~B2World()
+{
+	for (b2Body* body = world->GetBodyList(); body; body->GetNext())
+	{
+		body->GetUserData()->object
+	}
 }

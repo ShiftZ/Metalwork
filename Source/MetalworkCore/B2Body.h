@@ -4,9 +4,13 @@
 
 class B2Body final : public RigidBody
 {
+	class b2Body* body;
+	friend b2Body* GetB2Body(RigidBody*);
+
 public:
-	B2Body(RigidObject* object, b2Body* body);
+	B2Body(b2Body* body);
 	vec2 GetPosition() override;
+	void SetPosition(vec2 position) override;
 	float GetAngle() override;
 	void JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB = nullopt) override;
 	void JoinDistant(RigidBody* with, vec2 anchor, float min, float max) override;
@@ -14,13 +18,4 @@ public:
 	void DrawShapes(IDebugDrawer& drawer) override;
 };
 
-class B2Object : public RigidObject
-{
-public:
-	B2Object(class B2World* world, Json::Value& model, string_view root_name = {});
-
-	void SetPosition(vec2 position) override;
-	auto Parts() { return views::values(parts) | views::transform([](shared_ptr<RigidBody>& b){ return b->xbody; }); }
-};
-
-
+inline b2Body* GetB2Body(RigidBody* body) { return static_cast<B2Body*>(body)->body; }

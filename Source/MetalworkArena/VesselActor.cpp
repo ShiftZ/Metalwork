@@ -1,6 +1,8 @@
 #pragma warning(disable:4458) // declaration hides class member
 
 #include "VesselActor.h"
+
+#include "ArenaSettings.h"
 #include "RigidWorld.h"
 
 void AArenaActor::AttachToRig(RigidObject* Rig)
@@ -58,5 +60,20 @@ TArray<FName> APropActor::GetRigs()
 		Rigs.Add(*FPaths::GetBaseFilename(*File));
 
 	return Rigs;
+}
+
+void APropActor::PostEditChangeProperty(FPropertyChangedEvent& Event)
+{
+	Super::PostEditChangeProperty(Event);
+	if (Event.GetPropertyName() == GET_MEMBER_NAME_CHECKED(APropActor, RigModel))
+	{
+		FString FilePath = FPaths::ProjectContentDir() + L"Props/" + RigModel.ToString() + L".json";
+		FArchive* Reader = IFileManager::Get().CreateFileReader(*FilePath);
+		string Json(Reader->TotalSize(), '');
+		Reader->Serialize(Json.data(), Json.size());
+
+		AArenaSettings* Arena = CastChecked<AArenaSettings>(GetWorldSettings());
+		Arena->Rig->
+	}
 }
 

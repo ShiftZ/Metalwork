@@ -9,7 +9,7 @@
 #	include "WindowsInput.h"
 #endif
 
-MetalCore::MetalCore(int player, unique_ptr<INetwork> net) : player(player), arena(1.f / fps)
+MetalCore::MetalCore(int player, unique_ptr<INetwork> net) : player(player)
 {
 	network = static_pointer_cast<Network>(move(net));
 

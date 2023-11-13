@@ -32,6 +32,7 @@
 #include <DrawDebugHelpers.h>
 #include <HAL/FileManager.h>
 #include <EngineUtils.h>
+#include <Engine/LevelScriptActor.h>
 
 #include "tools/flat_map.h"
 #include "tools/logger.h"

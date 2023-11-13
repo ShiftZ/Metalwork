@@ -48,6 +48,16 @@ inline auto drop_nth( size_t n )
 
 inline auto cptr = std::views::transform([]( auto& smart ){ return smart.get(); });
 
+class data_error : public std::exception
+{
+	std::string msg;
+
+public:
+	template< typename... types >
+	data_error( std::format_string<types...> fmt, types&&... args ) { msg = std::format(fmt, args...); }
+	const char* what() const override { return msg.c_str(); }
+};
+
 /*namespace std::ranges::views
 {
 	template< range range_t >

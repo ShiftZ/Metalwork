@@ -4,9 +4,9 @@
 #include "B2World.h"
 #include "Weapon.h"
 
-Arena::Arena(float step_time)
+Arena::Arena()
 {
-	rigid_world = make_unique<B2World>(step_time, -5);
+	rigid_world = MakeWorld();
 
 	shared_ptr<Vessel> player1 = make_shared<Vessel>(this, "dummy");
 	shared_ptr<Weapon> weapon1 = make_shared<Weapon>(this, "chain-ball");
@@ -23,7 +23,7 @@ Arena::Arena(float step_time)
 	vessels.push_back(move(player2));
 }
 
-void Arena::Start()
+void Arena::Start() 
 {
 	rigid_world->Capture();
 }
@@ -60,4 +60,9 @@ void Arena::Step(StepInputs inputs)
 
 		rigid_world->Step();
 	}
+}
+
+unique_ptr<RigidWorld> Arena::MakeWorld()
+{
+	return make_unique<B2World>(-5);
 }

@@ -22,9 +22,11 @@ public:
 	mutex step_mtx;
 
 public:
-	Arena(float step_time);
+	Arena();
 	void Start();
 	void Step(StepInputs inputs);
 
 	span<shared_ptr<Vessel>> Vessels() { return vessels; }
+
+	static METALWORKCORE_API unique_ptr<RigidWorld> MakeWorld();
 };

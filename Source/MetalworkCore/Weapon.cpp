@@ -1,6 +1,5 @@
 #include "Weapon.h"
 
-#include "B2Object.h"
 #include "Arena.h"
 
 Weapon::Weapon(Arena* arena, string_view model_name)
@@ -15,5 +14,5 @@ Weapon::Weapon(Arena* arena, string_view model_name)
 	Json::Reader reader;
 	reader.parse(json_string, jval);
 
-	body = make_unique<B2Object>((class B2World*)arena->rigid_world.get(), jval, "root");
+	arena->rigid_world->LoadModel(*this, jval, "root");
 }

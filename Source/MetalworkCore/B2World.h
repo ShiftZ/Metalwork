@@ -2,19 +2,20 @@
 
 #include "RigidWorld.h"
 
-using namespace std;
-
 class B2World : public RigidWorld
 {
+	unique_ptr<b2World> world;
 	vector<char> data;
 	unordered_map<void*, int> allocs;
-	float step_time;
 
 public:
-	B2World(float step_time, float gravity);
+	B2World(float gravity);
 	void Capture() override;
 	void Restore() override;
 	void Step() override;
-	unique_ptr<RigidObject> MakeObject(Json::Value& model, string_view root_name) override;
+	unordered_map<string, shared_ptr<RigidBody>> LoadModel(Json::Value& model) override;
+	string SaveToJson() override;
+	void LoadFromJson(string_view json) override;
+	~B2World();
 };
 

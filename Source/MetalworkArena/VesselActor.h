@@ -19,7 +19,7 @@ public:
 };
 
 UCLASS()
-class METALWORKARENA_API AVesselActor : public AArenaActor, public VehicleActor
+class METALWORKARENA_API AVesselActor : public AArenaActor
 {
 	GENERATED_BODY()
 
@@ -45,6 +45,8 @@ public:
 
 	UFUNCTION()
 	TArray<FName> GetRigs();
+
+	void PostEditChangeProperty(FPropertyChangedEvent& Event);
 };
 
 UINTERFACE(MinimalAPI)

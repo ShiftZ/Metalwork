@@ -597,19 +597,251 @@ b2dJsonCustomProperties *b2dJson::getCustomPropertiesForItem(void *item, bool cr
     return props;
 }
 
-void b2dJson::setCustomInt(void* item, string propertyName, int val)        { getCustomPropertiesForItem(item, true)->m_customPropertyMap_int[propertyName] = val; }
-void b2dJson::setCustomFloat(void* item, string propertyName, float val)    { getCustomPropertiesForItem(item, true)->m_customPropertyMap_float[propertyName] = val; }
-void b2dJson::setCustomString(void* item, string propertyName, string val)  { getCustomPropertiesForItem(item, true)->m_customPropertyMap_string[propertyName] = val; }
-void b2dJson::setCustomVector(void* item, string propertyName, b2Vec2 val)  { getCustomPropertiesForItem(item, true)->m_customPropertyMap_b2Vec2[propertyName] = val; }
-void b2dJson::setCustomBool(void* item, string propertyName, bool val)      { getCustomPropertiesForItem(item, true)->m_customPropertyMap_bool[propertyName] = val; }
-void b2dJson::setCustomColor(void* item, string propertyName, b2dJsonColor4 val)    { getCustomPropertiesForItem(item, true)->m_customPropertyMap_color[propertyName] = val; }
+void b2dJson::setCustomInt(void* item, string propertyName, int val)
+{
+	getCustomPropertiesForItem(item, true)->m_customPropertyMap_int[propertyName] = val;
+}
 
-bool b2dJson::hasCustomInt(void *item, string propertyName)     { return getCustomPropertiesForItem(item, false) != NULL && getCustomPropertiesForItem(item, false)->m_customPropertyMap_int.count(propertyName) > 0; }
-bool b2dJson::hasCustomFloat(void *item, string propertyName)   { return getCustomPropertiesForItem(item, false) != NULL && getCustomPropertiesForItem(item, false)->m_customPropertyMap_float.count(propertyName) > 0; }
-bool b2dJson::hasCustomString(void *item, string propertyName)  { return getCustomPropertiesForItem(item, false) != NULL && getCustomPropertiesForItem(item, false)->m_customPropertyMap_string.count(propertyName) > 0; }
-bool b2dJson::hasCustomVector(void *item, string propertyName)  { return getCustomPropertiesForItem(item, false) != NULL && getCustomPropertiesForItem(item, false)->m_customPropertyMap_b2Vec2.count(propertyName) > 0; }
-bool b2dJson::hasCustomBool(void *item, string propertyName)    { return getCustomPropertiesForItem(item, false) != NULL && getCustomPropertiesForItem(item, false)->m_customPropertyMap_bool.count(propertyName) > 0; }
-bool b2dJson::hasCustomColor(void *item, string propertyName)   { return getCustomPropertiesForItem(item, false) != NULL && getCustomPropertiesForItem(item, false)->m_customPropertyMap_color.count(propertyName) > 0; }
+void b2dJson::setCustomFloat(void* item, string propertyName, float val)
+{
+	getCustomPropertiesForItem(item, true)->m_customPropertyMap_float[propertyName] = val;
+}
+
+void b2dJson::setCustomString(void* item, string propertyName, string val)
+{
+	getCustomPropertiesForItem(item, true)->m_customPropertyMap_string[propertyName] = val;
+}
+
+void b2dJson::setCustomVector(void* item, string propertyName, b2Vec2 val)
+{
+	getCustomPropertiesForItem(item, true)->m_customPropertyMap_b2Vec2[propertyName] = val;
+}
+
+void b2dJson::setCustomBool(void* item, string propertyName, bool val)
+{
+	getCustomPropertiesForItem(item, true)->m_customPropertyMap_bool[propertyName] = val;
+}
+
+void b2dJson::setCustomColor(void* item, string propertyName, b2dJsonColor4 val)
+{
+	getCustomPropertiesForItem(item, true)->m_customPropertyMap_color[propertyName] = val;
+}
+
+void b2dJson::setCustomInt(b2Body* item, std::string propertyName, int val)
+{
+	m_bodiesWithCustomProperties.insert(item);
+	setCustomInt((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomInt(b2Fixture* item, std::string propertyName, int val)
+{
+	m_fixturesWithCustomProperties.insert(item);
+	setCustomInt((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomInt(b2Joint* item, std::string propertyName, int val)
+{
+	m_jointsWithCustomProperties.insert(item);
+	setCustomInt((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomInt(b2dJsonImage* item, std::string propertyName, int val)
+{
+	m_imagesWithCustomProperties.insert(item);
+	setCustomInt((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomInt(b2World* item, std::string propertyName, int val)
+{
+	m_worldsWithCustomProperties.insert(item);
+	setCustomInt((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomFloat(b2Body* item, std::string propertyName, float val)
+{
+	m_bodiesWithCustomProperties.insert(item);
+	setCustomFloat((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomFloat(b2Fixture* item, std::string propertyName, float val)
+{
+	m_fixturesWithCustomProperties.insert(item);
+	setCustomFloat((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomFloat(b2Joint* item, std::string propertyName, float val)
+{
+	m_jointsWithCustomProperties.insert(item);
+	setCustomFloat((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomFloat(b2dJsonImage* item, std::string propertyName, float val)
+{
+	m_imagesWithCustomProperties.insert(item);
+	setCustomFloat((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomFloat(b2World* item, std::string propertyName, float val)
+{
+	m_worldsWithCustomProperties.insert(item);
+	setCustomFloat((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomString(b2Body* item, std::string propertyName, std::string val)
+{
+	m_bodiesWithCustomProperties.insert(item);
+	setCustomString((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomString(b2Fixture* item, std::string propertyName, std::string val)
+{
+	m_fixturesWithCustomProperties.insert(item);
+	setCustomString((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomString(b2Joint* item, std::string propertyName, std::string val)
+{
+	m_jointsWithCustomProperties.insert(item);
+	setCustomString((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomString(b2dJsonImage* item, std::string propertyName, std::string val)
+{
+	m_imagesWithCustomProperties.insert(item);
+	setCustomString((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomString(b2World* item, std::string propertyName, std::string val)
+{
+	m_worldsWithCustomProperties.insert(item);
+	setCustomString((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomVector(b2Body* item, std::string propertyName, b2Vec2 val)
+{
+	m_bodiesWithCustomProperties.insert(item);
+	setCustomVector((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomVector(b2Fixture* item, std::string propertyName, b2Vec2 val)
+{
+	m_fixturesWithCustomProperties.insert(item);
+	setCustomVector((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomVector(b2Joint* item, std::string propertyName, b2Vec2 val)
+{
+	m_jointsWithCustomProperties.insert(item);
+	setCustomVector((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomVector(b2dJsonImage* item, std::string propertyName, b2Vec2 val)
+{
+	m_imagesWithCustomProperties.insert(item);
+	setCustomVector((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomVector(b2World* item, std::string propertyName, b2Vec2 val)
+{
+	m_worldsWithCustomProperties.insert(item);
+	setCustomVector((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomBool(b2Body* item, std::string propertyName, bool val)
+{
+	m_bodiesWithCustomProperties.insert(item);
+	setCustomBool((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomBool(b2Fixture* item, std::string propertyName, bool val)
+{
+	m_fixturesWithCustomProperties.insert(item);
+	setCustomBool((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomBool(b2Joint* item, std::string propertyName, bool val)
+{
+	m_jointsWithCustomProperties.insert(item);
+	setCustomBool((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomBool(b2dJsonImage* item, std::string propertyName, bool val)
+{
+	m_imagesWithCustomProperties.insert(item);
+	setCustomBool((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomBool(b2World* item, std::string propertyName, bool val)
+{
+	m_worldsWithCustomProperties.insert(item);
+	setCustomBool((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomColor(b2Body* item, std::string propertyName, b2dJsonColor4 val)
+{
+	m_bodiesWithCustomProperties.insert(item);
+	setCustomColor((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomColor(b2Fixture* item, std::string propertyName, b2dJsonColor4 val)
+{
+	m_fixturesWithCustomProperties.insert(item);
+	setCustomColor((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomColor(b2Joint* item, std::string propertyName, b2dJsonColor4 val)
+{
+	m_jointsWithCustomProperties.insert(item);
+	setCustomColor((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomColor(b2dJsonImage* item, std::string propertyName, b2dJsonColor4 val)
+{
+	m_imagesWithCustomProperties.insert(item);
+	setCustomColor((void*)item, propertyName, val);
+}
+
+void b2dJson::setCustomColor(b2World* item, std::string propertyName, b2dJsonColor4 val)
+{
+	m_worldsWithCustomProperties.insert(item);
+	setCustomColor((void*)item, propertyName, val);
+}
+
+bool b2dJson::hasCustomInt(void *item, string propertyName)
+{
+	return getCustomPropertiesForItem(item, false) != NULL && 
+        getCustomPropertiesForItem(item, false)->m_customPropertyMap_int.count(propertyName) > 0;
+}
+
+bool b2dJson::hasCustomFloat(void *item, string propertyName)
+{
+	return getCustomPropertiesForItem(item, false) != NULL &&
+        getCustomPropertiesForItem(item, false)->m_customPropertyMap_float.count(propertyName) > 0;
+}
+
+bool b2dJson::hasCustomString(void *item, string propertyName)
+{
+	return getCustomPropertiesForItem(item, false) != NULL && 
+        getCustomPropertiesForItem(item, false)->m_customPropertyMap_string.count(propertyName) > 0;
+}
+
+bool b2dJson::hasCustomVector(void *item, string propertyName)
+{
+	return getCustomPropertiesForItem(item, false) != NULL && 
+        getCustomPropertiesForItem(item, false)->m_customPropertyMap_b2Vec2.count(propertyName) > 0;
+}
+
+bool b2dJson::hasCustomBool(void *item, string propertyName)
+{
+	return getCustomPropertiesForItem(item, false) != NULL && 
+        getCustomPropertiesForItem(item, false)->m_customPropertyMap_bool.count(propertyName) > 0;
+}
+
+bool b2dJson::hasCustomColor(void *item, string propertyName)
+{
+	return getCustomPropertiesForItem(item, false) != NULL && 
+        getCustomPropertiesForItem(item, false)->m_customPropertyMap_color.count(propertyName) > 0;
+}
 
 int b2dJson::getCustomInt(void *item, string propertyName, int defaultVal)
 {
@@ -693,7 +925,13 @@ b2dJsonColor4 b2dJson::getCustomColor(void *item, string propertyName, b2dJsonCo
         return (int)items.size();\
     }
 
-IMPLEMENT_GET_BY_CUSTOM_PROPERTY_FUNCTIONS_VECTOR(b2Body, Bodies, bodies, Int, int)
+int b2dJson::getBodiesByCustomInt( std::string propertyName, int valueToMatch, std::vector<b2Body*>& items )
+{
+	set<b2Body*>::iterator it = m_bodiesWithCustomProperties.begin();
+	set<b2Body*>::iterator end = m_bodiesWithCustomProperties.end();
+	while (it != end) { b2Body* item = *it; if ( hasCustomInt( item, propertyName ) && getCustomInt( item, propertyName ) == valueToMatch ) items.push_back( item ); ++it; } return (int)items.size();
+}
+
 IMPLEMENT_GET_BY_CUSTOM_PROPERTY_FUNCTIONS_VECTOR(b2Body, Bodies, bodies, Float, float)
 IMPLEMENT_GET_BY_CUSTOM_PROPERTY_FUNCTIONS_VECTOR(b2Body, Bodies, bodies, String, string)
 IMPLEMENT_GET_BY_CUSTOM_PROPERTY_FUNCTIONS_VECTOR(b2Body, Bodies, bodies, Vector, b2Vec2)

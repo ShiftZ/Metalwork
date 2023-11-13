@@ -3,8 +3,6 @@
 #include "Vessel.h"
 #include "Arena.h"
 
-using namespace std::filesystem;
-
 Vessel::Vessel(Arena* arena, string_view model_name)
 {
 	path model_path = "../../Content/Vessels/"s + model_name.data() + ".json";
@@ -17,18 +15,18 @@ Vessel::Vessel(Arena* arena, string_view model_name)
 	Json::Reader reader;
 	reader.parse(json_string, jval);
 
-	body = arena->rigid_world->MakeObject(jval, "vehicle");
+	arena->rigid_world->LoadModel(*this, jval, "vehicle");
 }
 
 void Vessel::AttachWeapon(shared_ptr<Weapon> weapon)
 {
-	body->root->JoinRevolute(weapon->body->root, {0, -2}, -weapon->body->root_shift);
+	root->JoinRevolute(weapon->root, {0, -2}, -weapon->root_shift);
 	this->weapon = move(weapon);
 }
 
 void Vessel::SetPosition(vec2 position)
 {
-	body->SetPosition(position);
-	if (weapon) weapon->body->SetPosition(position);
+	RigidObject::SetPosition(position);
+	if (weapon) weapon->SetPosition(position);
 }
 

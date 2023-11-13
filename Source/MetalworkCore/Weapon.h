@@ -1,10 +1,9 @@
 #pragma once
 
-class Weapon
-{
-public:
-	unique_ptr<class RigidObject> body;
+#include "RigidWorld.h"
 
+class Weapon : public RigidObject
+{
 public:
 	Weapon(class Arena* arena, string_view model_name);
 };
