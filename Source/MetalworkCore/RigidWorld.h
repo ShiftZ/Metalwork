@@ -7,6 +7,7 @@ class RigidWorld
 public:
 	int step = 0;
 	int captured_step = -1;
+	vector<shared_ptr<class RigidObject>> objects;
 
 public:
 	virtual void Capture() = 0;
@@ -39,6 +40,7 @@ public:
 class RigidObject
 {
 public:
+	class MetalActor* actor = nullptr;
 	unordered_map<string, shared_ptr<RigidBody>> parts;
 	RigidBody* root = nullptr;
 	vec2 root_shift = nullvec;
@@ -47,5 +49,12 @@ public:
 	METALWORKCORE_API void DrawShapes(IDebugDrawer& drawer);
 	void SetPosition(vec2 position);
 	void LoadModel(RigidWorld* world, Json::Value& model, string root_name = {});
+	shared_ptr<RigidBody> RemovePart(RigidBody* part);
 	virtual ~RigidObject() = default;
+};
+
+class MetalActor
+{
+public:
+	virtual string GetName() = 0;
 };

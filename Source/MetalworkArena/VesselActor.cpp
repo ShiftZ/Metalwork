@@ -49,6 +49,11 @@ void AArenaActor::Tick(float dt)
 	//SyncPose();
 }
 
+string AArenaActor::GetName()
+{
+	return TCHAR_TO_ANSI(*AActor::GetName());
+}
+
 TArray<FName> APropActor::GetRigs()
 {
 	TArray<FName> Rigs;

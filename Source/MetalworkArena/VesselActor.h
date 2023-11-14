@@ -4,7 +4,7 @@
 #include "VesselActor.generated.h"
 
 UCLASS()
-class METALWORKARENA_API AArenaActor : public AActor
+class METALWORKARENA_API AArenaActor : public AActor, public MetalActor
 {
 	GENERATED_BODY()
 
@@ -16,6 +16,7 @@ public:
 	void AttachToRig(RigidObject* Rig);
 	void SyncPose();
 	void Tick(float dt) override;
+	string GetName() override;
 };
 
 UCLASS()

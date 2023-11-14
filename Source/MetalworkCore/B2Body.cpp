@@ -90,3 +90,8 @@ void B2Body::DrawShapes(IDebugDrawer& drawer)
 		}
 	}
 }
+
+B2Body::~B2Body()
+{
+	if (body) body->GetWorld()->DestroyBody(body);
+}

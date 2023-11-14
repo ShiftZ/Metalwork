@@ -5,7 +5,9 @@
 class B2Body final : public RigidBody
 {
 	class b2Body* body;
+
 	friend b2Body* GetB2Body(RigidBody*);
+	friend class B2World;
 
 public:
 	B2Body(b2Body* body);
@@ -16,6 +18,7 @@ public:
 	void JoinDistant(RigidBody* with, vec2 anchor, float min, float max) override;
 	void ApplyForce(vec2 force) override;
 	void DrawShapes(IDebugDrawer& drawer) override;
+	~B2Body();
 };
 
 inline b2Body* GetB2Body(RigidBody* body) { return static_cast<B2Body*>(body)->body; }

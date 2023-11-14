@@ -1,8 +1,19 @@
 #include "MetalGameInstance.h"
 #include "CoreInterface.h"
 
+struct test_with_location
+{
+	test_with_location( std::format_string<int, int> str ) {}
+};
+
+void test( test_with_location fmt )
+{
+}
+
 void UMetalGameInstance::Init()
 {
+	test("P{}:{}");
+
 	Super::Init();
 	
 	if (!UE_BUILD_SHIPPING)
@@ -13,8 +24,7 @@ void UMetalGameInstance::Init()
 
 		flog_path("network", *(FPaths::ProjectLogDir() + "Network.log"), "---------------------------");
 
-		add_logger(NetworkLog(), [&](string msg, const NetworkLog& id){
-			flog("network", 'P' + to_string(id.player) + ':' + msg);
-		});
+		add_logger(NetworkLog(), [&](string msg, const NetworkLog& id)
+			{ flog("network", "P{}:{}", id.player, msg); });
 	}
 }

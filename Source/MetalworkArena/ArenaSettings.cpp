@@ -13,6 +13,8 @@ void AArenaSettings::PostLoad()
 	Super::PostLoad();
 }
 
+FCriticalSection MyCriticalSection;
+
 void AArenaSettings::Serialize(FArchive& Ar)
 {
 	AInfo::Serialize(Ar);
@@ -34,4 +36,5 @@ void AArenaSettings::Serialize(FArchive& Ar)
 		FString FilePath = FPaths::ProjectContentDir() + L"Maps/" + GetWorld()->GetMapName() + L".json";
 		FFileHelper::SaveArrayToFile(MakeArrayView((uint8*)Json.data(), Json.size()), *FilePath);
 	}
+
 }

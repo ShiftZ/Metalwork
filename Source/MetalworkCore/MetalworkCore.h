@@ -24,6 +24,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <variant>
+#include <tuple>
 
 #undef JSON_API
 #include <json/json.h>

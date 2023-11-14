@@ -93,6 +93,12 @@ string B2World::SaveToJson()
 {
 	b2dJson b2json;
 
+	for (b2Body* body = world->GetBodyList(); body; body = body->GetNext())
+	{
+		string name = body->GetUserData()->object->actor->GetName();
+		b2json.setBodyName(body, name.c_str());
+	}
+
 	return b2json.writeToString(world.get());
 }
 
@@ -108,12 +114,24 @@ void B2World::LoadFromJson(string_view json)
 
 	vector<b2Body*> bodies;
 	b2json.getAllBodies(bodies);
+
+	unordered_map<string, vector<b2Body*>> objects;
+	for (b2Body* body : bodies)
+		objects[b2json.getBodyName(body)].push_back(body);
+
+	for (auto& [name, parts] : objects)
+	{
+		shared_ptr object = make_shared<RigidObject>();
+		for (b2Body* body : parts)
+		{
+
+			object->parts
+		}
+	}
 }
 
 B2World::~B2World()
 {
-	for (b2Body* body = world->GetBodyList(); body; body->GetNext())
-	{
-		body->GetUserData()->object
-	}
+	for (b2Body* b2body = world->GetBodyList(); b2body; b2body = b2body->GetNext())
+		b2body->GetUserData()->body = nullptr;
 }

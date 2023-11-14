@@ -31,3 +31,12 @@ void RigidObject::LoadModel(RigidWorld* world, Json::Value& model, string root_n
 		root_shift = root->GetPosition();
 	}
 }
+
+shared_ptr<RigidBody> RigidObject::RemovePart(RigidBody* part)
+{
+	auto part_it = ranges::find_if(parts, [&](value<shared_ptr<RigidBody>> p){ return p->get() == part; });
+	auto [_, body] = move(*part_it);
+	parts.erase(part_it);
+	body->object = nullptr;
+	return body;
+}
