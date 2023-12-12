@@ -13,7 +13,7 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 
 	auto MakeComponent = [&](RigidBody* Body)
 	{
-		FVehicleModelPartRow* ModelRow = Models->FindRow<FVehicleModelPartRow>(ANSI_TO_TCHAR(Body->model_name.c_str()), nullptr);
+		FVehicleModelPartRow* ModelRow = Models->FindRow<FVehicleModelPartRow>(ANSI_TO_TCHAR(*Body->model), nullptr);
 		USceneComponent* Component = NewObject<USceneComponent>(this, ModelRow->ComponentClass.Get());
 		Component->SetupAttachment(GetRootComponent());
 		Component->RegisterComponent();
@@ -25,7 +25,7 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 	USceneComponent* Root = MakeComponent(Rig->root);
 	SetRootComponent(Root);
 
-	for (RigidBody* Part : Rig->parts | views::values | cptr)
+	for (RigidBody* Part : Rig->parts | cptr)
 		if (Part != Rig->root) MakeComponent(Part);
 
 	SyncPose();
@@ -74,11 +74,10 @@ void APropActor::PostEditChangeProperty(FPropertyChangedEvent& Event)
 	{
 		FString FilePath = FPaths::ProjectContentDir() + L"Props/" + RigModel.ToString() + L".json";
 		FArchive* Reader = IFileManager::Get().CreateFileReader(*FilePath);
-		string Json(Reader->TotalSize(), '');
+		string Json(Reader->TotalSize(), 0);
 		Reader->Serialize(Json.data(), Json.size());
 
 		AArenaSettings* Arena = CastChecked<AArenaSettings>(GetWorldSettings());
-		Arena->Rig->
+		Rig->LoadModel(Arena->Rig.get(), Json);
 	}
 }
-

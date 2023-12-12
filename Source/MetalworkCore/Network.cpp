@@ -183,7 +183,7 @@ awaitable<void> Network::ListenUDP()
 		}
 		catch (exception& e)
 		{
-			log(NetworkLog(player), "Error reading UDP package: "s + e.what());
+			log(NetworkLog(player), "Error reading UDP package: {}", e.what());
 		}
 	}
 }

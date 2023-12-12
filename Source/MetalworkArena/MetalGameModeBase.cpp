@@ -44,17 +44,17 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 	
 	Core = MakeUnique<MetalCore>(Player, move(Network));
 
-	for (Vessel* vessel : Core->Arena().Vessels() | cptr)
+	for (Vessel* Ves : Core->Arena().Vessels() | cptr)
 	{
 		AVesselActor* Actor = GetWorld()->SpawnActor<AVesselActor>();
-		Actor->AttachToRig(vessel->body.get());
+		Actor->AttachToRig(Ves);
 		Actors.Emplace(Actor);
 
-		if (vessel->weapon)
+		if (Ves->weapon)
 		{
-			AWeaponActor* actor = GetWorld()->SpawnActor<AWeaponActor>();
-			actor->AttachToRig(vessel->weapon->body.get());
-			Actors.Emplace(actor);
+			AWeaponActor* Actor = GetWorld()->SpawnActor<AWeaponActor>();
+			Actor->AttachToRig(Ves->weapon.get());
+			Actors.Emplace(Actor);
 		}
 	}
 

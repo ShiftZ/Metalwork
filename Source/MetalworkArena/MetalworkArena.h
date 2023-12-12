@@ -33,6 +33,7 @@
 #include <HAL/FileManager.h>
 #include <EngineUtils.h>
 #include <Engine/LevelScriptActor.h>
+#include <UObject/LinkerLoad.h>
 
 #include "tools/flat_map.h"
 #include "tools/logger.h"
@@ -40,6 +41,7 @@
 #include "tools/vector2.h"
 #include "tools/vector3.h"
 #include "tools/std.h"
+#include "tools/sol_hash_set.h"
 
 using namespace std;
 using namespace std::chrono;

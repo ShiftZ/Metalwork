@@ -1,19 +1,8 @@
 #include "MetalGameInstance.h"
 #include "CoreInterface.h"
 
-struct test_with_location
-{
-	test_with_location( std::format_string<int, int> str ) {}
-};
-
-void test( test_with_location fmt )
-{
-}
-
 void UMetalGameInstance::Init()
 {
-	test("P{}:{}");
-
 	Super::Init();
 	
 	if (!UE_BUILD_SHIPPING)

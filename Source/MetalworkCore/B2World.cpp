@@ -69,9 +69,9 @@ void B2World::Step()
 	++step;
 }
 
-unordered_map<string, shared_ptr<RigidBody>> B2World::LoadModel(Json::Value& model)
+vector<shared_ptr<RigidBody>> B2World::LoadModel(Json::Value& model)
 {
-	unordered_map<string, shared_ptr<RigidBody>> parts;
+	vector<shared_ptr<RigidBody>> parts;
 
 	b2dJson json;
 	json.readFromValue(model, world.get());
@@ -82,8 +82,9 @@ unordered_map<string, shared_ptr<RigidBody>> B2World::LoadModel(Json::Value& mod
 	for (b2Body* body : bodies)
 	{
 		shared_ptr part = make_shared<B2Body>(body);
-		part->model_name = json.getCustomString(body, "Model");
-		parts.emplace(json.getBodyName(body), move(part));
+		part->name = json.getBodyName(body);
+		part->model = json.getCustomString(body, "Model");
+		parts.emplace_back(move(part));
 	}
 
 	return parts;
@@ -93,10 +94,11 @@ string B2World::SaveToJson()
 {
 	b2dJson b2json;
 
-	for (b2Body* body = world->GetBodyList(); body; body = body->GetNext())
+	for (b2Body* b2body = world->GetBodyList(); b2body; b2body = b2body->GetNext())
 	{
-		string name = body->GetUserData()->object->actor->GetName();
-		b2json.setBodyName(body, name.c_str());
+		B2Body* body = b2body->GetUserData();
+		b2json.setBodyName(b2body, *body->name);
+		b2json.setCustomString(b2body, "ObjectName", *body->object->name);
 	}
 
 	return b2json.writeToString(world.get());
@@ -115,18 +117,12 @@ void B2World::LoadFromJson(string_view json)
 	vector<b2Body*> bodies;
 	b2json.getAllBodies(bodies);
 
-	unordered_map<string, vector<b2Body*>> objects;
-	for (b2Body* body : bodies)
-		objects[b2json.getBodyName(body)].push_back(body);
-
-	for (auto& [name, parts] : objects)
+	for (b2Body* b2body : bodies)
 	{
-		shared_ptr object = make_shared<RigidObject>();
-		for (b2Body* body : parts)
-		{
-
-			object->parts
-		}
+		string obj_name = b2json.getCustomString(b2body, "ObjectName");
+		RigidObject* obj = FindObject(obj_name);
+		if (!obj) obj = objects.emplace_back(make_shared<RigidObject>()).get();
+		obj->parts.push_back(make_shared<B2Body>(b2body));
 	}
 }
 

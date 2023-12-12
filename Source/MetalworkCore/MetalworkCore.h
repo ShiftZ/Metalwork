@@ -54,6 +54,7 @@
 #include "tools/std.h"
 #include "tools/vector2.h"
 #include "tools/vector3.h"
+#include "tools/sol_hash_set.h"
 
 using namespace std;
 namespace views = std::ranges::views;

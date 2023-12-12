@@ -170,11 +170,8 @@ void MetalCore::MainLoop(stop_token st)
 			for (int player = 0; auto& [clean_seqid, pointer_in, clean_pointer] : inputs)
 			{
 				auto clean_it = ranges::upper_bound(pointer_in, clean_step, less(), [](value<PointerInput> in){ return in->step; });
-
-#ifndef __INTELLISENSE__ // microsoft?!
 				auto clean_range = ranges::subrange(pointer_in.begin(), clean_it) | views::values;
 				auto dirty_range = ranges::subrange(clean_it, pointer_in.end()) | views::values;
-#endif 
 
 				auto chunk_by_step = views::chunk_by([](PointerInput& a, PointerInput& b){ return a.step == b.step; });
 

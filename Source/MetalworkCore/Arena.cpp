@@ -40,7 +40,7 @@ void Arena::Step(StepInputs inputs)
 		for (auto& [player, input] : players_input)
 		{
 			Vessel* vessel = vessels[player].get();
-			vessel->body->root->ApplyForce(input.move);
+			vessel->root->ApplyForce(input.move);
 		}
 
 		rigid_world->Step();
@@ -55,7 +55,7 @@ void Arena::Step(StepInputs inputs)
 		for (auto& [player, input] : players_input)
 		{
 			Vessel* vessel = vessels[player].get();
-			vessel->body->root->ApplyForce(input.move);
+			vessel->root->ApplyForce(input.move);
 		}
 
 		rigid_world->Step();

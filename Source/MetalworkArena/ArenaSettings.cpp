@@ -1,6 +1,7 @@
 #include "ArenaSettings.h"
 #include "Arena.h"
 #include "Misc/FileHelper.h"
+#include "UObject/Package.h"
 
 void AArenaSettings::PostInitProperties()
 {
@@ -13,15 +14,16 @@ void AArenaSettings::PostLoad()
 	Super::PostLoad();
 }
 
-FCriticalSection MyCriticalSection;
-
 void AArenaSettings::Serialize(FArchive& Ar)
 {
 	AInfo::Serialize(Ar);
 
 	if (Ar.IsLoading())
 	{
-		FString FilePath = FPaths::ProjectContentDir() + L"Maps/" + GetWorld()->GetMapName() + L".json";
+		UPackage* pkg = GetLinker()->LinkerRoot;
+		FString Name = FPaths::GetBaseFilename(pkg->GetLoadedPath().GetPackageName());
+
+		FString FilePath = FPaths::ProjectContentDir() + L"Maps/" + Name + L".json";
 		TUniquePtr<FArchive> Reader(IFileManager::Get().CreateFileReader(*FilePath));
 		if (Reader)
 		{
@@ -36,5 +38,4 @@ void AArenaSettings::Serialize(FArchive& Ar)
 		FString FilePath = FPaths::ProjectContentDir() + L"Maps/" + GetWorld()->GetMapName() + L".json";
 		FFileHelper::SaveArrayToFile(MakeArrayView((uint8*)Json.data(), Json.size()), *FilePath);
 	}
-
 }

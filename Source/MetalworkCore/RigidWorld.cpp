@@ -1,8 +1,22 @@
 #include "RigidWorld.h"
 
+RigidObject* RigidWorld::FindObject(string_view name)
+{
+	auto obj_it = ranges::find_if(objects, [&](shared_ptr<RigidObject>& obj){ return obj->name == name; });
+	return obj_it != objects.end() ? obj_it->get() : nullptr;
+}
+
+shared_ptr<RigidObject> RigidWorld::RemoveObject(RigidObject* obj)
+{
+	auto obj_it = ranges::find_if(objects, [&](shared_ptr<RigidObject>& o){ return o.get() == obj; });
+	shared_ptr<RigidObject> removed_obj = move(*obj_it);
+	objects.erase(obj_it);
+	return removed_obj;
+}
+
 void RigidObject::DrawShapes(IDebugDrawer& drawer)
 {
-	for (RigidBody* body : parts | views::values | cptr)
+	for (RigidBody* body : parts | cptr)
 		body->DrawShapes(drawer);
 
 	if (root) root->DrawShapes(drawer);
@@ -11,31 +25,37 @@ void RigidObject::DrawShapes(IDebugDrawer& drawer)
 void RigidObject::SetPosition(vec2 position)
 {
 	vec2 shift = position - root->GetPosition() + root_shift;
-	for (RigidBody* part : parts | views::values | cptr)
+	for (RigidBody* part : parts | cptr)
 		part->SetPosition(part->GetPosition() + shift);
 }
 
-void RigidObject::LoadModel(RigidWorld* world, Json::Value& model, string root_name)
+void RigidObject::LoadModel(RigidWorld* world, string_view jmodel_str, string_view root_name)
 {
-	parts = world->LoadModel(model);
+	Json::Value jval;
+	Json::Reader reader;
+	reader.parse(jmodel_str.data(), jmodel_str.data() + jmodel_str.size(), jval);
 
-	for (RigidBody* part : parts | views::values | cptr)
-		part->object = this;
+	parts = world->LoadModel(jval);
+	ranges::for_each(parts | cptr, [&](RigidBody* part){ part->object = this; });
 
 	if (!root_name.empty())
 	{
-		auto root_it = parts.find(root_name);
-		if (root_it == parts.end())
-			throw data_error("Root name {} not found.", root_name);
-		root = root_it->second.get();
+		root = FindPart(root_name);
+		if (!root) throw data_error("Root name {} not found.", root_name);
 		root_shift = root->GetPosition();
 	}
 }
 
+RigidBody* RigidObject::FindPart(string_view part_name)
+{
+	auto part_it = ranges::find_if(parts, [&](shared_ptr<RigidBody>& part){ return part->name == part_name; });
+	return part_it != parts.end() ? part_it->get() : nullptr;
+}
+
 shared_ptr<RigidBody> RigidObject::RemovePart(RigidBody* part)
 {
-	auto part_it = ranges::find_if(parts, [&](value<shared_ptr<RigidBody>> p){ return p->get() == part; });
-	auto [_, body] = move(*part_it);
+	auto part_it = ranges::find_if(parts, [&](shared_ptr<RigidBody>& p){ return p.get() == part; });
+	shared_ptr<RigidBody> body = move(*part_it);
 	parts.erase(part_it);
 	body->object = nullptr;
 	return body;

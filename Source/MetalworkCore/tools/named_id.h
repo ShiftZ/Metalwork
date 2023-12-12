@@ -4,11 +4,40 @@
 #include <unordered_map>
 #include <ranges>
 
+constexpr size_t encode_name( std::string_view view )
+{
+	const size_t base = ('z' - 'a' + 3 + 1);
+
+	size_t hash = 1;
+	auto it = view.begin();
+	for (;it != view.end(); ++it)
+	{
+		// ' ', '-', '0..9', 'A..Z', '_', 'a..z'
+
+		size_t code;
+		if (*it >= 'a')
+			code = *it - 'a';
+		else if (*it >= 'A')
+			code = (*it != '_') ? *it - 'A' : base - 1;
+		else if (*it < '0')
+			code = (*it == '-') ? base - 2 : base - 3;
+		else
+			break; // digits
+
+		hash = code + base * hash;
+	}
+
+	for (; it != view.end(); ++it)
+		hash = (*it - '0') + hash * 10;
+
+	return hash;
+}
+
 class named_id
 {
 	struct hasher : std::hash<std::string_view> { using is_transparent = void; };
 
-	static inline int count = 0;
+	static inline std::atomic<int> count = 0;
 	static inline std::unordered_map<std::string, int, hasher, std::equal_to<>> names;
 	static inline std::shared_mutex mtx;
 

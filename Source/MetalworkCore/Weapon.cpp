@@ -10,9 +10,5 @@ Weapon::Weapon(Arena* arena, string_view model_name)
 	json_string.resize(file_size(model_path));
 	file.read(json_string.data(), json_string.size());
 
-	Json::Value jval;
-	Json::Reader reader;
-	reader.parse(json_string, jval);
-
-	arena->rigid_world->LoadModel(*this, jval, "root");
+	LoadModel(arena->rigid_world.get(), json_string, "root");
 }

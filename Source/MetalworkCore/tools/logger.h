@@ -67,7 +67,7 @@ void log( format_with_location<std::type_identity_t<types>...> fmt, types&&... a
 }
 
 template< typename log_t, typename... types > requires std::is_convertible_v<log_t, size_t>
-void log( const log_t& id, format_with_location<std::type_identity_t<types>...> fmt, types&&... args )
+void log( const log_t& id, format_with_location<std::type_identity_t<const types&>...> fmt, const types&... args )
 {
 	using namespace std;
 	using ext_signature = void(string, const log_t&);
@@ -78,7 +78,7 @@ void log( const log_t& id, format_with_location<std::type_identity_t<types>...> 
 
 	auto& [_, logr] = *loggers.find(size_t(id));
 
-	string msg = format(fmt, forward<types>(args)...);
+	string msg = format(fmt, args...);
 
 	size_t pos = msg.find("$fn");
 	if (pos != string::npos)
@@ -93,11 +93,11 @@ void log( const log_t& id, format_with_location<std::type_identity_t<types>...> 
 }
 
 template< typename... types >
-void flog( std::string_view file_name, format_with_location<std::type_identity_t<types>...> fmt, const types&... args )
+void flog( std::string_view file_name, format_with_location<std::type_identity_t<const types&>...> fmt, const types&... args )
 {
 	using namespace std;
 
-	string msg = format(fmt, forward<types>(args)...) + '\n';
+	string msg = format(fmt, args...) + '\n';
 
 	size_t pos = msg.find("$fn");
 	if (pos != string::npos)

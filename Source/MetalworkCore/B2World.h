@@ -13,7 +13,7 @@ public:
 	void Capture() override;
 	void Restore() override;
 	void Step() override;
-	unordered_map<string, shared_ptr<RigidBody>> LoadModel(Json::Value& model) override;
+	vector<shared_ptr<RigidBody>> LoadModel(Json::Value& model) override;
 	string SaveToJson() override;
 	void LoadFromJson(string_view json) override;
 	~B2World();

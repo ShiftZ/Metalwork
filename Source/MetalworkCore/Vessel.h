@@ -5,6 +5,7 @@
 
 class Vessel : public RigidObject
 {
+public:
 	shared_ptr<Weapon> weapon;
 
 public:
