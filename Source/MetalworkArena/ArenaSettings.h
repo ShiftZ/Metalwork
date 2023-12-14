@@ -9,12 +9,12 @@ class AArenaSettings : public AWorldSettings
 	GENERATED_BODY()
 
 public:
-	unique_ptr<RigidWorld> Rig;
+	unique_ptr<RigidWorld> RigWorld;
 
 protected:
 	void PostInitProperties() override;
-	void PostLoad() override;
 	void Serialize(FArchive& Ar) override;
+	void PostLoad() override;
 };
 
 UCLASS()

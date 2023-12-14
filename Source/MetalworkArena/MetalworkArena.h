@@ -4,6 +4,7 @@
 
 #include <any>
 #include <chrono>
+#include <filesystem>
 #include <format>
 #include <fstream>
 #include <functional>
@@ -17,31 +18,32 @@
 #include <string>
 #include <typeindex>
 #include <unordered_map>
-#include <filesystem>
 
+#include <DrawDebugHelpers.h>
+#include <Engine/DataTable.h>
 #include <Engine/Engine.h>
 #include <Engine/GameInstance.h>
+#include <Engine/LevelScriptActor.h>
 #include <Engine/World.h>
+#include <EngineUtils.h>
+#include <GameFramework/Actor.h>
 #include <GameFramework/GameModeBase.h>
+#include <HAL/FileManager.h>
+#include <Misc/FileHelper.h>
+#include <Misc/Paths.h>
 #include <Modules/ModuleManager.h>
 #include <PaperFlipbookComponent.h>
 #include <PaperSpriteComponent.h>
-#include <Engine/DataTable.h>
-#include <GameFramework/Actor.h>
-#include <Misc/Paths.h>
-#include <DrawDebugHelpers.h>
-#include <HAL/FileManager.h>
-#include <EngineUtils.h>
-#include <Engine/LevelScriptActor.h>
 #include <UObject/LinkerLoad.h>
+#include <UObject/Package.h>
 
 #include "tools/flat_map.h"
 #include "tools/logger.h"
 #include "tools/queue.h"
+#include "tools/sol_hash_set.h"
+#include "tools/std.h"
 #include "tools/vector2.h"
 #include "tools/vector3.h"
-#include "tools/std.h"
-#include "tools/sol_hash_set.h"
 
 using namespace std;
 using namespace std::chrono;

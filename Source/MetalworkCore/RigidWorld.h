@@ -12,8 +12,9 @@ public:
 	vector<shared_ptr<class RigidObject>> objects;
 
 public:
-	RigidObject* FindObject(string_view name);
-	shared_ptr<RigidObject> RemoveObject(RigidObject* obj);
+	METALWORKCORE_API RigidObject* AddObject(shared_ptr<RigidObject> obj);
+	METALWORKCORE_API shared_ptr<RigidObject> RemoveObject(RigidObject* obj);
+	METALWORKCORE_API RigidObject* FindObject(string_view name);
 
 	virtual void Capture() = 0;
 	virtual void Restore() = 0;
@@ -52,6 +53,10 @@ public:
 	Name name;
 
 public:
+	RigidObject() = default;
+	RigidObject(Name name) : name(name) {}
+	RigidObject(MetalActor* actor) : actor(actor) {}
+
 	METALWORKCORE_API void DrawShapes(IDebugDrawer& drawer);
 	METALWORKCORE_API void LoadModel(RigidWorld* world, string_view jmodel_str, string_view root_name = {});
 
@@ -64,6 +69,4 @@ public:
 
 class MetalActor
 {
-public:
-	virtual string GetName() = 0;
 };

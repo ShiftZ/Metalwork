@@ -5,6 +5,7 @@
 #include "CoreInterface.h"
 #include "VesselActor.h"
 #include "DebugDrawer.h"
+#include "Vessel.h"
 
 DEFINE_LOG_CATEGORY(LogNetwork);
 
