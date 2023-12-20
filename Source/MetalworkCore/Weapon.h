@@ -5,5 +5,5 @@
 class Weapon : public RigidObject
 {
 public:
-	Weapon(class Arena* arena, string_view model_name);
+	Weapon(class Arena* arena, Name model_name);
 };

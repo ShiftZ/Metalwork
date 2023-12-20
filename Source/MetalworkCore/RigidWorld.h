@@ -14,7 +14,7 @@ public:
 public:
 	METALWORKCORE_API RigidObject* AddObject(shared_ptr<RigidObject> obj);
 	METALWORKCORE_API shared_ptr<RigidObject> RemoveObject(RigidObject* obj);
-	METALWORKCORE_API RigidObject* FindObject(string_view name);
+	METALWORKCORE_API RigidObject* FindObject(Name name);
 
 	virtual void Capture() = 0;
 	virtual void Restore() = 0;
@@ -22,6 +22,8 @@ public:
 	virtual vector<shared_ptr<class RigidBody>> LoadModel(Json::Value& model) = 0;
 	virtual string SaveToJson() = 0;
 	virtual void LoadFromJson(string_view json) = 0;
+	virtual void SetDebugDrawer(class IDebugDrawer* drawer) = 0;
+	virtual void DebugDraw() = 0;
 	virtual ~RigidWorld() = default;
 };
 
@@ -32,6 +34,8 @@ public:
 	Name name, model;
 
 public:
+	RigidBody(Name name, Name model) : name(name), model(model) {}
+
 	virtual vec2 GetPosition() = 0;
 	virtual void SetPosition(vec2 position) = 0;
 	virtual float GetAngle() = 0;
@@ -58,10 +62,11 @@ public:
 	RigidObject(MetalActor* actor) : actor(actor) {}
 
 	METALWORKCORE_API void DrawShapes(IDebugDrawer& drawer);
-	METALWORKCORE_API void LoadModel(RigidWorld* world, string_view jmodel_str, string_view root_name = {});
+	METALWORKCORE_API void LoadModel(RigidWorld* world, Json::Value& jmodel, string_view root_name = {});
 
-	RigidBody* FindPart(string_view part_name);
+	void AddPart(shared_ptr<RigidBody> body);
 	shared_ptr<RigidBody> RemovePart(RigidBody* part);
+	RigidBody* FindPart(Name part_name);
 	void SetPosition(vec2 position);
 
 	virtual ~RigidObject() = default;

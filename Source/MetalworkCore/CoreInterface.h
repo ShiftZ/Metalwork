@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Name.h"
+
 template<typename Type>
 class IFuture
 {
@@ -28,8 +30,6 @@ class METALWORKCORE_API IMetalCore
 public:
 	virtual void Ready() = 0;
 	virtual ~IMetalCore() = default;
-
-	static unique_ptr<IMetalCore> Make(int player, unique_ptr<INetwork> net);
 };
 
 struct METALWORKCORE_API DisplayLog : log_category
@@ -45,10 +45,32 @@ struct METALWORKCORE_API NetworkLog : log_category
 	NetworkLog(int player = -1) : player(player) {}
 };
 
+struct Color
+{
+	float r, g, b, a;
+
+	Color() = default;
+	Color(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {}
+
+	template< typename Type > requires requires (Type col) { {col.r + col.g + col.b + col.a} -> std::convertible_to<float>; }
+	Color(const Type& col) : r(col.r), g(col.g), b(col.b), a(col.a) {}
+};
+
 class IDebugDrawer
 {
 public:
-	virtual void Circle(vec2 center, float radius) = 0;
-	virtual void Poly(span<vec2> verts) = 0;
-	virtual void Edge(vec2 A, vec2 B) = 0;
+	virtual void Circle(vec2 center, float radius, Color color) = 0;
+	virtual void SolidCircle(vec2 center, vec2 axis, float radius, Color color) = 0;
+	virtual void Poly(span<vec2> verts, Color color) = 0;
+	virtual void SolidPoly(span<vec2> verts, Color color) = 0;
+	virtual void Line(vec2 a, vec2 b, Color color) = 0;
+	virtual void Point(vec2 p, float size, Color color) = 0;
+	virtual void Edge(vec2 a, vec2 b) = 0;
+	virtual ~IDebugDrawer() = default;
 };
+
+namespace Json { class Value; }
+
+METALWORKCORE_API void SetContentPath(path dir);
+METALWORKCORE_API Json::Value& GetJson(Name name);
+METALWORKCORE_API Json::Value& MakeJson(string_view json_str);

@@ -22,7 +22,7 @@ public:
 	mutex step_mtx;
 
 public:
-	Arena();
+	Arena(unique_ptr<RigidWorld>);
 	void Start();
 	void Step(StepInputs inputs);
 

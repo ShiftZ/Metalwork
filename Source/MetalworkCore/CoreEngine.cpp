@@ -9,27 +9,33 @@
 #	include "WindowsInput.h"
 #endif
 
-MetalCore::MetalCore(int player, unique_ptr<INetwork> net) : player(player)
+MetalCore::MetalCore(int player, unique_ptr<RigidWorld> world, unique_ptr<INetwork> net)
+	: player(player), arena(move(world))
 {
 	network = static_pointer_cast<Network>(move(net));
 
-	packaged_task init([&]
+	promise<void> init_prom;
+
+	auto init = [&]
 	{
 		if constexpr (windows)
 			input = make_unique<WindowsInput>();
-
 		inputs.resize(network ? network->NumPeers() + 1 : 1);
-	});
 
-	thread = jthread([this, &init](stop_token st)
+		init_prom.set_value();
+	};
+
+	thread = jthread([&](stop_token st)
 	{
-		init();
+		try { init(); } 
+		catch (...) { return init_prom.set_exception(current_exception()); }
+
 		GetReady(st);
 		if (st.stop_requested()) return;
 		MainLoop(st);
 	});
 
-	init.get_future().get();
+	init_prom.get_future().get();
 }
 
 void MetalCore::Ready()

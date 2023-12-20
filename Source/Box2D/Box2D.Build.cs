@@ -6,9 +6,11 @@ public class Box2D : ModuleRules
     {
         PCHUsage = PCHUsageMode.NoPCHs;
 
+        PrivateDependencyModuleNames.AddRange(new string[] { "Core" });
+
         PublicDefinitions.Add("B2_USER_SETTINGS");
         if (Target.Type == TargetType.Editor) PublicDefinitions.Add("B2_SHARED");
-
+        
         PublicIncludePaths.Add(ModuleDirectory);
 
         PrivateDefinitions.Add("box2d_EXPORTS");

@@ -4,19 +4,17 @@
 #include "B2World.h"
 #include "Weapon.h"
 
-Arena::Arena()
+Arena::Arena(unique_ptr<RigidWorld> rigid_world) : rigid_world(move(rigid_world))
 {
-	rigid_world = MakeWorld();
-
-	shared_ptr<Vessel> player1 = make_shared<Vessel>(this, "dummy");
-	shared_ptr<Weapon> weapon1 = make_shared<Weapon>(this, "chain-ball");
+	shared_ptr<Vessel> player1 = make_shared<Vessel>(this, "vessels/dummy"_n);
+	shared_ptr<Weapon> weapon1 = make_shared<Weapon>(this, "weapons/chain-ball"_n);
 	player1->AttachWeapon(weapon1);
 	player1->SetPosition({-25, 0});
 
 	vessels.push_back(move(player1));
 
-	shared_ptr<Vessel> player2 = make_shared<Vessel>(this, "dummy");
-	shared_ptr<Weapon> weapon2 = make_shared<Weapon>(this, "chain-ball");
+	shared_ptr<Vessel> player2 = make_shared<Vessel>(this, "vessels/dummy"_n);
+	shared_ptr<Weapon> weapon2 = make_shared<Weapon>(this, "weapons/chain-ball"_n);
 	player2->AttachWeapon(weapon2);
 	player2->SetPosition({25, 0});
 

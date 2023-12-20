@@ -1,5 +1,6 @@
 #include "B2World.h"
 #include "B2Body.h"
+#include "B2Draw.h"
 #include "CoreDefinitions.h"
 #include "b2dJson/b2dJson.h"
 
@@ -69,22 +70,21 @@ void B2World::Step()
 	++step;
 }
 
-vector<shared_ptr<RigidBody>> B2World::LoadModel(Json::Value& model)
+vector<shared_ptr<RigidBody>> B2World::LoadModel(Json::Value& model_jval)
 {
 	vector<shared_ptr<RigidBody>> parts;
 
 	b2dJson json;
-	json.readFromValue(model, world.get());
+	json.readFromValue(model_jval, world.get());
 
 	vector<b2Body*> bodies;
 	json.getAllBodies(bodies);
 
-	for (b2Body* body : bodies)
+	for (b2Body* b2body : bodies)
 	{
-		shared_ptr part = make_shared<B2Body>(body);
-		part->name = json.getBodyName(body);
-		part->model = json.getCustomString(body, "Model");
-		parts.emplace_back(move(part));
+		Name name = json.getBodyName(b2body);
+		Name model = json.getCustomString(b2body, "Model");
+		parts.emplace_back(make_shared<B2Body>(b2body, name, model));
 	}
 
 	return parts;
@@ -119,11 +119,25 @@ void B2World::LoadFromJson(string_view json)
 
 	for (b2Body* b2body : bodies)
 	{
-		string obj_name = b2json.getCustomString(b2body, "ObjectName");
+		Name obj_name = b2json.getCustomString(b2body, "ObjectName");
 		RigidObject* obj = FindObject(obj_name);
 		if (!obj) obj = objects.emplace_back(make_shared<RigidObject>(obj_name)).get();
-		obj->parts.push_back(make_shared<B2Body>(b2body));
+		Name body_name = b2json.getBodyName(b2body);
+		Name model = b2json.getCustomString(b2body, "Model");
+		obj->AddPart(make_shared<B2Body>(b2body, body_name, model));
 	}
+}
+
+void B2World::SetDebugDrawer(IDebugDrawer* engine_drawer)
+{
+	drawer = make_unique<B2Draw>(engine_drawer);
+	drawer->SetFlags(b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_centerOfMassBit);
+	world->SetDebugDraw(drawer.get());
+}
+
+void B2World::DebugDraw()
+{
+	world->DebugDraw();
 }
 
 B2World::~B2World()

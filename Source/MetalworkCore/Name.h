@@ -2,6 +2,9 @@
 
 class Name
 {
+	//using string = basic_string<TCHAR>;
+	//using string_view = basic_string_view<TCHAR>;
+
 	struct Hasher
 	{
 		using is_transparent = void;
@@ -18,13 +21,16 @@ private:
 public:
 	Name() = default;
 	Name(const Name&) = default;
-	Name(string_view sv) { AcquireName(sv); }
-	Name(const string& s) { AcquireName(s); }
+	Name(const wchar_t* wstr) { name = &*names.insert(string(wstr, wstr + wcslen(wstr))).first; }
+
+	template< typename Type > requires is_convertible_v<Type, string_view>
+	Name(const Type& str) { name = &*names.insert(string_view(str)).first; }
 
 	Name& operator=(const Name&) = default;
-	Name& operator=(string_view sv) { return AcquireName(sv); }
-	Name& operator=(const string& s) { return AcquireName(s); }
-	Name& operator=(const char* cstr) { return AcquireName(string_view(cstr)); }
+	Name& operator=(const wchar_t* wstr) { name = &*names.insert(string(wstr, wstr + wcslen(wstr))).first; return *this; }
+
+	template< typename Type > requires is_convertible_v<Type, string_view>
+	Name& operator=(const Type& str) { name = &*names.insert(string_view(str)).first; return *this; }
 
 	bool operator==(const Name& other) const { return name == other.name; }
 	bool operator!=(const Name& other) const { return name != other.name; }
@@ -36,15 +42,11 @@ public:
 	bool operator!=(const StrType& str) const { return name ? *name != str : ""sv != str; }
 
 	const char* operator*() const { return name ? name->c_str() : ""; }
-	string_view ToString() const { return name ? string_view(*name) : ""sv; }
 
-private:
-	template<typename Type>
-	Name& AcquireName(const Type& str)
+	operator const wchar_t*() const
 	{
-		auto [it, _] = names.insert(str);
-		name = &*it;
-		return *this;
+		static wstring wstr;
+		return name ? wstr.assign(name->begin(), name->end()).c_str() : L"";
 	}
 };
 
@@ -53,3 +55,5 @@ struct std::hash<Name>
 {
 	size_t operator()(const Name& n) const noexcept { return n.name ? std::hash<void*>()(n.name) : 0; }
 };
+
+inline Name operator ""_n(const char* str, size_t len) { return basic_string_view(str, len); }

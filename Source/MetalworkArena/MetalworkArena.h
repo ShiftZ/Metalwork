@@ -47,6 +47,7 @@
 
 using namespace std;
 using namespace std::chrono;
+using namespace std::filesystem;
 namespace views = std::views;
 
 inline struct UEScaler {} UEScale;

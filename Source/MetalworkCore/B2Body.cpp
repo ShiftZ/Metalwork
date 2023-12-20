@@ -3,7 +3,7 @@
 #include "B2World.h"
 #include "CoreInterface.h"
 
-B2Body::B2Body(b2Body* body): body(body)
+B2Body::B2Body(b2Body* body, Name name, Name model) : RigidBody(name, model), body(body)
 {
 	body->GetUserData() = this;
 }
@@ -58,6 +58,8 @@ void B2Body::DrawShapes(IDebugDrawer& drawer)
 {
 	const b2Transform& transform = body->GetTransform();
 
+	Color color(0, 1, 1, 1);
+
 	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
 	{
 		switch (fixture->GetType())
@@ -66,7 +68,7 @@ void B2Body::DrawShapes(IDebugDrawer& drawer)
 		{
 			b2CircleShape* circle = (b2CircleShape*)fixture->GetShape();
 			b2Vec2 center = transform.p + b2Mul(transform.q, circle->m_p);
-			drawer.Circle(center, circle->m_radius);
+			drawer.Circle(center, circle->m_radius, color);
 			break;
 		}
 
@@ -77,7 +79,7 @@ void B2Body::DrawShapes(IDebugDrawer& drawer)
 			for (int i = 0; i < poly->m_count; ++i)
 				verts[i] = transform.p + b2Mul(transform.q, poly->m_vertices[i]);
 			verts.push_back(verts[0]);
-			drawer.Poly(verts);
+			drawer.Poly(verts, color);
 			break;
 		}
 

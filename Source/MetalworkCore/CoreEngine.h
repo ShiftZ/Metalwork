@@ -45,7 +45,7 @@ private:
 	void MainLoop(stop_token st);
 
 public:
-	MetalCore(int player, unique_ptr<INetwork> net);
+	MetalCore(int player, unique_ptr<RigidWorld> world, unique_ptr<INetwork> net);
 	~MetalCore() override;
 
 	Arena& Arena() { return arena; }

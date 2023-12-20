@@ -4,7 +4,7 @@
 
 #include "CoreInterface.h"
 #include "VesselActor.h"
-#include "DebugDrawer.h"
+#include "ArenaSettings.h"
 #include "Vessel.h"
 
 DEFINE_LOG_CATEGORY(LogNetwork);
@@ -16,7 +16,7 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 	FString PlayerStr;
 	FParse::Value(FCommandLine::Get(), L"player", PlayerStr);
 
-	int Player = 0, Players = 1;
+	int Player = 1, Players = 1;
 
 	swscanf(*PlayerStr, L"%d/%d", &Player, &Players);
 	--Player;
@@ -42,8 +42,11 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 			UE_DEBUG_BREAK();
 		}
 	}
+
+	AArenaSettings* Settings = CastChecked<AArenaSettings>(GetWorldSettings());
+	unique_ptr<RigidWorld> RigWorld(Settings->RigWorld.Release());
 	
-	Core = MakeUnique<MetalCore>(Player, move(Network));
+	Core = MakeUnique<MetalCore>(Player, move(RigWorld), move(Network));
 
 	for (Vessel* Ves : Core->Arena().Vessels() | cptr)
 	{
@@ -71,7 +74,9 @@ void AMetalworkArenaGameModeBase::Tick(float DeltaTime)
 	for (AArenaActor* Actor : Actors)
 		Actor->SyncPose();
 
-	DebugDrawer Drawer(GetWorld());
-	for (TActorIterator<AArenaActor> Actor(GetWorld()); Actor; ++Actor)
-		(*Actor)->Rig->DrawShapes(Drawer);
+	Core->arena.rigid_world->DebugDraw();
+
+	//DebugDrawer Drawer(GetWorld());
+	//for (TActorIterator<AArenaActor> Actor(GetWorld()); Actor; ++Actor)
+	//	(*Actor)->Rig->DrawShapes(Drawer);
 }		

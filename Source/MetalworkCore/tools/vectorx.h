@@ -286,6 +286,15 @@ vectorx<type, dim> operator*( const vectorx<type, dim>& v, scalar_type scalar )
 }
 
 template< typename type, int dim, typename scalar_type > requires std::is_arithmetic_v<scalar_type>
+vectorx<type, dim> operator*( scalar_type scalar, const vectorx<type, dim>& v )
+{
+	vectorx<type, dim> result;
+	for (int i = 0; i < dim; i++)
+		result[i] = v[i] * scalar;
+	return result;
+}
+
+template< typename type, int dim, typename scalar_type > requires std::is_arithmetic_v<scalar_type>
 vectorx<type, dim> operator/( const vectorx<type, dim>& v, scalar_type scalar )
 {
 	vectorx<type, dim> result;

@@ -13,7 +13,7 @@ shared_ptr<RigidObject> RigidWorld::RemoveObject(RigidObject* obj)
 	return removed_obj;
 }
 
-RigidObject* RigidWorld::FindObject(string_view name)
+RigidObject* RigidWorld::FindObject(Name name)
 {
 	auto obj_it = ranges::find_if(objects, [&](shared_ptr<RigidObject>& obj){ return obj->name == name; });
 	return obj_it != objects.end() ? obj_it->get() : nullptr;
@@ -34,13 +34,9 @@ void RigidObject::SetPosition(vec2 position)
 		part->SetPosition(part->GetPosition() + shift);
 }
 
-void RigidObject::LoadModel(RigidWorld* world, string_view jmodel_str, string_view root_name)
+void RigidObject::LoadModel(RigidWorld* world, Json::Value& jmodel, string_view root_name)
 {
-	Json::Value jval;
-	Json::Reader reader;
-	reader.parse(jmodel_str.data(), jmodel_str.data() + jmodel_str.size(), jval);
-
-	parts = world->LoadModel(jval);
+	parts = world->LoadModel(jmodel);
 	ranges::for_each(parts | cptr, [&](RigidBody* part){ part->object = this; });
 
 	if (!root_name.empty())
@@ -51,7 +47,13 @@ void RigidObject::LoadModel(RigidWorld* world, string_view jmodel_str, string_vi
 	}
 }
 
-RigidBody* RigidObject::FindPart(string_view part_name)
+void RigidObject::AddPart(shared_ptr<RigidBody> body)
+{
+	body->object = this;
+	parts.push_back(move(body));
+}
+
+RigidBody* RigidObject::FindPart(Name part_name)
 {
 	auto part_it = ranges::find_if(parts, [&](shared_ptr<RigidBody>& part){ return part->name == part_name; });
 	return part_it != parts.end() ? part_it->get() : nullptr;

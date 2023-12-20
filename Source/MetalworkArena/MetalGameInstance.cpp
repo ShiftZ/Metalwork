@@ -4,10 +4,12 @@
 void UMetalGameInstance::Init()
 {
 	Super::Init();
+
+	SetContentPath(*FPaths::ProjectContentDir());
 	
 	if (!UE_BUILD_SHIPPING)
 	{
-		add_logger([](string msg){ UE_LOG(LogTemp, Log, L"%s", ANSI_TO_TCHAR(msg.c_str())); });
+		add_logger([](string msg){ UE_LOG(LogTemp, Log, L"%s", StringCast<wchar_t>(msg.c_str()).Get()); });
 		add_logger(DisplayLog(), [&](string msg, const DisplayLog& id)
 			{ GetEngine()->AddOnScreenDebugMessage(id.key, id.time, FColor::Yellow, msg.c_str()); });
 

@@ -2,7 +2,6 @@
 
 #include "ArenaActor.h"
 #include "ArenaSettings.h"
-#include "Kismet/GameplayStatics.h"
 
 void AArenaActor::AttachToRig(RigidObject* Rig)
 {
@@ -12,7 +11,7 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 
 	auto MakeComponent = [&](RigidBody* Body)
 	{
-		FVehicleModelPartRow* ModelRow = Models->FindRow<FVehicleModelPartRow>(ANSI_TO_TCHAR(*Body->model), nullptr);
+		FVehicleModelPartRow* ModelRow = Models->FindRow<FVehicleModelPartRow>(*Body->model, nullptr);
 		USceneComponent* Component = NewObject<USceneComponent>(this, ModelRow->ComponentClass.Get());
 		Component->SetupAttachment(GetRootComponent());
 		Component->RegisterComponent();
@@ -67,14 +66,12 @@ void APropActor::PostEditChangeProperty(FPropertyChangedEvent& Event)
 	Super::PostEditChangeProperty(Event);
 	if (Event.GetPropertyName() == GET_MEMBER_NAME_CHECKED(APropActor, RigModel))
 	{
-		FString FilePath = FPaths::ProjectContentDir() + L"Props/" + RigModel.ToString() + L".json";
-		FArchive* Reader = IFileManager::Get().CreateFileReader(*FilePath);
-		string Json(Reader->TotalSize(), 0);
-		Reader->Serialize(Json.data(), Json.size());
-
 		AArenaSettings* Arena = CastChecked<AArenaSettings>(GetWorldSettings());
 		if (!Rig) Rig = Arena->RigWorld->AddObject(make_shared<RigidObject>(this));
-		Rig->LoadModel(Arena->RigWorld.get(), Json);
+
+		FString ModelName = L"Props/" + RigModel.ToString();
+		Json::Value& JModel = GetJson(*ModelName);
+		Rig->LoadModel(Arena->RigWorld.Get(), JModel);
 	}
 }
 
@@ -84,6 +81,7 @@ void APropActor::PostLoad()
 	if (GetFlags() & RF_ClassDefaultObject) return;
 
 	AArenaSettings* Arena = CastChecked<AArenaSettings>(GetWorldSettings());
-	string_view Name = StringCast<char>(*GetName()).Get();
-	Rig = Arena->RigWorld->FindObject(Name);
+	Name ActorName = StringCast<char>(*GetName()).Get();
+	Rig = Arena->RigWorld->FindObject(ActorName);
+	Rig->actor = this;
 }

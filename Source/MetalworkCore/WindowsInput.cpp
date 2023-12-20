@@ -2,43 +2,53 @@
 
 static LRESULT CALLBACK EventHandler(HWND, unsigned, WPARAM, LPARAM);
 
-static HWND whandler;
+static HWND window;
 
 WindowsInput::WindowsInput()
 {
-	packaged_task init([&]
+	promise<void> init_prom;
+
+	auto initialize_window = [&]
 	{
 		WNDCLASS window_class = {};
 		window_class.lpfnWndProc = EventHandler;
 		window_class.hInstance = GetModuleHandle(nullptr);
 		window_class.lpszClassName = L"Metalwork";
 
-		if (!RegisterClass(&window_class))
+		if (!RegisterClass(&window_class) && GetLastError() != ERROR_CLASS_ALREADY_EXISTS)
 			throw runtime_error(format("RegisterClass failed. Error {}", GetLastError()));
 
-		whandler = CreateWindow(window_class.lpszClassName, L"Metalwork Input", 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr, nullptr, nullptr);
-		if (whandler == nullptr)
+		HWND hwnd = CreateWindow(window_class.lpszClassName, L"Metalwork Input", 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr, nullptr, nullptr);
+		if (hwnd == nullptr)
 			throw runtime_error(format("CreateWindow failed. Error {}", GetLastError()));
 
-		SetWindowLongPtr(whandler, GWLP_USERDATA, LONG_PTR(this));
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, LONG_PTR(this));
+		SetTimer(hwnd, 0, 250, nullptr);
 
-		SetTimer(whandler, 0, 250, nullptr);
-	});
+		init_prom.set_value();
+
+		return hwnd;
+	};
 
 	thread = jthread([&, this](stop_token st)
 	{
-		init();
-		stop_callback stop(st, [=]{ DestroyWindow(whandler); });
+		try { window = initialize_window(); }
+		catch (...) { return init_prom.set_exception(current_exception()); }
+
+		stop_callback stop(st, []{ PostMessage(window, WM_NULL, 0, 0); });
 
 		MSG msg = {};
-		while (GetMessage(&msg, nullptr, 0, 0) && msg.message != WM_DESTROY)
+		while (GetMessage(&msg, nullptr, 0, 0))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+
+			if (st.stop_requested()) 
+				DestroyWindow(window);
 		}
 	});
 
-	init.get_future().get();
+	init_prom.get_future().get();
 }
 
 void WindowsInput::RegisterDevices()
@@ -50,9 +60,9 @@ void WindowsInput::RegisterDevices()
 	GetRegisteredRawInputDevices(devices.data(), &num, sizeof(RAWINPUTDEVICE));
 
 	auto mouse = ranges::find_if(devices, [](RAWINPUTDEVICE& dev){ return dev.usUsagePage == 0x01 && dev.usUsage == 0x02; });
-	if (mouse != devices.end() && mouse->hwndTarget != whandler)
+	if (mouse != devices.end() && mouse->hwndTarget != window)
 	{
-		mouse->hwndTarget = whandler;
+		mouse->hwndTarget = window;
 		RegisterRawInputDevices(devices.data(), num, sizeof(RAWINPUTDEVICE));
 	}
 }
@@ -91,6 +101,12 @@ static LRESULT CALLBACK EventHandler(HWND hwnd, unsigned msg, WPARAM wparam, LPA
 			winput->RegisterDevices();
 			SetTimer(hwnd, 0, 250, nullptr);
 			return 0;
+		}
+
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			break;
 		}
 	}
 

@@ -10,7 +10,7 @@ class B2Body final : public RigidBody
 	friend class B2World;
 
 public:
-	B2Body(b2Body* body);
+	B2Body(b2Body* body, Name name, Name model);
 	vec2 GetPosition() override;
 	void SetPosition(vec2 position) override;
 	float GetAngle() override;
