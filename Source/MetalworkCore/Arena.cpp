@@ -21,7 +21,7 @@ Arena::Arena(unique_ptr<RigidWorld> rigid_world) : rigid_world(move(rigid_world)
 	vessels.push_back(move(player2));
 }
 
-void Arena::Start() 
+void Arena::Start()
 {
 	rigid_world->Capture();
 }

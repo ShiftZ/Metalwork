@@ -47,6 +47,12 @@ void AArenaActor::Tick(float dt)
 	//SyncPose();
 }
 
+void AArenaActor::Destroyed()
+{
+	Super::Destroyed();
+	if (Rig && Rig->world)
+		Rig->world->RemoveObject(Rig);
+}
 
 TArray<FName> APropActor::GetRigs()
 {

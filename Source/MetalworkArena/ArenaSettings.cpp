@@ -13,10 +13,11 @@ void AArenaSettings::PostInitProperties()
 void AArenaSettings::Serialize(FArchive& Ar)
 {
 	AInfo::Serialize(Ar);
+	if (GetFlags() & RF_ClassDefaultObject) return;
 
 	if (Ar.IsSaving())
 	{
-		for (RigidObject* Obj : RigWorld->objects | cptr)
+		for (RigidObject* Obj : RigWorld->GetObjects())
 		{
 			AArenaActor* Actor = static_cast<AArenaActor*>(Obj->actor);
 			Obj->name = StringCast<char>(*Actor->GetName()).Get();
@@ -69,4 +70,16 @@ void AArenaSettings::PostLoad()
 
 	Drawer = MakeUnique<DebugDrawer>(GetWorld());
 	RigWorld->SetDebugDrawer(Drawer.Get());
+
+	if constexpr (WITH_EDITOR)
+	{
+		UChildActorComponent* ActorComponent = NewObject<UChildActorComponent>(this);
+		ActorComponent->SetChildActorClass(AEditorTicker::StaticClass());
+		ActorComponent->RegisterComponent();
+	}
+}
+
+void AArenaSettings::EditorTick()
+{
+	RigWorld->DebugDraw();
 }

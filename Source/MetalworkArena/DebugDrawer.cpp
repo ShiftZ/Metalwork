@@ -5,7 +5,7 @@ const float Transparency = 0.2;
 void DebugDrawer::Circle(vec2 Center, float Radius, Color Col)
 {
 	FColor Color = FLinearColor(Col.r, Col.g, Col.b, Col.a * Transparency).QuantizeRound();
-	DrawCircle(World, Center * UEScale, {1, 0, 0}, {0, 0, 1}, Color, Radius * UEScale, 20);
+	DrawCircle(World, Center * UEScale, {1, 0, 0}, {0, 0, 1}, Color, Radius * UEScale, 20, false, -1, 0, 2);
 }
 
 void DebugDrawer::SolidCircle(vec2 Center, vec2 Axis, float Radius, Color Col)
@@ -54,7 +54,7 @@ void DebugDrawer::SolidPoly(span<vec2> Verts, Color Col)
 void DebugDrawer::Line(vec2 A, vec2 B, Color Col)
 {
 	FColor Color = FLinearColor(Col.r, Col.g, Col.b, Col.a * Transparency).QuantizeRound();
-	DrawDebugLine(World, A * UEScale, B * UEScale, Color);
+	DrawDebugLine(World, A * UEScale, B * UEScale, Color, false, -1, 0, 2);
 }
 
 void DebugDrawer::Point(vec2 P, float Size, Color Col)

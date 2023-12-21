@@ -121,7 +121,7 @@ void B2World::LoadFromJson(string_view json)
 	{
 		Name obj_name = b2json.getCustomString(b2body, "ObjectName");
 		RigidObject* obj = FindObject(obj_name);
-		if (!obj) obj = objects.emplace_back(make_shared<RigidObject>(obj_name)).get();
+		if (!obj) obj = AddObject(make_shared<RigidObject>(obj_name));
 		Name body_name = b2json.getBodyName(b2body);
 		Name model = b2json.getCustomString(b2body, "Model");
 		obj->AddPart(make_shared<B2Body>(b2body, body_name, model));

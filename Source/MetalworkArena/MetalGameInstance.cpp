@@ -5,8 +5,6 @@ void UMetalGameInstance::Init()
 {
 	Super::Init();
 
-	SetContentPath(*FPaths::ProjectContentDir());
-	
 	if (!UE_BUILD_SHIPPING)
 	{
 		add_logger([](string msg){ UE_LOG(LogTemp, Log, L"%s", StringCast<wchar_t>(msg.c_str()).Get()); });

@@ -36,6 +36,7 @@
 #include <PaperSpriteComponent.h>
 #include <UObject/LinkerLoad.h>
 #include <UObject/Package.h>
+#include <TimerManager.h>
 
 #include "tools/flat_map.h"
 #include "tools/logger.h"

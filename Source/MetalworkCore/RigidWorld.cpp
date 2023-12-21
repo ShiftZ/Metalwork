@@ -2,6 +2,7 @@
 
 RigidObject* RigidWorld::AddObject(shared_ptr<RigidObject> obj)
 {
+	obj->world = this;
 	return objects.emplace_back(move(obj)).get();
 }
 
@@ -10,6 +11,7 @@ shared_ptr<RigidObject> RigidWorld::RemoveObject(RigidObject* obj)
 	auto obj_it = ranges::find_if(objects, [&](shared_ptr<RigidObject>& o){ return o.get() == obj; });
 	shared_ptr<RigidObject> removed_obj = move(*obj_it);
 	objects.erase(obj_it);
+	removed_obj->world = nullptr;
 	return removed_obj;
 }
 
@@ -34,9 +36,14 @@ void RigidObject::SetPosition(vec2 position)
 		part->SetPosition(part->GetPosition() + shift);
 }
 
-void RigidObject::LoadModel(RigidWorld* world, Json::Value& jmodel, string_view root_name)
+RigidObject::~RigidObject()
 {
-	parts = world->LoadModel(jmodel);
+	if (actor) actor->Rig = nullptr;
+}
+
+void RigidObject::LoadModel(RigidWorld* _world, Json::Value& jmodel, string_view root_name)
+{
+	parts = _world->LoadModel(jmodel);
 	ranges::for_each(parts | cptr, [&](RigidBody* part){ part->object = this; });
 
 	if (!root_name.empty())

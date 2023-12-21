@@ -9,13 +9,11 @@ class METALWORKARENA_API AArenaActor : public AActor, public MetalActor
 	GENERATED_BODY()
 
 public:
-	RigidObject* Rig = nullptr;
-
-public:
 	AArenaActor() { PrimaryActorTick.bCanEverTick = true; }
 	void AttachToRig(RigidObject* Rig);
 	void SyncPose();
 	void Tick(float dt) override;
+	void Destroyed() override;
 };
 
 UCLASS()

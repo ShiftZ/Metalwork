@@ -6,15 +6,17 @@ namespace Json { class Value; }
 
 class RigidWorld
 {
+	vector<shared_ptr<class RigidObject>> objects;
+
 public:
 	int step = 0;
 	int captured_step = -1;
-	vector<shared_ptr<class RigidObject>> objects;
 
 public:
 	METALWORKCORE_API RigidObject* AddObject(shared_ptr<RigidObject> obj);
 	METALWORKCORE_API shared_ptr<RigidObject> RemoveObject(RigidObject* obj);
 	METALWORKCORE_API RigidObject* FindObject(Name name);
+	METALWORKCORE_API auto GetObjects() { return objects | cptr; }
 
 	virtual void Capture() = 0;
 	virtual void Restore() = 0;
@@ -51,6 +53,7 @@ class RigidObject
 {
 public:
 	class MetalActor* actor = nullptr;
+	RigidWorld* world = nullptr;
 	vector<shared_ptr<RigidBody>> parts;
 	RigidBody* root = nullptr;
 	vec2 root_shift = nullvec;
@@ -69,9 +72,11 @@ public:
 	RigidBody* FindPart(Name part_name);
 	void SetPosition(vec2 position);
 
-	virtual ~RigidObject() = default;
+	METALWORKCORE_API ~RigidObject();
 };
 
 class MetalActor
 {
+public:
+	RigidObject* Rig = nullptr;
 };
