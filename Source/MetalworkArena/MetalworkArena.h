@@ -51,6 +51,10 @@ using namespace std::chrono;
 using namespace std::filesystem;
 namespace views = std::views;
 
+inline constexpr float ScaleRigToUE = 10.f;
+
 inline struct UEScaler {} UEScale;
-inline float operator*(float F, const UEScaler& S) { return F * 10; }
+inline float operator*(float F, const UEScaler& S) { return F * ScaleRigToUE; }
+inline float operator/(float F, const UEScaler& S) { return F / ScaleRigToUE; }
 inline FVector operator*(const vec2& P, const UEScaler& S) { return FVector(P.x * S, 0, P.y * S); }
+inline vec2 operator/(const FVector& P, const UEScaler& S) { return vec2(P.X / S, P.Z / S); }

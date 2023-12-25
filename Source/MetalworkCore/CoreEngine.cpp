@@ -14,28 +14,17 @@ MetalCore::MetalCore(int player, unique_ptr<RigidWorld> world, unique_ptr<INetwo
 {
 	network = static_pointer_cast<Network>(move(net));
 
-	promise<void> init_prom;
+	if constexpr (windows)
+		input = make_unique<WindowsInput>();
 
-	auto init = [&]
-	{
-		if constexpr (windows)
-			input = make_unique<WindowsInput>();
-		inputs.resize(network ? network->NumPeers() + 1 : 1);
-
-		init_prom.set_value();
-	};
+	inputs.resize(network ? network->NumPeers() + 1 : 1);
 
 	thread = jthread([&](stop_token st)
 	{
-		try { init(); } 
-		catch (...) { return init_prom.set_exception(current_exception()); }
-
 		GetReady(st);
 		if (st.stop_requested()) return;
 		MainLoop(st);
 	});
-
-	init_prom.get_future().get();
 }
 
 void MetalCore::Ready()

@@ -2,23 +2,32 @@
 
 #include "Vessel.h"
 #include "B2World.h"
+#include "CoreInterface.h"
 #include "Weapon.h"
 
-Arena::Arena(unique_ptr<RigidWorld> rigid_world) : rigid_world(move(rigid_world))
+Arena::Arena(unique_ptr<RigidWorld> rigid_world)
 {
-	shared_ptr<Vessel> player1 = make_shared<Vessel>(this, "vessels/dummy"_n);
-	shared_ptr<Weapon> weapon1 = make_shared<Weapon>(this, "weapons/chain-ball"_n);
+	Vessel* player1 = rigid_world->AddObject(make_shared<Vessel>("player1"));
+	player1->LoadModel(GetJson("vessels/dummy"));
+
+	Weapon* weapon1 = rigid_world->AddObject(make_shared<Weapon>("weapon1"));
+	weapon1->LoadModel(GetJson("weapons/chain-ball"));
 	player1->AttachWeapon(weapon1);
 	player1->SetPosition({-25, 0});
 
-	vessels.push_back(move(player1));
+	vessels.push_back(player1);
 
-	shared_ptr<Vessel> player2 = make_shared<Vessel>(this, "vessels/dummy"_n);
-	shared_ptr<Weapon> weapon2 = make_shared<Weapon>(this, "weapons/chain-ball"_n);
+	Vessel* player2 = rigid_world->AddObject(make_shared<Vessel>("player2"));
+	player2->LoadModel(GetJson("vessels/dummy"));
+
+	Weapon* weapon2 = rigid_world->AddObject(make_shared<Weapon>("weapon2"));
+	weapon2->LoadModel(GetJson("weapons/chain-ball"));
 	player2->AttachWeapon(weapon2);
 	player2->SetPosition({25, 0});
 
-	vessels.push_back(move(player2));
+	vessels.push_back(player2);
+
+	this->rigid_world = move(rigid_world);
 }
 
 void Arena::Start()
@@ -36,10 +45,7 @@ void Arena::Step(StepInputs inputs)
 	for (int substep = 0; flat_map<int, PlayerInput>& players_input : inputs.clean)
 	{
 		for (auto& [player, input] : players_input)
-		{
-			Vessel* vessel = vessels[player].get();
-			vessel->root->ApplyForce(input.move);
-		}
+			vessels[player]->root->ApplyForce(input.move);
 
 		rigid_world->Step();
 		++substep;
@@ -51,10 +57,7 @@ void Arena::Step(StepInputs inputs)
 	for (flat_map<int, PlayerInput>& players_input : inputs.dirty)
 	{
 		for (auto& [player, input] : players_input)
-		{
-			Vessel* vessel = vessels[player].get();
-			vessel->root->ApplyForce(input.move);
-		}
+			vessels[player]->root->ApplyForce(input.move);
 
 		rigid_world->Step();
 	}

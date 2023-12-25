@@ -6,10 +6,10 @@
 class Vessel : public RigidObject
 {
 public:
-	shared_ptr<Weapon> weapon;
+	Weapon* weapon = nullptr;
 
 public:
-	Vessel(class Arena* arena, Name model_name);
-	void AttachWeapon(shared_ptr<Weapon> weapon);
+	using RigidObject::RigidObject;
+	void AttachWeapon(Weapon* weapon);
 	void SetPosition(vec2 position);
 };

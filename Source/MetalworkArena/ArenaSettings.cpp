@@ -15,7 +15,7 @@ void AArenaSettings::Serialize(FArchive& Ar)
 	AInfo::Serialize(Ar);
 	if (GetFlags() & RF_ClassDefaultObject) return;
 
-	if (Ar.IsSaving())
+	/*if (Ar.IsSaving())
 	{
 		for (RigidObject* Obj : RigWorld->GetObjects())
 		{
@@ -60,16 +60,13 @@ void AArenaSettings::Serialize(FArchive& Ar)
 			Ar.Serialize(Json.data(), Size);
 			RigWorld->LoadFromJson(Json);
 		}
-	}
+	}*/
 }
 
 void AArenaSettings::PostLoad()
 {
 	Super::PostLoad();
 	if (GetFlags() & RF_ClassDefaultObject) return;
-
-	Drawer = MakeUnique<DebugDrawer>(GetWorld());
-	RigWorld->SetDebugDrawer(Drawer.Get());
 
 	if constexpr (WITH_EDITOR)
 	{
@@ -81,5 +78,6 @@ void AArenaSettings::PostLoad()
 
 void AArenaSettings::EditorTick()
 {
-	RigWorld->DebugDraw();
+	FlushPersistentDebugLines(GetWorld());
+	RigWorld->DebugDraw(DebugDrawer(GetWorld(), true));
 }

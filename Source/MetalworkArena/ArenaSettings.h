@@ -12,7 +12,6 @@ class AArenaSettings : public AWorldSettings, public IEditorTickable
 
 public:
 	TUniquePtr<RigidWorld> RigWorld;
-	TUniquePtr<DebugDrawer> Drawer;
 
 protected:
 	void PostInitProperties() override;

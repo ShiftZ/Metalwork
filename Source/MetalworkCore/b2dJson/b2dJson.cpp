@@ -20,6 +20,7 @@
 #include <istream>
 #include <fstream>
 #include <algorithm>
+#include <charconv>
 #include "json/json.h"
 #include "b2dJsonImage.h"
 #include "Box2D/box2d.h"
@@ -276,6 +277,7 @@ Json::Value b2dJson::b2j(b2Fixture *fixture)
             const b2Vec2* vertices = chain->m_vertices;
             for (int32 i = 0; i < count; ++i)
                 vecToJson("vertices", vertices[i], fixtureValue["chain"], i);
+
             fixtureValue["chain"]["hasPrevVertex"] = true;
             fixtureValue["chain"]["hasNextVertex"] = true;
             vecToJson("prevVertex", chain->m_prevVertex, fixtureValue["chain"]);
@@ -461,6 +463,7 @@ Json::Value b2dJson::b2j(b2Joint* joint)
             floatToJson("maxTorque", frictionJoint->GetMaxTorque(), jointValue);
         }
         break;
+
     case e_unknownJoint:
     default:
         std::cout << "Unknown joint type not stored in snapshot : " << joint->GetType() << std::endl;
@@ -1416,7 +1419,7 @@ b2Fixture* b2dJson::j2b2Fixture(b2Body* body, Json::Value &fixtureValue)
         edgeShape.m_vertex1 = jsonToVec("vertex1", fixtureValue["edge"]);
         edgeShape.m_vertex2 = jsonToVec("vertex2", fixtureValue["edge"]);
         edgeShape.m_oneSided = fixtureValue["edge"].get("hasVertex0",false).asBool();
-        if (  edgeShape.m_oneSided )
+        if ( edgeShape.m_oneSided )
         {
             edgeShape.m_vertex0 = jsonToVec("vertex0", fixtureValue["edge"]);
             edgeShape.m_vertex3 = jsonToVec("vertex3", fixtureValue["edge"]);
@@ -1443,14 +1446,20 @@ b2Fixture* b2dJson::j2b2Fixture(b2Body* body, Json::Value &fixtureValue)
         for (int i = 0; i < numVertices; i++)
             vertices[i] = jsonToVec("vertices", fixtureValue["chain"], i);
 
+         b2Vec2 prevVertex, nextVertex;
+
         if ( fixtureValue["chain"].get("hasPrevVertex",false).asBool() )
         {
-            b2Vec2 prevVertex = jsonToVec("prevVertex", fixtureValue["chain"]);
-            b2Vec2 nextVertex = jsonToVec("nextVertex", fixtureValue["chain"]);
-            chainShape.CreateChain(vertices, numVertices, prevVertex, nextVertex);
+            prevVertex = jsonToVec("prevVertex", fixtureValue["chain"]);
+            nextVertex = jsonToVec("nextVertex", fixtureValue["chain"]);
         }
         else
-            chainShape.CreateLoop(vertices, numVertices);
+        {
+            prevVertex = vertices[0] + (vertices[0] - vertices[1]);
+            nextVertex = 2 * vertices[numVertices - 1] - vertices[numVertices - 2];
+        }
+
+        chainShape.CreateChain(vertices, numVertices, prevVertex, nextVertex);
 
     	fixtureDef.shape = &chainShape;
         fixture = body->CreateFixture(&fixtureDef);
@@ -1792,29 +1801,10 @@ std::string b2dJson::floatToHex(float f)
 
 float b2dJson::hexToFloat(std::string str)
 {
-    int strLen = 8;//32 bit float
-    unsigned char bytes[4];
-    int bptr = (strLen / 2) - 1;
-
-    for (int i = 0; i < strLen; i++){
-        unsigned char   c;
-        c = str[i];
-        if (c > '9') c -= 7;
-        c <<= 4;
-        bytes[bptr] = c;
-
-        ++i;
-        c = str[i];
-        if (c > '9') c -= 7;
-        c -= '0';
-        bytes[bptr] |= c;
-
-        --bptr;
-    }
-
-    //return *((float*)bytes); dereferencing type-punned pointer will break strict-aliasing rules
-    float* f = (float*)bytes;
-    return *f;
+    int32_t iValue;
+    std::from_chars(str.data(), str.data() + str.size(), iValue, 16);
+    float fValue = std::bit_cast<float>(iValue);
+    return fValue;
 }
 
 b2Body* b2dJson::lookupBodyFromIndex( unsigned int index )

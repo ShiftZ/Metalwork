@@ -59,13 +59,12 @@ struct Color
 class IDebugDrawer
 {
 public:
-	virtual void Circle(vec2 center, float radius, Color color) = 0;
-	virtual void SolidCircle(vec2 center, vec2 axis, float radius, Color color) = 0;
-	virtual void Poly(span<vec2> verts, Color color) = 0;
-	virtual void SolidPoly(span<vec2> verts, Color color) = 0;
-	virtual void Line(vec2 a, vec2 b, Color color) = 0;
-	virtual void Point(vec2 p, float size, Color color) = 0;
-	virtual void Edge(vec2 a, vec2 b) = 0;
+	virtual void Circle(vec2 center, float radius, Color color) const = 0;
+	virtual void SolidCircle(vec2 center, vec2 axis, float radius, Color color) const = 0;
+	virtual void Poly(span<vec2> verts, Color color) const = 0;
+	virtual void SolidPoly(span<vec2> verts, Color color) const = 0;
+	virtual void Line(vec2 a, vec2 b, Color color) const = 0;
+	virtual void Point(vec2 p, float size, Color color) const = 0;
 	virtual ~IDebugDrawer() = default;
 };
 

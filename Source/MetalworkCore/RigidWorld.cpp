@@ -31,27 +31,34 @@ void RigidObject::DrawShapes(IDebugDrawer& drawer)
 
 void RigidObject::SetPosition(vec2 position)
 {
-	vec2 shift = position - root->GetPosition() + root_shift;
-	for (RigidBody* part : parts | cptr)
-		part->SetPosition(part->GetPosition() + shift);
+	if (root)
+	{
+		vec2 shift = position - root->GetPosition() + root->offset;
+		for (RigidBody* part : parts | cptr)
+			part->SetPosition(part->GetPosition() + shift);
+	}
+	else
+	{
+		for (RigidBody* part : parts | cptr)
+			part->SetPosition(position + part->offset);
+	}
 }
 
 RigidObject::~RigidObject()
 {
-	if (actor) actor->Rig = nullptr;
+	if (actor) actor->ReleaseRig();
 }
 
-void RigidObject::LoadModel(RigidWorld* _world, Json::Value& jmodel, string_view root_name)
+void RigidObject::LoadModel(Json::Value& jmodel)
 {
-	parts = _world->LoadModel(jmodel);
-	ranges::for_each(parts | cptr, [&](RigidBody* part){ part->object = this; });
+	parts.clear();
 
-	if (!root_name.empty())
-	{
-		root = FindPart(root_name);
-		if (!root) throw data_error("Root name {} not found.", root_name);
-		root_shift = root->GetPosition();
-	}
+	parts = world->LoadModel(jmodel);
+	for (RigidBody* p : parts | cptr) p->object = this;
+
+	static const Name default_root_name = "root";
+	root = FindPart(default_root_name);
+	if (!root) root = parts.front().get();
 }
 
 void RigidObject::AddPart(shared_ptr<RigidBody> body)

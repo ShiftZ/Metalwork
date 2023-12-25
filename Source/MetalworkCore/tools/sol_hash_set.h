@@ -103,6 +103,8 @@ public:
 	};
 
 public:
+	constexpr sol_hash_set() = default;
+
 	std::pair<iterator, bool> insert( const value_type& value ) { return insert_value(value); }
 	std::pair<iterator, bool> insert( value_type&& value ) { return insert_value(std::move(value)); }
 

@@ -119,29 +119,24 @@ void B2World::LoadFromJson(string_view json)
 
 	for (b2Body* b2body : bodies)
 	{
-		Name obj_name = b2json.getCustomString(b2body, "ObjectName");
+		Name obj_name = b2json.getCustomString(b2body, "ObjectName"s);
 		RigidObject* obj = FindObject(obj_name);
 		if (!obj) obj = AddObject(make_shared<RigidObject>(obj_name));
 		Name body_name = b2json.getBodyName(b2body);
-		Name model = b2json.getCustomString(b2body, "Model");
+		Name model = b2json.getCustomString(b2body, "Model"s);
 		obj->AddPart(make_shared<B2Body>(b2body, body_name, model));
 	}
 }
 
-void B2World::SetDebugDrawer(IDebugDrawer* engine_drawer)
+void B2World::DebugDraw(const IDebugDrawer& drawer)
 {
-	drawer = make_unique<B2Draw>(engine_drawer);
-	drawer->SetFlags(b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_centerOfMassBit);
-	world->SetDebugDraw(drawer.get());
-}
-
-void B2World::DebugDraw()
-{
+	B2Draw b2_drawer(drawer, b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_centerOfMassBit);
+	world->SetDebugDraw(&b2_drawer);
 	world->DebugDraw();
 }
 
 B2World::~B2World()
 {
 	for (b2Body* b2body = world->GetBodyList(); b2body; b2body = b2body->GetNext())
-		b2body->GetUserData()->body = nullptr;
+		b2body->GetUserData()->b2body = nullptr;
 }

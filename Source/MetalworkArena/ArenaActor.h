@@ -8,12 +8,18 @@ class METALWORKARENA_API AArenaActor : public AActor, public MetalActor
 {
 	GENERATED_BODY()
 
+protected:
+	RigidObject* Rig = nullptr;
+
 public:
 	AArenaActor() { PrimaryActorTick.bCanEverTick = true; }
+	void OnConstruction(const FTransform& Transform) override;
 	void AttachToRig(RigidObject* Rig);
 	void SyncPose();
 	void Tick(float dt) override;
 	void Destroyed() override;
+	void PostEditMove(bool bFinished) override;
+	void ReleaseRig() override { Rig = nullptr; }
 };
 
 UCLASS()
@@ -29,7 +35,8 @@ public:
 	TArray<FName> GetRigs();
 
 	void PostEditChangeProperty(FPropertyChangedEvent& Event) override;
-	void PostLoad() override;
+	void PostRegisterAllComponents() override;
+	void SetModel(FName ModelName);
 };
 
 UINTERFACE(MinimalAPI)

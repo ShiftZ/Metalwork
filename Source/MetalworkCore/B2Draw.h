@@ -2,10 +2,10 @@
 
 class B2Draw : public b2Draw
 {
-	class IDebugDrawer* drawer;
+	const class IDebugDrawer& drawer;
 
 public:
-	B2Draw(IDebugDrawer* drawer) : drawer(drawer) { m_drawFlags = 0; }
+	B2Draw(const IDebugDrawer& drawer, int flags) : drawer(drawer) { SetFlags(flags); }
 
 	void DrawPolygon(const b2Vec2* vertices, int32 n_vertices, const b2Color& col) override;
 	void DrawSolidPolygon(const b2Vec2* vertices, int32 n_vertices, const b2Color& col) override;

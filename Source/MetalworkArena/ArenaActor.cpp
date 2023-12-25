@@ -3,6 +3,15 @@
 #include "ArenaActor.h"
 #include "ArenaSettings.h"
 
+void AArenaActor::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+
+	FVector Location = GetActorLocation();
+    Location.Y = 0;
+    SetActorLocation(Location);
+}
+
 void AArenaActor::AttachToRig(RigidObject* Rig)
 {
 	this->Rig = Rig;
@@ -54,6 +63,16 @@ void AArenaActor::Destroyed()
 		Rig->world->RemoveObject(Rig);
 }
 
+void AArenaActor::PostEditMove(bool bFinished)
+{
+	Super::PostEditMove(bFinished);
+
+    FVector Location = GetActorLocation();
+    Location.Y = 0;
+    SetActorLocation(Location);
+	if (Rig) Rig->SetPosition(Location / UEScale);
+}
+
 TArray<FName> APropActor::GetRigs()
 {
 	TArray<FName> Rigs;
@@ -71,23 +90,37 @@ void APropActor::PostEditChangeProperty(FPropertyChangedEvent& Event)
 {
 	Super::PostEditChangeProperty(Event);
 	if (Event.GetPropertyName() == GET_MEMBER_NAME_CHECKED(APropActor, RigModel))
-	{
-		AArenaSettings* Arena = CastChecked<AArenaSettings>(GetWorldSettings());
-		if (!Rig) Rig = Arena->RigWorld->AddObject(make_shared<RigidObject>(this));
-
-		FString ModelName = L"Props/" + RigModel.ToString();
-		Json::Value& JModel = GetJson(*ModelName);
-		Rig->LoadModel(Arena->RigWorld.Get(), JModel);
-	}
+		SetModel(RigModel);
 }
 
-void APropActor::PostLoad()
+void APropActor::PostRegisterAllComponents()
 {
-	Super::PostLoad();
-	if (GetFlags() & RF_ClassDefaultObject) return;
+	Super::PostRegisterAllComponents();
+	SetModel(RigModel);
+}
 
+void APropActor::SetModel(FName ModelName)
+{
 	AArenaSettings* Arena = CastChecked<AArenaSettings>(GetWorldSettings());
-	Name ActorName = StringCast<char>(*GetName()).Get();
-	Rig = Arena->RigWorld->FindObject(ActorName);
-	Rig->actor = this;
+
+	if (ModelName != NAME_None)
+	{
+		if (!Rig)
+		{
+			Name ActorName = StringCast<char>(*GetName()).Get();
+			Rig = Arena->RigWorld->AddObject(make_shared<RigidObject>(ActorName, this));
+		}
+
+		FString PropName = L"Props/" + RigModel.ToString();
+		Rig->LoadModel(GetJson(*PropName));
+		Rig->SetPosition(GetActorLocation() / UEScale);
+	}
+
+	if (ModelName == NAME_None && Rig)
+	{
+		Arena->RigWorld->RemoveObject(Rig);
+		Rig = nullptr;
+	}
+
+	RigModel = ModelName;
 }

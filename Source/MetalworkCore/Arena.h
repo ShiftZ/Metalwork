@@ -16,7 +16,7 @@ public:
 	};
 
 public:
-	vector<shared_ptr<class Vessel>> vessels;
+	vector<class Vessel*> vessels;
 	unique_ptr<RigidWorld> rigid_world;
 	int step = 0;
 	mutex step_mtx;
@@ -26,7 +26,7 @@ public:
 	void Start();
 	void Step(StepInputs inputs);
 
-	span<shared_ptr<Vessel>> Vessels() { return vessels; }
+	span<Vessel*> Vessels() { return vessels; }
 
 	static METALWORKCORE_API unique_ptr<RigidWorld> MakeWorld();
 };

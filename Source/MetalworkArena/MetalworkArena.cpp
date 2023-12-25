@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "CoreInterface.h"
 #include "MetalworkArena.h"
+#include "CoreInterface.h"
 
 class FMetalworkArenaModule : public FDefaultGameModuleImpl
 {

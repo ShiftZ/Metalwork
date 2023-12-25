@@ -48,7 +48,7 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 	
 	Core = MakeUnique<MetalCore>(Player, move(RigWorld), move(Network));
 
-	for (Vessel* Ves : Core->Arena().Vessels() | cptr)
+	for (Vessel* Ves : Core->Arena().Vessels())
 	{
 		AVesselActor* Actor = GetWorld()->SpawnActor<AVesselActor>();
 		Actor->AttachToRig(Ves);
@@ -57,7 +57,7 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 		if (Ves->weapon)
 		{
 			AWeaponActor* Actor = GetWorld()->SpawnActor<AWeaponActor>();
-			Actor->AttachToRig(Ves->weapon.get());
+			Actor->AttachToRig(Ves->weapon);
 			Actors.Emplace(Actor);
 		}
 	}
@@ -73,10 +73,6 @@ void AMetalworkArenaGameModeBase::Tick(float DeltaTime)
 	unique_lock lock(Core->arena.step_mtx);
 	for (AArenaActor* Actor : Actors)
 		Actor->SyncPose();
-
-	Core->arena.rigid_world->DebugDraw();
-
-	//DebugDrawer Drawer(GetWorld());
-	//for (TActorIterator<AArenaActor> Actor(GetWorld()); Actor; ++Actor)
-	//	(*Actor)->Rig->DrawShapes(Drawer);
+	
+	Core->arena.rigid_world->DebugDraw(DebugDrawer(GetWorld(), false));
 }		

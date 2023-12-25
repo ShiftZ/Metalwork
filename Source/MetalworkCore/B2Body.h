@@ -4,13 +4,13 @@
 
 class B2Body final : public RigidBody
 {
-	class b2Body* body;
+	class b2Body* b2body;
 
 	friend b2Body* GetB2Body(RigidBody*);
 	friend class B2World;
 
 public:
-	B2Body(b2Body* body, Name name, Name model);
+	B2Body(b2Body* b2body, Name name, Name model);
 	vec2 GetPosition() override;
 	void SetPosition(vec2 position) override;
 	float GetAngle() override;
@@ -21,4 +21,4 @@ public:
 	~B2Body();
 };
 
-inline b2Body* GetB2Body(RigidBody* body) { return static_cast<B2Body*>(body)->body; }
+inline b2Body* GetB2Body(RigidBody* body) { return static_cast<B2Body*>(body)->b2body; }

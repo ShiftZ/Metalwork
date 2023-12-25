@@ -13,6 +13,10 @@ public:
 	int captured_step = -1;
 
 public:
+	template<typename ObjectType>
+	ObjectType* AddObject(shared_ptr<ObjectType> obj)
+		{ return (ObjectType*)AddObject(static_pointer_cast<RigidObject>(move(obj))); }
+
 	METALWORKCORE_API RigidObject* AddObject(shared_ptr<RigidObject> obj);
 	METALWORKCORE_API shared_ptr<RigidObject> RemoveObject(RigidObject* obj);
 	METALWORKCORE_API RigidObject* FindObject(Name name);
@@ -24,8 +28,7 @@ public:
 	virtual vector<shared_ptr<class RigidBody>> LoadModel(Json::Value& model) = 0;
 	virtual string SaveToJson() = 0;
 	virtual void LoadFromJson(string_view json) = 0;
-	virtual void SetDebugDrawer(class IDebugDrawer* drawer) = 0;
-	virtual void DebugDraw() = 0;
+	virtual void DebugDraw(const class IDebugDrawer& drawer) = 0;
 	virtual ~RigidWorld() = default;
 };
 
@@ -34,9 +37,10 @@ class RigidBody
 public:
 	class RigidObject* object = nullptr;
 	Name name, model;
+	vec2 offset;
 
 public:
-	RigidBody(Name name, Name model) : name(name), model(model) {}
+	RigidBody(Name name, Name model, vec2 shift) : name(name), model(model), offset(shift) {}
 
 	virtual vec2 GetPosition() = 0;
 	virtual void SetPosition(vec2 position) = 0;
@@ -56,21 +60,19 @@ public:
 	RigidWorld* world = nullptr;
 	vector<shared_ptr<RigidBody>> parts;
 	RigidBody* root = nullptr;
-	vec2 root_shift = nullvec;
 	Name name;
 
 public:
-	RigidObject() = default;
-	RigidObject(Name name) : name(name) {}
-	RigidObject(MetalActor* actor) : actor(actor) {}
+	RigidObject(const RigidObject&) = delete;
+	RigidObject(Name name, MetalActor* actor = nullptr) : actor(actor), name(name) {}
 
 	METALWORKCORE_API void DrawShapes(IDebugDrawer& drawer);
-	METALWORKCORE_API void LoadModel(RigidWorld* world, Json::Value& jmodel, string_view root_name = {});
+	METALWORKCORE_API void LoadModel(Json::Value& jmodel);
 
 	void AddPart(shared_ptr<RigidBody> body);
 	shared_ptr<RigidBody> RemovePart(RigidBody* part);
 	RigidBody* FindPart(Name part_name);
-	void SetPosition(vec2 position);
+	METALWORKCORE_API void SetPosition(vec2 position);
 
 	METALWORKCORE_API ~RigidObject();
 };
@@ -78,5 +80,5 @@ public:
 class MetalActor
 {
 public:
-	RigidObject* Rig = nullptr;
+	virtual void ReleaseRig() = 0;
 };

@@ -3,46 +3,46 @@
 #include "B2World.h"
 #include "CoreInterface.h"
 
-B2Body::B2Body(b2Body* body, Name name, Name model) : RigidBody(name, model), body(body)
+B2Body::B2Body(b2Body* b2body, Name name, Name model) : RigidBody(name, model, b2body->GetPosition()), b2body(b2body)
 {
-	body->GetUserData() = this;
+	b2body->GetUserData() = this;
 }
 
 vec2 B2Body::GetPosition()
 {
-	return body->GetPosition();
+	return b2body->GetPosition();
 }
 
 void B2Body::SetPosition(vec2 position)
 {
-	body->SetTransform(position, body->GetAngle());
+	b2body->SetTransform(position, b2body->GetAngle());
 }
 
 float B2Body::GetAngle()
 {
-	return 180.f * body->GetAngle() / numbers::pi;
+	return 180.f * b2body->GetAngle() / numbers::pi;
 }
 
 void B2Body::JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB)
 {
 	b2RevoluteJointDef def;
 	if (!anchorB)
-		def.Initialize(body, GetB2Body(with), anchorA);
+		def.Initialize(b2body, GetB2Body(with), anchorA);
 	else
 	{
-		def.bodyA = body;
+		def.bodyA = b2body;
 		def.bodyB = GetB2Body(with);
 		def.localAnchorA = anchorA;
 		def.localAnchorB = *anchorB;
 	}
 
-	body->GetWorld()->CreateJoint(&def);
+	b2body->GetWorld()->CreateJoint(&def);
 }
 
 void B2Body::JoinDistant(RigidBody* with, vec2 anchor, float min, float max)
 {
 	b2DistanceJointDef def;
-	def.Initialize(body, GetB2Body(with), body->GetLocalPoint(anchor), GetB2Body(with)->GetLocalPoint(anchor));
+	def.Initialize(b2body, GetB2Body(with), b2body->GetLocalPoint(anchor), GetB2Body(with)->GetLocalPoint(anchor));
 	def.minLength = min;
 	def.maxLength = max;
 	def.stiffness = 2;
@@ -51,16 +51,16 @@ void B2Body::JoinDistant(RigidBody* with, vec2 anchor, float min, float max)
 
 void B2Body::ApplyForce(vec2 force)
 {
-	body->ApplyForceToCenter(force, true);
+	b2body->ApplyForceToCenter(force, true);
 }
 
 void B2Body::DrawShapes(IDebugDrawer& drawer)
 {
-	const b2Transform& transform = body->GetTransform();
+	const b2Transform& transform = b2body->GetTransform();
 
 	Color color(0, 1, 1, 1);
 
-	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	for (b2Fixture* fixture = b2body->GetFixtureList(); fixture; fixture = fixture->GetNext())
 	{
 		switch (fixture->GetType())
 		{
@@ -82,18 +82,11 @@ void B2Body::DrawShapes(IDebugDrawer& drawer)
 			drawer.Poly(verts, color);
 			break;
 		}
-
-		case b2Shape::e_edge:
-		{
-			b2EdgeShape* edge = (b2EdgeShape*)fixture->GetShape();
-			drawer.Edge(edge->m_vertex1, edge->m_vertex2);
-			break;
-		}
 		}
 	}
 }
 
 B2Body::~B2Body()
 {
-	if (body) body->GetWorld()->DestroyBody(body);
+	if (b2body) b2body->GetWorld()->DestroyBody(b2body);
 }
