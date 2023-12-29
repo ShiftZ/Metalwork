@@ -45,7 +45,7 @@ void AArenaActor::SyncPose()
 		if (IComponentPocket* Pocket = Cast<IComponentPocket>(Comp))
 		{
 			Comp->SetWorldLocation(Pocket->Body->GetPosition() * UEScale);
-			Comp->SetWorldRotation(FRotator(Pocket->Body->GetAngle(), 0, 0));
+			Comp->SetWorldRotation(FRotator(FMath::RadiansToDegrees(Pocket->Body->GetAngle()), 0, 0));
 		}
 	});
 }

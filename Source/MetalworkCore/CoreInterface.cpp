@@ -3,27 +3,39 @@
 #include "CoreEngine.h"
 
 static path content_dir;
+static bool reload_modified;
 
 unique_ptr<IFuture<INetwork>> INetwork::Connect(span<RemotePlayer> targets, int player)
 {
 	return make_unique<Task<INetwork>>(Network::Connect(targets, player));
 }
 
-void SetContentPath(path dir)
+void SetContentPath(path dir, bool reload_modifed)
 {
-	content_dir = dir;
+	::content_dir = dir;
+	::reload_modified = reload_modifed;
 }
 
 Json::Value& GetJson(Name name)
 {
-	static unordered_map<Name, Json::Value> jvalues;
+	static unordered_map<Name, pair<Json::Value, file_time_type>> jvalues;
 
 	auto [it, ins] = jvalues.try_emplace(name);
-	Json::Value& jval = it->second;
+	auto& [jval, time] = it->second;
+
+	if (!ins && !reload_modified) return jval;
+
+	path json_path = content_dir / *name += ".json";
+
+	if (reload_modified)
+	{
+		file_time_type mod_time = last_write_time(json_path);
+		ins = (time != mod_time);
+		time = mod_time;
+	}
 
 	if (ins)
 	{
-		path json_path = content_dir / *name += ".json";
 		ifstream file(json_path);
 		string json_string;
 		json_string.resize(file_size(json_path));
@@ -33,13 +45,5 @@ Json::Value& GetJson(Name name)
 		reader.parse(json_string.data(), json_string.data() + json_string.size(), jval);
 	}
 
-	return jval;
-}
-
-Json::Value& MakeJson(string_view json_str)
-{
-	static Json::Value jval;
-	Json::Reader reader;
-	reader.parse(json_str.data(), json_str.data() + json_str.size(), jval);
 	return jval;
 }

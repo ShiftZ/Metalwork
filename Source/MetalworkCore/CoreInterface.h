@@ -70,6 +70,5 @@ public:
 
 namespace Json { class Value; }
 
-METALWORKCORE_API void SetContentPath(path dir);
+METALWORKCORE_API void SetContentPath(path dir, bool reload_modifed);
 METALWORKCORE_API Json::Value& GetJson(Name name);
-METALWORKCORE_API Json::Value& MakeJson(string_view json_str);

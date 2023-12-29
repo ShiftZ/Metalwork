@@ -20,11 +20,15 @@ class METALWORKCORE_API MetalCore : public IMetalCore
 		vec2i clean_pointer = 0;
 	};
 
+	enum class StepMode { Continuous, Paused, SingleStep };
+
 private:
 	unique_ptr<class InputInterface> input;
 	unique_ptr<class Network> network;
 	int player;
 	int step = 0;
+	StepMode step_mode = StepMode::Continuous;
+	
 	steady_clock::time_point start_time;
 
 	vector<PlayerInput> inputs;
@@ -49,6 +53,8 @@ public:
 	~MetalCore() override;
 
 	Arena& Arena() { return arena; }
+	void Pause() { step_mode = StepMode::Paused; }
+	void SingleStep() { step_mode = StepMode::SingleStep; }
 
 	void Ready() override;
 };

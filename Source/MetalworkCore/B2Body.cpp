@@ -20,7 +20,37 @@ void B2Body::SetPosition(vec2 position)
 
 float B2Body::GetAngle()
 {
-	return 180.f * b2body->GetAngle() / numbers::pi;
+	return b2body->GetAngle();
+}
+
+float B2Body::GetMass()
+{
+	return b2body->GetMass();
+}
+
+float B2Body::GetInertia()
+{
+	return b2body->GetInertia();
+}
+
+vec2 B2Body::GetVelocity()
+{
+	return b2body->GetLinearVelocity();
+}
+
+float B2Body::GetAngVelocity()
+{
+	return b2body->GetAngularVelocity();
+}
+
+void B2Body::SetGravityScale(float scale)
+{
+	b2body->SetGravityScale(scale);
+}
+
+void B2Body::SetAngDamping(float damping)
+{
+	b2body->SetAngularDamping(damping);
 }
 
 void B2Body::JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB)
@@ -51,7 +81,17 @@ void B2Body::JoinDistant(RigidBody* with, vec2 anchor, float min, float max)
 
 void B2Body::ApplyForce(vec2 force)
 {
-	b2body->ApplyForceToCenter(force, true);
+	b2body->ApplyForceToCenter(force, false);
+}
+
+void B2Body::ApplyForce(vec2 force, vec2 point)
+{
+	b2body->ApplyForce(force, point, false);
+}
+
+void B2Body::ApplyTorque(float torque)
+{
+	b2body->ApplyTorque(torque, false);
 }
 
 void B2Body::DrawShapes(IDebugDrawer& drawer)

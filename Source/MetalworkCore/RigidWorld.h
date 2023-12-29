@@ -29,6 +29,9 @@ public:
 	virtual string SaveToJson() = 0;
 	virtual void LoadFromJson(string_view json) = 0;
 	virtual void DebugDraw(const class IDebugDrawer& drawer) = 0;
+
+	virtual vec2 GetGravity() = 0;
+
 	virtual ~RigidWorld() = default;
 };
 
@@ -45,9 +48,17 @@ public:
 	virtual vec2 GetPosition() = 0;
 	virtual void SetPosition(vec2 position) = 0;
 	virtual float GetAngle() = 0;
+	virtual float GetMass() = 0;
+	virtual float GetInertia() = 0;
+	virtual vec2 GetVelocity() = 0;
+	virtual float GetAngVelocity() = 0;
+	virtual void SetGravityScale(float scale) = 0;
+	virtual void SetAngDamping(float damping) = 0;
 	virtual void JoinRevolute(RigidBody* with_body, vec2 anchorA, optional<vec2> anchorB = nullopt) = 0;
 	virtual void JoinDistant(RigidBody* with, vec2 anchor, float min, float max) = 0;
 	virtual void ApplyForce(vec2 force) = 0;
+	virtual void ApplyForce(vec2 force, vec2 point) = 0;
+	virtual void ApplyTorque(float torque) = 0;
 	virtual void DrawShapes(class IDebugDrawer& drawer) = 0;
 
 	virtual ~RigidBody() = default;
@@ -73,6 +84,7 @@ public:
 	shared_ptr<RigidBody> RemovePart(RigidBody* part);
 	RigidBody* FindPart(Name part_name);
 	METALWORKCORE_API void SetPosition(vec2 position);
+	float GetMass();
 
 	METALWORKCORE_API ~RigidObject();
 };

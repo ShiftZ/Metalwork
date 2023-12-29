@@ -64,6 +64,20 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 
 	Core->Ready();
 	//Core->Start();
+    
+}
+
+void AMetalworkArenaGameModeBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UInputComponent* PlayerInput = GetWorld()->GetFirstPlayerController()->InputComponent;
+	PlayerInput->BindKey(EKeys::P, IE_Pressed, this, &AMetalworkArenaGameModeBase::Pause);
+}
+
+void AMetalworkArenaGameModeBase::Pause()
+{
+	Core->SingleStep();
 }
 
 void AMetalworkArenaGameModeBase::Tick(float DeltaTime)

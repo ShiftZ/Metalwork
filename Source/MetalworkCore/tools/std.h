@@ -58,6 +58,8 @@ public:
 	const char* what() const override { return msg.c_str(); }
 };
 
+constexpr auto sqr(auto value) { return value * value; }
+
 /*namespace std::ranges::views
 {
 	template< range range_t >

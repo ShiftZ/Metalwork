@@ -135,6 +135,11 @@ void B2World::DebugDraw(const IDebugDrawer& drawer)
 	world->DebugDraw();
 }
 
+vec2 B2World::GetGravity()
+{
+	return world->GetGravity();
+}
+
 B2World::~B2World()
 {
 	for (b2Body* b2body = world->GetBodyList(); b2body; b2body = b2body->GetNext())

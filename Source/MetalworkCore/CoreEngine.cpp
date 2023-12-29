@@ -125,6 +125,20 @@ void MetalCore::MainLoop(stop_token st)
 
 	while (!st.stop_requested())
 	{
+		if (step_mode != StepMode::Continuous)
+		{
+			step_mode = StepMode::Paused;
+
+			while (step_mode == StepMode::Paused)
+			{
+				input->WaitInput(st, steady_clock::now() + milliseconds(50));
+				if (st.stop_requested()) return;
+				while (input->GetInput()); // discard input
+			}
+
+			start_time = steady_clock::now() - milliseconds(step * (1000 / fps));
+		}
+
 		steady_clock::time_point next_step_time = start_time + milliseconds((step + 1) * (1000 / fps));
 
 		do // wait step time, send inputs
@@ -134,8 +148,8 @@ void MetalCore::MainLoop(stop_token st)
 
 			while (optional<Input> in = input->GetInput())
 			{
-				auto& [seq_id, pointer, _] = inputs[player];
-				pointer.try_emplace(pointer.end(), ++seq_id, step, in->pointer);
+				auto& [seq_id, pointer_in, _] = inputs[player];
+				pointer_in.try_emplace(pointer_in.end(), ++seq_id, step, in->pointer);
 				if (network) network->SendSeqUDP(InputMsg{seq_id, step, in->pointer});
 			}
 		}

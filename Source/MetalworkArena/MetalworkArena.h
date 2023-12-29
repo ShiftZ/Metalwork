@@ -19,6 +19,7 @@
 #include <typeindex>
 #include <unordered_map>
 
+#include <Components/InputComponent.h>
 #include <DrawDebugHelpers.h>
 #include <Engine/DataTable.h>
 #include <Engine/Engine.h>
@@ -28,15 +29,16 @@
 #include <EngineUtils.h>
 #include <GameFramework/Actor.h>
 #include <GameFramework/GameModeBase.h>
+#include <GameFramework/PlayerInput.h>
 #include <HAL/FileManager.h>
 #include <Misc/FileHelper.h>
 #include <Misc/Paths.h>
 #include <Modules/ModuleManager.h>
 #include <PaperFlipbookComponent.h>
 #include <PaperSpriteComponent.h>
+#include <TimerManager.h>
 #include <UObject/LinkerLoad.h>
 #include <UObject/Package.h>
-#include <TimerManager.h>
 
 #include "tools/flat_map.h"
 #include "tools/logger.h"
@@ -51,7 +53,7 @@ using namespace std::chrono;
 using namespace std::filesystem;
 namespace views = std::views;
 
-inline constexpr float ScaleRigToUE = 10.f;
+inline constexpr float ScaleRigToUE = 100.f;
 
 inline struct UEScaler {} UEScale;
 inline float operator*(float F, const UEScaler& S) { return F * ScaleRigToUE; }

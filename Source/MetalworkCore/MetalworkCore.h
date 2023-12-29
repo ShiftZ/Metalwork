@@ -68,3 +68,5 @@ using namespace asio;
 using namespace asio::ip;
 using namespace asio::experimental;
 using namespace asio::experimental::awaitable_operators;
+
+using std::numbers::pi;

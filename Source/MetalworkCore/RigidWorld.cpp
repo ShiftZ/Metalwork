@@ -44,6 +44,12 @@ void RigidObject::SetPosition(vec2 position)
 	}
 }
 
+float RigidObject::GetMass()
+{
+	return ranges::fold_left(parts | cptr, 0.f,
+		[](float acc, RigidBody* body){ return acc + body->GetMass(); });
+}
+
 RigidObject::~RigidObject()
 {
 	if (actor) actor->ReleaseRig();

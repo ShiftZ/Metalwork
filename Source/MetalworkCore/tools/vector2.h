@@ -95,7 +95,10 @@ struct vectorx<type, 2> : super_vector<type, 2>
 
 	void swap() { std::swap(x, y); }
 
-	float angle() const requires std::is_floating_point_v<type> { return atan2(y, x); }
+	type angle() const requires std::is_floating_point_v<type> { return atan2(y, x); }
+
+	static vectorx from_angle(type angle, type length) { return {cos(angle) * length, sin(angle) * length}; }
+	static vectorx from_angle(type angle) { return {cos(angle), sin(angle)}; }
 
 	/*template< typename init_type >
 	void operator=( std::initializer_list<init_type> list ) { super_vector<type, 2>::operator=(delta(list)); }*/

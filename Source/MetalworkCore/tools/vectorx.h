@@ -132,19 +132,21 @@ struct super_vector : super_vectorx<type, dim>
 
 	type normalize()
 	{
-		type l = length();
-		type k = 1 / l;
+		type len = length();
+		type k = 1 / len;
 		for (int i = 0; i < dim; ++i)
 			at(i) *= k;
-		return l;
+		return len;
 	}
 
-	vectorx<type, dim> normalized() const
+	template< typename length_t = type >
+	vectorx<type, dim> normalized( length_t&& len = type() ) const
 	{
 		vectorx<type, dim> n;
-		type k = 1 / length();
+		len = length();
+		type k = 1 / len;
 		for (int i = 0; i < dim; i++)
-			n.v[i] = at(i) * k;
+			n.at(i) = at(i) * k;
 		return n;
 	}
 

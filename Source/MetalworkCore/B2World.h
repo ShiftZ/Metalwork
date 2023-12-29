@@ -17,5 +17,8 @@ public:
 	string SaveToJson() override;
 	void LoadFromJson(string_view json) override;
 	void DebugDraw(const IDebugDrawer& drawer) override;
+
+	vec2 GetGravity() override;
+
 	~B2World();
 };

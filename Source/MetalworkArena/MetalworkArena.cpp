@@ -5,7 +5,12 @@
 
 class FMetalworkArenaModule : public FDefaultGameModuleImpl
 {
-	void StartupModule() override { SetContentPath(*FPaths::ProjectContentDir()); }
+	void StartupModule() override
+	{
+		SetContentPath(*FPaths::ProjectContentDir(), WITH_EDITOR);
+		FCoreUObjectDelegates::ReloadCompleteDelegate.AddLambda([](EReloadCompleteReason)
+			{ SetContentPath(*FPaths::ProjectContentDir(), WITH_EDITOR); });
+	}
 };
 
 IMPLEMENT_PRIMARY_GAME_MODULE(FMetalworkArenaModule, MetalworkArena, "MetalworkArena");

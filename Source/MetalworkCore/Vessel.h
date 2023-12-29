@@ -12,4 +12,5 @@ public:
 	using RigidObject::RigidObject;
 	void AttachWeapon(Weapon* weapon);
 	void SetPosition(vec2 position);
+	void SetPlayerInput(vec2 move_in);
 };
