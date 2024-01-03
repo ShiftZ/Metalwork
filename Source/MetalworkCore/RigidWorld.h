@@ -53,7 +53,8 @@ public:
 	virtual vec2 GetVelocity() = 0;
 	virtual float GetAngVelocity() = 0;
 	virtual void SetGravityScale(float scale) = 0;
-	virtual void SetAngDamping(float damping) = 0;
+	virtual void SetAngDamping(float factor) = 0;
+	virtual void SetLinearDamping(float factor) = 0;
 	virtual void JoinRevolute(RigidBody* with_body, vec2 anchorA, optional<vec2> anchorB = nullopt) = 0;
 	virtual void JoinDistant(RigidBody* with, vec2 anchor, float min, float max) = 0;
 	virtual void ApplyForce(vec2 force) = 0;
@@ -84,7 +85,9 @@ public:
 	shared_ptr<RigidBody> RemovePart(RigidBody* part);
 	RigidBody* FindPart(Name part_name);
 	METALWORKCORE_API void SetPosition(vec2 position);
+	METALWORKCORE_API vec2 GetPosition();
 	float GetMass();
+	METALWORKCORE_API shared_ptr<RigidObject> Release();
 
 	METALWORKCORE_API ~RigidObject();
 };

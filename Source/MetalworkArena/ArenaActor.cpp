@@ -1,4 +1,4 @@
-#pragma warning(disable:4458) // declaration hides class member
+#pragma warning(disable:4458 4855) // declaration hides class member
 
 #include "ArenaActor.h"
 #include "ArenaSettings.h"
@@ -71,6 +71,67 @@ void AArenaActor::PostEditMove(bool bFinished)
     Location.Y = 0;
     SetActorLocation(Location);
 	if (Rig) Rig->SetPosition(Location / UEScale);
+}
+
+void ATestActor::PostEditChangeProperty(FPropertyChangedEvent& Event)
+{
+	Super::PostEditChangeProperty(Event);
+
+	if (Event.GetPropertyName() == GET_MEMBER_NAME_CHECKED(ATestActor, RigModel))
+	{
+		if (FPaths::FileExists(FPaths::ProjectContentDir() + RigModel + ".json"))
+		{
+			auto LoadModel = [&]
+			{
+				vec2 Position = GetActorLocation() / UEScale;
+
+				if (Rig)
+				{
+					Position = Rig->GetPosition();
+					Rig->Release();
+				}
+				
+				TSet<UActorComponent*> Components = GetComponents();
+				for (UActorComponent* Component : Components)
+					Component->DestroyComponent();
+
+				AArenaSettings* Arena = CastChecked<AArenaSettings>(GetWorldSettings());
+				Name ActorName = StringCast<char>(*GetName()).Get();
+				Rig = Arena->RigWorld->AddObject(make_shared<RigidObject>(ActorName, this));
+
+				Rig->LoadModel(GetJson(*RigModel));
+				Rig->SetPosition(Position);
+				AttachToRig(Rig);
+			};
+
+			LoadModel();
+
+			auto OnFileChanged = IDirectoryWatcher::FDirectoryChanged::CreateLambda([=](const TArray<FFileChangeData>& Files)
+		    {
+				auto IsModelFile = [&](FFileChangeData& File){ return File.Filename.Contains(RigModel + L".json"); };
+				if (Files.ContainsByPredicate(IsModelFile)) LoadModel();
+		    });
+
+			IDirectoryWatcher* Watcher = FModuleManager::LoadModuleChecked<FDirectoryWatcherModule>(L"DirectoryWatcher").Get();
+
+			if (WatchHandle.IsValid())
+				Watcher->UnregisterDirectoryChangedCallback_Handle(WatchPath, WatchHandle);
+
+			WatchPath = FPaths::GetPath(FPaths::ProjectContentDir() + RigModel);
+		    Watcher->RegisterDirectoryChangedCallback_Handle(WatchPath, OnFileChanged, WatchHandle);
+		}
+	}
+}
+
+void ATestActor::Destroyed()
+{
+	Super::Destroyed();
+
+	if (WatchHandle.IsValid())
+	{
+		IDirectoryWatcher* Watcher = FModuleManager::LoadModuleChecked<FDirectoryWatcherModule>(L"DirectoryWatcher").Get();
+		Watcher->UnregisterDirectoryChangedCallback_Handle(WatchPath, WatchHandle);
+	}
 }
 
 TArray<FName> APropActor::GetRigs()

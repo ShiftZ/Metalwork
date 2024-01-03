@@ -19,6 +19,9 @@ public class MetalworkArena : ModuleRules
 
         PrivateDefinitions.Add("_CRT_SECURE_NO_WARNINGS");
         if (Target.Type == TargetType.Editor)
+        {
             PrivateDefinitions.Add("LOGGER_IMPORT");
+            PrivateDependencyModuleNames.Add("DirectoryWatcher");
+        }
     }
 }

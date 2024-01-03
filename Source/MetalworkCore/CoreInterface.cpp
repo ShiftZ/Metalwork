@@ -2,8 +2,8 @@
 #include "Network.h"
 #include "CoreEngine.h"
 
-static path content_dir;
-static bool reload_modified;
+METALWORKCORE_API path content_dir;
+METALWORKCORE_API bool reload_modified;
 
 unique_ptr<IFuture<INetwork>> INetwork::Connect(span<RemotePlayer> targets, int player)
 {

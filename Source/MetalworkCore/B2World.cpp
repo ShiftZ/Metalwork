@@ -130,7 +130,7 @@ void B2World::LoadFromJson(string_view json)
 
 void B2World::DebugDraw(const IDebugDrawer& drawer)
 {
-	B2Draw b2_drawer(drawer, b2Draw::e_shapeBit | b2Draw::e_jointBit | b2Draw::e_centerOfMassBit);
+	B2Draw b2_drawer(drawer, b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit);
 	world->SetDebugDraw(&b2_drawer);
 	world->DebugDraw();
 }

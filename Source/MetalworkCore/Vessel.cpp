@@ -20,7 +20,10 @@ void Vessel::SetPosition(vec2 position)
 
 void Vessel::SetPlayerInput(vec2 move_in)
 {
-	const float max_speed = 10;
+	const float max_speed = 15;
+
+	root->SetLinearDamping(0.8);
+	root->SetGravityScale(0);
 
 	float mass = root->GetMass();
 	vec2 velocity = root->GetVelocity();
@@ -42,20 +45,30 @@ void Vessel::SetPlayerInput(vec2 move_in)
 	root->ApplyForce(accel * mass);
 
 	float desired_ang_accel = 0;
+	float rolypoly_angle = angle;
 
 	float move_magnitude;
+
 	vec2 move_dir = move_in.normalized(move_magnitude);
+
 	if (move_dir != 0)
 	{
-		float move_angle = move_dir.rotate90_cw().angle();
+		float move_angle = rotate90cw(move_dir).angle();
 
-		float k = min(move_magnitude / 300, 1.f);
+		float k = min(move_magnitude / 600, 1.f);
 		move_angle *= k;
+
+		rolypoly_angle -= move_angle;
+
+		log(DisplayLog(2), "k = {}", k);
 
 		float dist = move_angle - angle;
 
-		float move_ang_accel = copysign(100.f * k, dist);
-		float move_ang_deccel = copysign(100.f * k, -dist);
+		constexpr float m_accel = 50;
+		constexpr float m_deccel = 50;
+
+		float move_ang_accel = copysign(m_accel, dist);
+		float move_ang_deccel = copysign(m_deccel, -dist);
 
 		float brake_dist = 0.5 * sqr(ang_vel) / (ang_vel * dist > 0 ? -move_ang_deccel : -move_ang_accel);
 		brake_dist += (ang_vel + 0.5 * move_ang_accel * frame_time) * frame_time;
@@ -64,19 +77,22 @@ void Vessel::SetPlayerInput(vec2 move_in)
 
 		if ((dist > 0 && dist > brake_dist) || (dist < 0 && dist < brake_dist))
 		{
-			desired_ang_accel = move_ang_accel;
+			//desired_ang_accel = move_ang_accel;
+			log(DisplayLog(1), "accel = {}", desired_ang_accel);
 		}
 		else if (dist != 0)
 		{
 			desired_ang_accel = -sqr(ang_vel) / (2 * dist);
+			log(DisplayLog(1), "deccel = {}", desired_ang_accel);
+			//desired_ang_accel = clamp(desired_ang_accel, -m_deccel, m_deccel);
 		}
 	}
 
-	float desired_rolypoly_angvel = (cos(angle / 1) - 1) * copysign(20, angle);
+	float desired_rolypoly_angvel = (cos(rolypoly_angle / 1) - 1) * copysign(20, rolypoly_angle);
 	ang_vel += desired_ang_accel * frame_time;
 
 	float delta = desired_rolypoly_angvel - ang_vel;
-	desired_ang_accel += clamp(delta * fps, -20.f, 20.f);
+	desired_ang_accel += clamp(delta * fps, -100.f, 100.f);
 
 	root->ApplyTorque(desired_ang_accel * root->GetInertia());
 }

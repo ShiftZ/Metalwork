@@ -19,7 +19,8 @@ public:
 	vec2 GetVelocity() override;
 	float GetAngVelocity() override;
 	void SetGravityScale(float scale) override;
-	void SetAngDamping(float damping) override;
+	void SetAngDamping(float factor) override;
+	void SetLinearDamping(float factor) override;
 	void JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB = nullopt) override;
 	void JoinDistant(RigidBody* with, vec2 anchor, float min, float max) override;
 	void ApplyForce(vec2 force) override;

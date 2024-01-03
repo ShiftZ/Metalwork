@@ -2,6 +2,9 @@
 
 #include "Name.h"
 
+METALWORKCORE_API extern path content_dir;
+METALWORKCORE_API extern bool reload_modified;
+
 template<typename Type>
 class IFuture
 {

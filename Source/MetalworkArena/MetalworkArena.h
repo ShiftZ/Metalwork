@@ -40,6 +40,11 @@
 #include <UObject/LinkerLoad.h>
 #include <UObject/Package.h>
 
+#if WITH_EDITOR
+#	include <IDirectoryWatcher.h>
+#	include <DirectoryWatcherModule.h>
+#endif
+
 #include "tools/flat_map.h"
 #include "tools/logger.h"
 #include "tools/queue.h"

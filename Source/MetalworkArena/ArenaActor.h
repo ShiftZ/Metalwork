@@ -22,6 +22,22 @@ public:
 	void ReleaseRig() override { Rig = nullptr; }
 };
 
+UCLASS(Transient)
+class METALWORKARENA_API ATestActor : public AArenaActor
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	FString RigModel;
+
+	FString WatchPath;
+	FDelegateHandle WatchHandle;
+
+	void PostEditChangeProperty(FPropertyChangedEvent& Event) override;
+	void Destroyed() override;
+};
+
 UCLASS()
 class METALWORKARENA_API APropActor : public AArenaActor
 {

@@ -48,9 +48,14 @@ void B2Body::SetGravityScale(float scale)
 	b2body->SetGravityScale(scale);
 }
 
-void B2Body::SetAngDamping(float damping)
+void B2Body::SetAngDamping(float factor)
 {
-	b2body->SetAngularDamping(damping);
+	b2body->SetAngularDamping(factor);
+}
+
+void B2Body::SetLinearDamping(float factor)
+{
+	b2body->SetLinearDamping(factor);
 }
 
 void B2Body::JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB)

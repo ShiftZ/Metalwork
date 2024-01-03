@@ -44,10 +44,21 @@ void RigidObject::SetPosition(vec2 position)
 	}
 }
 
+vec2 RigidObject::GetPosition()
+{
+	RigidBody* body = root ? root : parts.front().get();
+	return body->GetPosition() - body->offset;
+}
+
 float RigidObject::GetMass()
 {
 	return ranges::fold_left(parts | cptr, 0.f,
 		[](float acc, RigidBody* body){ return acc + body->GetMass(); });
+}
+
+shared_ptr<RigidObject> RigidObject::Release()
+{
+	return world->RemoveObject(this);
 }
 
 RigidObject::~RigidObject()
