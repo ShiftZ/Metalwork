@@ -5,9 +5,13 @@ DerivedDataCache
 Intermediate
 Saved
 /*.sln
+*.uasset
+*.umap
+*rube-backups
+*json-backups
+*.dds
 
 /.vsconfig
-/Content
 /Build/Windows/FileOpenOrder/*.log
 /Rube
 /enc_temp_folder

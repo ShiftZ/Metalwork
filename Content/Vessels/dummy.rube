@@ -1,0 +1,148 @@
+
+{
+  "collisionbitplanes" : 
+  {
+    "names" : 
+    [
+      "bitplane1",
+      "bitplane2",
+      "bitplane3",
+      "bitplane4",
+      "bitplane5",
+      "bitplane6",
+      "bitplane7",
+      "bitplane8",
+      "bitplane9",
+      "bitplane10",
+      "bitplane11",
+      "bitplane12",
+      "bitplane13",
+      "bitplane14",
+      "bitplane15",
+      "bitplane16",
+      "bitplane17",
+      "bitplane18",
+      "bitplane19",
+      "bitplane20",
+      "bitplane21",
+      "bitplane22",
+      "bitplane23",
+      "bitplane24",
+      "bitplane25",
+      "bitplane26",
+      "bitplane27",
+      "bitplane28",
+      "bitplane29",
+      "bitplane30",
+      "bitplane31",
+      "bitplane32"
+    ]
+  },
+  "customPropertyDefs" : 
+  [
+    
+    {
+      "class" : "body",
+      "displayName" : "Model",
+      "name" : "Model",
+      "type" : "string"
+    }
+  ],
+  "excludedJsonExportProperties" : 
+  [
+    "/world/allowSleep",
+    "/world/autoClearForces",
+    "/world/collisionbitplanes",
+    "/world/continuousPhysics",
+    "/world/customProperties",
+    "/world/gravity",
+    "/world/positionIterations",
+    "/world/stepsPerSecond",
+    "/world/subStepping",
+    "/world/velocityIterations",
+    "/world/warmStarting"
+  ],
+  "metaworld" : 
+  {
+    "allowSleep" : false,
+    "autoClearForces" : false,
+    "continuousPhysics" : false,
+    "exportOptions" : 
+    {
+      "compactCommonFloats" : true,
+      "compactZeroVecs" : false,
+      "propertyExportFilterScriptFile" : "D:/iProject/Tools/Rube/worldless.rs",
+      "saveFullPathForImages" : false,
+      "saveFullPathForSamplerOutput" : false,
+      "saveImagePathsRelativeToRUBEFile" : false,
+      "saveSamplerOutputPathsRelativeToRUBEFile" : false,
+      "useGsonFormat" : false,
+      "useHumanReadableFloats" : true,
+      "usePrettyPrint" : true
+    },
+    "gravity" : 0,
+    "metabody" : 
+    [
+      
+      {
+        "angle" : 0,
+        "angularVelocity" : 0,
+        "awake" : true,
+        "customProperties" : 
+        [
+          
+          {
+            "name" : "Model",
+            "string" : "copter1"
+          }
+        ],
+        "fixture" : 
+        [
+          
+          {
+            "density" : 1,
+            "friction" : 0.2,
+            "id" : 1,
+            "name" : "root",
+            "shapes" : 
+            [
+              
+              {
+                "type" : "polygon"
+              }
+            ],
+            "vertices" : 
+            {
+              "x" : 
+              [
+                0.2974635362625122,
+                0.2974635362625122,
+                -0.2974635362625122,
+                -0.2974635362625122
+              ],
+              "y" : 
+              [
+                -0.4461953043937683,
+                0.4461953043937683,
+                0.4461953043937683,
+                -0.4461953043937683
+              ]
+            }
+          }
+        ],
+        "id" : 1,
+        "linearVelocity" : 0,
+        "massData-I" : 0.05089185759425163,
+        "massData-mass" : 0.5309073328971863,
+        "name" : "vehicle",
+        "position" : 0,
+        "type" : "dynamic"
+      }
+    ],
+    "positionIterations" : 3,
+    "stepsPerSecond" : 60.0,
+    "subStepping" : false,
+    "velocityIterations" : 8,
+    "warmStarting" : false
+  }
+}

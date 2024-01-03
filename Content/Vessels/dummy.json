@@ -1,0 +1,63 @@
+
+{
+	"body" : 
+	[
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"customProperties" : 
+			[
+				
+				{
+					"name" : "Model",
+					"string" : "copter1"
+				}
+			],
+			"fixture" : 
+			[
+				
+				{
+					"density" : 1,
+					"friction" : 0.2,
+					"name" : "root",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.2974635362625122,
+								0.2974635362625122,
+								-0.2974635362625122,
+								-0.2974635362625122
+							],
+							"y" : 
+							[
+								-0.4461953043937683,
+								0.4461953043937683,
+								0.4461953043937683,
+								-0.4461953043937683
+							]
+						}
+					}
+				}
+			],
+			"linearVelocity" : 
+			{
+				"x" : 0,
+				"y" : 0
+			},
+			"massData-I" : 0.05089185759425163,
+			"massData-mass" : 0.5309073328971863,
+			"name" : "vehicle",
+			"position" : 
+			{
+				"x" : 0,
+				"y" : 0
+			},
+			"type" : 2
+		}
+	]
+}
