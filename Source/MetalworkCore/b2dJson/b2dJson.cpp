@@ -1640,6 +1640,13 @@ b2Joint* b2dJson::j2b2Joint(b2World* world, Json::Value &jointValue)
         frictionDef.maxForce = jsonToFloat("maxForce", jointValue);
         frictionDef.maxTorque = jsonToFloat("maxTorque", jointValue);
     }
+    else if ( type == "rope" )
+    {
+	    jointDef = &distanceDef;
+		distanceDef.localAnchorA = jsonToVec("anchorA", jointValue);
+		distanceDef.localAnchorB = jsonToVec("anchorB", jointValue);
+		distanceDef.maxLength = jsonToFloat("maxLength", jointValue);
+    }
 
     if ( jointDef ) {
         //set features common to all joints

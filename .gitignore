@@ -10,6 +10,7 @@ Saved
 *rube-backups
 *json-backups
 *.dds
+*.png
 
 /.vsconfig
 /Build/Windows/FileOpenOrder/*.log

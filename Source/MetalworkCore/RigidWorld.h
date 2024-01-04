@@ -56,7 +56,7 @@ public:
 	virtual void SetAngDamping(float factor) = 0;
 	virtual void SetLinearDamping(float factor) = 0;
 	virtual void JoinRevolute(RigidBody* with_body, vec2 anchorA, optional<vec2> anchorB = nullopt) = 0;
-	virtual void JoinDistant(RigidBody* with, vec2 anchor, float min, float max) = 0;
+	virtual void JoinDistant(RigidBody* with, float min, float max) = 0;
 	virtual void ApplyForce(vec2 force) = 0;
 	virtual void ApplyForce(vec2 force, vec2 point) = 0;
 	virtual void ApplyTorque(float torque) = 0;

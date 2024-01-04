@@ -2,13 +2,15 @@
 
 #include "Vessel.h"
 #include "Arena.h"
-#include "Kinematics.h"
 #include "CoreDefinitions.h"
 #include "CoreInterface.h"
 
 void Vessel::AttachWeapon(Weapon* weapon)
 {
 	root->JoinRevolute(weapon->root, {0, 0}, -weapon->root->offset);
+	RigidBody* weapon_head = weapon->FindPart("head");
+	root->JoinDistant(weapon_head, 0, weapon_head->offset.length());
+
 	this->weapon = weapon;
 }
 
@@ -60,8 +62,6 @@ void Vessel::SetPlayerInput(vec2 move_in)
 
 		rolypoly_angle -= move_angle;
 
-		log(DisplayLog(2), "k = {}", k);
-
 		float dist = move_angle - angle;
 
 		constexpr float m_accel = 50;
@@ -73,17 +73,13 @@ void Vessel::SetPlayerInput(vec2 move_in)
 		float brake_dist = 0.5 * sqr(ang_vel) / (ang_vel * dist > 0 ? -move_ang_deccel : -move_ang_accel);
 		brake_dist += (ang_vel + 0.5 * move_ang_accel * frame_time) * frame_time;
 
-		log(DisplayLog(0), "dist = {}", 180 * dist / pi);
-
 		if ((dist > 0 && dist > brake_dist) || (dist < 0 && dist < brake_dist))
 		{
 			//desired_ang_accel = move_ang_accel;
-			log(DisplayLog(1), "accel = {}", desired_ang_accel);
 		}
 		else if (dist != 0)
 		{
 			desired_ang_accel = -sqr(ang_vel) / (2 * dist);
-			log(DisplayLog(1), "deccel = {}", desired_ang_accel);
 			//desired_ang_accel = clamp(desired_ang_accel, -m_deccel, m_deccel);
 		}
 	}

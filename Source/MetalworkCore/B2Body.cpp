@@ -74,14 +74,16 @@ void B2Body::JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB)
 	b2body->GetWorld()->CreateJoint(&def);
 }
 
-void B2Body::JoinDistant(RigidBody* with, vec2 anchor, float min, float max)
+void B2Body::JoinDistant(RigidBody* with, float min, float max)
 {
 	b2DistanceJointDef def;
-	def.Initialize(b2body, GetB2Body(with), b2body->GetLocalPoint(anchor), GetB2Body(with)->GetLocalPoint(anchor));
+	def.Initialize(b2body, GetB2Body(with), b2body->GetPosition(), GetB2Body(with)->GetPosition());
 	def.minLength = min;
 	def.maxLength = max;
-	def.stiffness = 2;
-	def.damping = 0.5;
+	//def.stiffness = 0;
+	//def.damping = 0;
+
+	b2body->GetWorld()->CreateJoint(&def);
 }
 
 void B2Body::ApplyForce(vec2 force)

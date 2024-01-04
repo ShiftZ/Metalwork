@@ -6,5 +6,5 @@
 	inline constexpr bool windows = false;
 #endif
 
-inline constexpr int fps = 30;
+inline constexpr int fps = 60;
 inline constexpr float frame_time = 1.f / fps;

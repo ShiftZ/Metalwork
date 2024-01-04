@@ -22,7 +22,7 @@ public:
 	void SetAngDamping(float factor) override;
 	void SetLinearDamping(float factor) override;
 	void JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB = nullopt) override;
-	void JoinDistant(RigidBody* with, vec2 anchor, float min, float max) override;
+	void JoinDistant(RigidBody* with, float min, float max) override;
 	void ApplyForce(vec2 force) override;
 	void ApplyForce(vec2 force, vec2 point) override;
 	void ApplyTorque(float torque) override;
