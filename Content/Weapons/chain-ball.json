@@ -115,8 +115,8 @@
 			"name" : "bridle",
 			"position" : 
 			{
-				"x" : -2.980232238769531e-08,
-				"y" : -1.970038890838623
+				"x" : 0,
+				"y" : -1.970039963722229
 			},
 			"type" : 2
 		},
@@ -458,14 +458,101 @@
 			"name" : "head",
 			"position" : 
 			{
-				"x" : 0.009395842440426350,
-				"y" : -2.277543067932129
+				"x" : 0,
+				"y" : -2.277539968490601
 			},
 			"type" : 2
 		}
 	],
 	"joint" : 
 	[
+		
+		{
+			"anchorA" : 
+			{
+				"x" : 0,
+				"y" : -0.1958740949630737
+			},
+			"anchorB" : 0,
+			"bodyA" : 1,
+			"bodyB" : 7,
+			"maxLength" : 0.1127226278185844,
+			"name" : "joint7",
+			"type" : "rope"
+		},
+		
+		{
+			"anchorA" : 
+			{
+				"x" : 0,
+				"y" : -0.3075000047683716
+			},
+			"anchorB" : 0,
+			"bodyA" : 1,
+			"bodyB" : 7,
+			"enableMotor" : false,
+			"localAxisA" : 
+			{
+				"x" : 0,
+				"y" : 1
+			},
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "joint6",
+			"springDampingRatio" : 0,
+			"springFrequency" : 0.001000000047497451,
+			"type" : "wheel"
+		},
+		
+		{
+			"anchorA" : 
+			{
+				"x" : 2.980229929505640e-08,
+				"y" : 0.4078190326690674
+			},
+			"anchorB" : 
+			{
+				"x" : 0,
+				"y" : -0.1029900312423706
+			},
+			"bodyA" : 1,
+			"bodyB" : 3,
+			"enableLimit" : false,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "joint5",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		},
+		
+		{
+			"anchorA" : 
+			{
+				"x" : 0,
+				"y" : -0.1075198650360107
+			},
+			"anchorB" : 
+			{
+				"x" : 0,
+				"y" : 0.1075199842453003
+			},
+			"bodyA" : 5,
+			"bodyB" : 0,
+			"enableLimit" : false,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "joint3",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		},
 		
 		{
 			"anchorA" : 
@@ -521,81 +608,6 @@
 			"anchorA" : 
 			{
 				"x" : 0,
-				"y" : -0.1075199842453003
-			},
-			"anchorB" : 
-			{
-				"x" : 0,
-				"y" : 0.1075200438499451
-			},
-			"bodyA" : 6,
-			"bodyB" : 4,
-			"enableLimit" : false,
-			"enableMotor" : false,
-			"jointSpeed" : 0,
-			"lowerLimit" : 0,
-			"maxMotorTorque" : 0,
-			"motorSpeed" : 0,
-			"name" : "joint0",
-			"refAngle" : 0,
-			"type" : "revolute",
-			"upperLimit" : 0
-		},
-		
-		{
-			"anchorA" : 
-			{
-				"x" : 0,
-				"y" : -0.1075198650360107
-			},
-			"anchorB" : 
-			{
-				"x" : 0,
-				"y" : 0.1075199842453003
-			},
-			"bodyA" : 5,
-			"bodyB" : 0,
-			"enableLimit" : false,
-			"enableMotor" : false,
-			"jointSpeed" : 0,
-			"lowerLimit" : 0,
-			"maxMotorTorque" : 0,
-			"motorSpeed" : 0,
-			"name" : "joint3",
-			"refAngle" : 0,
-			"type" : "revolute",
-			"upperLimit" : 0
-		},
-		
-		{
-			"anchorA" : 
-			{
-				"x" : 0,
-				"y" : -0.1075198650360107
-			},
-			"anchorB" : 
-			{
-				"x" : 0,
-				"y" : 0.1075199842453003
-			},
-			"bodyA" : 5,
-			"bodyB" : 0,
-			"enableLimit" : false,
-			"enableMotor" : false,
-			"jointSpeed" : 0,
-			"lowerLimit" : 0,
-			"maxMotorTorque" : 0,
-			"motorSpeed" : 0,
-			"name" : "joint3",
-			"refAngle" : 0,
-			"type" : "revolute",
-			"upperLimit" : 0
-		},
-		
-		{
-			"anchorA" : 
-			{
-				"x" : 0,
 				"y" : -0.1075198650360107
 			},
 			"anchorB" : 
@@ -637,6 +649,56 @@
 			"maxMotorTorque" : 0,
 			"motorSpeed" : 0,
 			"name" : "joint4",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		},
+		
+		{
+			"anchorA" : 
+			{
+				"x" : 0,
+				"y" : -0.1075198650360107
+			},
+			"anchorB" : 
+			{
+				"x" : 0,
+				"y" : 0.1075199842453003
+			},
+			"bodyA" : 5,
+			"bodyB" : 0,
+			"enableLimit" : false,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "joint3",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		},
+		
+		{
+			"anchorA" : 
+			{
+				"x" : 0,
+				"y" : -0.1075199842453003
+			},
+			"anchorB" : 
+			{
+				"x" : 0,
+				"y" : 0.1075200438499451
+			},
+			"bodyA" : 6,
+			"bodyB" : 4,
+			"enableLimit" : false,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "joint0",
 			"refAngle" : 0,
 			"type" : "revolute",
 			"upperLimit" : 0
