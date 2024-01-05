@@ -1,7 +1,7 @@
 #include "Arena.h"
 
 #include "Vessel.h"
-#include "B2World.h"
+#include "B2Rig/B2World.h"
 #include "CoreInterface.h"
 #include "Weapon.h"
 

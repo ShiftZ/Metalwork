@@ -30,16 +30,7 @@ struct B2_API b2FixtureUserData
 };
 
 /// You can define this to inject whatever data you want in b2Joint
-struct B2_API b2JointUserData
-{
-	b2JointUserData()
-	{
-		pointer = 0;
-	}
-
-	/// For legacy compatibility
-	uintptr_t pointer;
-};
+using b2JointUserData = class B2Joint*;
 
 // Memory Allocation
 

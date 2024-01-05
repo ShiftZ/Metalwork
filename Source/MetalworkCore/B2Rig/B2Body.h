@@ -2,11 +2,11 @@
 
 #include "RigidWorld.h"
 
-class B2Body final : public RigidBody
+class B2Body final : public Body
 {
 	class b2Body* b2body;
 
-	friend b2Body* GetB2Body(RigidBody*);
+	friend b2Body* GetB2Body(Body*);
 	friend class B2World;
 
 public:
@@ -21,8 +21,6 @@ public:
 	void SetGravityScale(float scale) override;
 	void SetAngDamping(float factor) override;
 	void SetLinearDamping(float factor) override;
-	void JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB = nullopt) override;
-	void JoinDistant(RigidBody* with, float min, float max) override;
 	void ApplyForce(vec2 force) override;
 	void ApplyForce(vec2 force, vec2 point) override;
 	void ApplyTorque(float torque) override;
@@ -31,4 +29,4 @@ public:
 	~B2Body();
 };
 
-inline b2Body* GetB2Body(RigidBody* body) { return static_cast<B2Body*>(body)->b2body; }
+inline b2Body* GetB2Body(Body* body) { return static_cast<B2Body*>(body)->b2body; }

@@ -66,7 +66,7 @@ class IComponentPocket
     GENERATED_BODY()
 
 public:
-	class RigidBody* Body;
+	class Body* Body;
 };
 
 UCLASS(Blueprintable)

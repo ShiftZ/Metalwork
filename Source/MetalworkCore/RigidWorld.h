@@ -2,6 +2,8 @@
 
 #include "Name.h"
 
+class Body;
+class Joint;
 namespace Json { class Value; }
 
 class RigidWorld
@@ -25,7 +27,9 @@ public:
 	virtual void Capture() = 0;
 	virtual void Restore() = 0;
 	virtual void Step() = 0;
-	virtual vector<shared_ptr<class RigidBody>> LoadModel(Json::Value& model) = 0;
+	virtual shared_ptr<Joint> CreateRevoluteJoint(Body* bodyA, Body* bodyB, vec2 anchorA, optional<vec2> anchorB = nullopt) = 0;
+	virtual shared_ptr<Joint> CreateDistantJoint(Body* bodyA, Body* bodyB, float min, float max) = 0;
+	virtual pair<vector<shared_ptr<Body>>, vector<shared_ptr<Joint>>> LoadModel(Json::Value& model) = 0;
 	virtual string SaveToJson() = 0;
 	virtual void LoadFromJson(string_view json) = 0;
 	virtual void DebugDraw(const class IDebugDrawer& drawer) = 0;
@@ -35,7 +39,7 @@ public:
 	virtual ~RigidWorld() = default;
 };
 
-class RigidBody
+class Body
 {
 public:
 	class RigidObject* object = nullptr;
@@ -43,7 +47,7 @@ public:
 	vec2 offset;
 
 public:
-	RigidBody(Name name, Name model, vec2 shift) : name(name), model(model), offset(shift) {}
+	Body(Name name, Name model, vec2 shift) : name(name), model(model), offset(shift) {}
 
 	virtual vec2 GetPosition() = 0;
 	virtual void SetPosition(vec2 position) = 0;
@@ -55,14 +59,12 @@ public:
 	virtual void SetGravityScale(float scale) = 0;
 	virtual void SetAngDamping(float factor) = 0;
 	virtual void SetLinearDamping(float factor) = 0;
-	virtual void JoinRevolute(RigidBody* with_body, vec2 anchorA, optional<vec2> anchorB = nullopt) = 0;
-	virtual void JoinDistant(RigidBody* with, float min, float max) = 0;
 	virtual void ApplyForce(vec2 force) = 0;
 	virtual void ApplyForce(vec2 force, vec2 point) = 0;
 	virtual void ApplyTorque(float torque) = 0;
 	virtual void DrawShapes(class IDebugDrawer& drawer) = 0;
 
-	virtual ~RigidBody() = default;
+	virtual ~Body() = default;
 };
 
 class RigidObject
@@ -70,8 +72,9 @@ class RigidObject
 public:
 	class MetalActor* actor = nullptr;
 	RigidWorld* world = nullptr;
-	vector<shared_ptr<RigidBody>> parts;
-	RigidBody* root = nullptr;
+	vector<shared_ptr<Joint>> joints;
+	vector<shared_ptr<Body>> parts;
+	Body* root = nullptr;
 	Name name;
 
 public:
@@ -81,15 +84,22 @@ public:
 	METALWORKCORE_API void DrawShapes(IDebugDrawer& drawer);
 	METALWORKCORE_API void LoadModel(Json::Value& jmodel);
 
-	void AddPart(shared_ptr<RigidBody> body);
-	shared_ptr<RigidBody> RemovePart(RigidBody* part);
-	RigidBody* FindPart(Name part_name);
+	void AddPart(shared_ptr<Body> body);
+	shared_ptr<Body> RemovePart(Body* part);
+	Body* FindPart(Name part_name);
 	METALWORKCORE_API void SetPosition(vec2 position);
 	METALWORKCORE_API vec2 GetPosition();
 	float GetMass();
 	METALWORKCORE_API shared_ptr<RigidObject> Release();
 
-	METALWORKCORE_API ~RigidObject();
+	METALWORKCORE_API virtual ~RigidObject();
+};
+
+class Joint
+{
+public:
+	virtual float GetForce() = 0;
+	virtual ~Joint() = default;
 };
 
 class MetalActor

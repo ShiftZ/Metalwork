@@ -18,7 +18,7 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 
 	UDataTable* Models = LoadObject<UDataTable>(nullptr, L"/Game/ModelParts");
 
-	auto MakeComponent = [&](RigidBody* Body)
+	auto MakeComponent = [&](Body* Body)
 	{
 		FVehicleModelPartRow* ModelRow = Models->FindRow<FVehicleModelPartRow>(*Body->model, nullptr);
 		USceneComponent* Component = NewObject<USceneComponent>(this, ModelRow->ComponentClass.Get());
@@ -32,7 +32,7 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 	USceneComponent* Root = MakeComponent(Rig->root);
 	SetRootComponent(Root);
 
-	for (RigidBody* Part : Rig->parts | cptr)
+	for (Body* Part : Rig->parts | cptr)
 		if (Part != Rig->root) MakeComponent(Part);
 
 	SyncPose();

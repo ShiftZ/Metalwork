@@ -7,9 +7,9 @@
 
 void Vessel::AttachWeapon(Weapon* weapon)
 {
-	root->JoinRevolute(weapon->root, {0, 0}, -weapon->root->offset);
-	RigidBody* weapon_head = weapon->FindPart("head");
-	root->JoinDistant(weapon_head, 0, weapon_head->offset.length());
+	root_joint = world->CreateRevoluteJoint(root, weapon->root, 0, -weapon->root->offset);
+	Body* weapon_head = weapon->FindPart("head");
+	head_joint = world->CreateDistantJoint(root, weapon_head, 0, weapon_head->offset.length());
 
 	this->weapon = weapon;
 }

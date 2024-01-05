@@ -3,7 +3,7 @@
 #include "B2World.h"
 #include "CoreInterface.h"
 
-B2Body::B2Body(b2Body* b2body, Name name, Name model) : RigidBody(name, model, b2body->GetPosition()), b2body(b2body)
+B2Body::B2Body(b2Body* b2body, Name name, Name model) : Body(name, model, b2body->GetPosition()), b2body(b2body)
 {
 	b2body->GetUserData() = this;
 }
@@ -56,34 +56,6 @@ void B2Body::SetAngDamping(float factor)
 void B2Body::SetLinearDamping(float factor)
 {
 	b2body->SetLinearDamping(factor);
-}
-
-void B2Body::JoinRevolute(RigidBody* with, vec2 anchorA, optional<vec2> anchorB)
-{
-	b2RevoluteJointDef def;
-	if (!anchorB)
-		def.Initialize(b2body, GetB2Body(with), anchorA);
-	else
-	{
-		def.bodyA = b2body;
-		def.bodyB = GetB2Body(with);
-		def.localAnchorA = anchorA;
-		def.localAnchorB = *anchorB;
-	}
-
-	b2body->GetWorld()->CreateJoint(&def);
-}
-
-void B2Body::JoinDistant(RigidBody* with, float min, float max)
-{
-	b2DistanceJointDef def;
-	def.Initialize(b2body, GetB2Body(with), b2body->GetPosition(), GetB2Body(with)->GetPosition());
-	def.minLength = min;
-	def.maxLength = max;
-	//def.stiffness = 0;
-	//def.damping = 0;
-
-	b2body->GetWorld()->CreateJoint(&def);
 }
 
 void B2Body::ApplyForce(vec2 force)
