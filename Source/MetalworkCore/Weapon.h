@@ -10,7 +10,11 @@ inline Name weapon_name = "weapon";
 class Weapon : public RigidObject
 {
 public:
+	class Vessel* vessel = nullptr;
+
+public:
 	using RigidObject::RigidObject;
+	virtual void SetOwner(Vessel* vessel);
 };
 
 class Chain : public Weapon
@@ -24,6 +28,7 @@ public:
 	void AttachAnchor(Anchor* anchor);
 	void SetPosition(vec2 position) override;
 	void LoadModel(Json::Value& jmodel) override;
+	void SetOwner(Vessel* vessel) override;
 };
 
 class Anchor : public RigidObject

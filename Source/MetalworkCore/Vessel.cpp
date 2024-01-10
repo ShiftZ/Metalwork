@@ -4,15 +4,11 @@
 #include "Arena.h"
 #include "CoreDefinitions.h"
 
-void Vessel::AttachChain(Chain* chain)
-{
-	shared_ptr<Joint> joint = world->CreateRevoluteJoint(root, chain->root, 0, -chain->root->offset);
-	AddJoint(move(joint), weapon_name);
-	this->weapon = chain;
-}
-
 void Vessel::AttachWeapon(Weapon* weapon)
 {
+	shared_ptr<Joint> joint = world->CreateRevoluteJoint(root, weapon->root, {0, 0});
+	AddJoint(move(joint), weapon_name);
+	weapon->SetOwner(this);
 	this->weapon = weapon;
 }
 

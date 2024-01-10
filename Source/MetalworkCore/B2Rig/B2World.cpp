@@ -95,6 +95,7 @@ shared_ptr<Joint> B2World::CreateDistantJoint(Body* bodyA, Body* bodyB, float le
 	vec2 ancB = anchorB ? *anchorB : bodyB->GetPosition();
 
 	def.Initialize(GetB2Body(bodyA), GetB2Body(bodyB), ancA, ancB);
+	def.minLength = 0;
 	def.maxLength = length;
 
 	b2Joint* b2joint = b2world->CreateJoint(&def);

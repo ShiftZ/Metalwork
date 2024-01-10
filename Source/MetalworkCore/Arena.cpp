@@ -17,7 +17,7 @@ Arena::Arena(unique_ptr<RigidWorld> rigid_world)
 	ball1->LoadModel(GetJson("Weapons/Ball"));
 
 	chain1->AttachAnchor(ball1);
-	player1->AttachChain(chain1);
+	player1->AttachWeapon(chain1);
 	player1->SetPosition({-2, 4});
 
 	vessels.push_back(player1);
