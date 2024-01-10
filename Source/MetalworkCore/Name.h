@@ -47,7 +47,7 @@ public:
 		return str ? wstr.assign(str->begin(), str->end()).c_str() : L"";
 	}
 
-	operator bool() const { return str != nullptr; }
+	operator bool() const { return str != nullptr || str->empty(); }
 };
 
 template<>

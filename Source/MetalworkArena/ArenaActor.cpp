@@ -12,6 +12,23 @@ void AArenaActor::OnConstruction(const FTransform& Transform)
     SetActorLocation(Location);
 }
 
+void AArenaActor::Destroyed()
+{
+	Super::Destroyed();
+	if (Rig && Rig->world)
+		Rig->world->RemoveObject(Rig);
+}
+
+void AArenaActor::PostEditMove(bool bFinished)
+{
+	Super::PostEditMove(bFinished);
+
+    FVector Location = GetActorLocation();
+    Location.Y = 0;
+    SetActorLocation(Location);
+	if (Rig) Rig->SetPosition(Location / UEScale);
+}
+
 void AArenaActor::AttachToRig(RigidObject* Rig)
 {
 	this->Rig = Rig;
@@ -32,9 +49,14 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 	USceneComponent* Root = MakeComponent(Rig->root);
 	SetRootComponent(Root);
 
-	for (Body* Part : Rig->parts | cptr)
-		if (Part != Rig->root) MakeComponent(Part);
+	for (Body* Part : Rig->parts | cptr | drop_value(Rig->root))
+		if (Part->model) MakeComponent(Part);
 
+	SyncPose();
+}
+
+void AArenaActor::ArenaTick(float DeltaTime)
+{
 	SyncPose();
 }
 
@@ -48,29 +70,6 @@ void AArenaActor::SyncPose()
 			Comp->SetWorldRotation(FRotator(FMath::RadiansToDegrees(Pocket->Body->GetAngle()), 0, 0));
 		}
 	});
-}
-
-void AArenaActor::Tick(float dt)
-{
-	Super::Tick(dt);
-	//SyncPose();
-}
-
-void AArenaActor::Destroyed()
-{
-	Super::Destroyed();
-	if (Rig && Rig->world)
-		Rig->world->RemoveObject(Rig);
-}
-
-void AArenaActor::PostEditMove(bool bFinished)
-{
-	Super::PostEditMove(bFinished);
-
-    FVector Location = GetActorLocation();
-    Location.Y = 0;
-    SetActorLocation(Location);
-	if (Rig) Rig->SetPosition(Location / UEScale);
 }
 
 void ATestActor::PostEditChangeProperty(FPropertyChangedEvent& Event)

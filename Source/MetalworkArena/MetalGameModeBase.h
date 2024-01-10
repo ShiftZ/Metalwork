@@ -12,7 +12,6 @@ class AMetalworkArenaGameModeBase : public AGameModeBase
 
 public:
 	TUniquePtr<MetalCore> Core;
-	TSet<class AArenaActor*> Actors;
 
 public:
 	AMetalworkArenaGameModeBase() { PrimaryActorTick.bCanEverTick = true; }

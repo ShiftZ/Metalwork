@@ -8,12 +8,16 @@
 Arena::Arena(unique_ptr<RigidWorld> rigid_world)
 {
 	Vessel* player1 = rigid_world->AddObject(make_shared<Vessel>("player1"));
-	player1->LoadModel(GetJson("vessels/dummy"));
+	player1->LoadModel(GetJson("Vessels/Dummy"));
 
-	Weapon* weapon1 = rigid_world->AddObject(make_shared<Weapon>("weapon1"));
-	weapon1->LoadModel(GetJson("weapons/chain-ball"));
-	player1->AttachWeapon(weapon1);
-	
+	Chain* chain1 = rigid_world->AddObject(make_shared<Chain>("chain1"));
+	chain1->LoadModel(GetJson("Weapons/Chain"));
+
+	Anchor* ball1 = rigid_world->AddObject(make_shared<Anchor>("ball1"));
+	ball1->LoadModel(GetJson("Weapons/Ball"));
+
+	chain1->AttachAnchor(ball1);
+	player1->AttachChain(chain1);
 	player1->SetPosition({-2, 4});
 
 	vessels.push_back(player1);

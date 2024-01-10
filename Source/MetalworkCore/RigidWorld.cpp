@@ -74,8 +74,7 @@ void RigidObject::LoadModel(Json::Value& jmodel)
 	tie(parts, joints) = world->LoadModel(jmodel);
 	for (Body* p : parts | cptr) p->object = this;
 
-	static const Name default_root_name = "root";
-	root = FindPart(default_root_name);
+	root = FindPart(root_name);
 	if (!root) root = parts.front().get();
 }
 
@@ -91,11 +90,31 @@ Body* RigidObject::FindPart(Name part_name)
 	return part_it != parts.end() ? part_it->get() : nullptr;
 }
 
-shared_ptr<Body> RigidObject::RemovePart(Body* part)
+shared_ptr<Body> RigidObject::RemovePart(Name part_name)
 {
-	auto part_it = ranges::find_if(parts, [&](shared_ptr<Body>& p){ return p.get() == part; });
+	auto part_it = ranges::find_if(parts, [&](shared_ptr<Body>& p){ return p->name == part_name; });
 	shared_ptr<Body> body = move(*part_it);
 	parts.erase(part_it);
 	body->object = nullptr;
 	return body;
+}
+
+void RigidObject::AddJoint(shared_ptr<Joint> joint, optional<Name> name)
+{
+	if (name) joint->name = *name;
+	joints.push_back(move(joint));
+}
+
+Joint* RigidObject::FindJoint(Name joint_name)
+{
+	auto joint_it = ranges::find_if(joints, [&](shared_ptr<Joint>& joint){ return joint->name = joint_name; });
+	return joint_it != joints.end() ? joint_it->get() : nullptr;
+}
+
+shared_ptr<Joint> RigidObject::RemoveJoint(Name joint_name)
+{
+	auto joint_it = ranges::find_if(joints, [&](shared_ptr<Joint>& j){ return j->name == joint_name; });
+	shared_ptr<Joint> joint = move(*joint_it);
+	joints.erase(joint_it);
+	return joint;
 }

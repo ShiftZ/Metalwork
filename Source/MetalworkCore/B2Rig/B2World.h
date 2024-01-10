@@ -15,7 +15,8 @@ public:
 	void Step() override;
 
 	shared_ptr<Joint> CreateRevoluteJoint(Body* bodyA, Body* bodyB, vec2 anchorA, optional<vec2> anchorB) override;
-	shared_ptr<Joint> CreateDistantJoint(Body* bodyA, Body* bodyB, float min, float max) override;
+	shared_ptr<Joint> CreateDistantJoint(Body* bodyA, Body* bodyB, float length, 
+										 optional<vec2> anchorA = nullopt, optional<vec2> anchorB = nullopt) override;
 
 	pair<vector<shared_ptr<Body>>, vector<shared_ptr<Joint>>> LoadModel(Json::Value& model_jval) override;
 	string SaveToJson() override;

@@ -46,6 +46,11 @@ inline auto drop_nth( size_t n )
     return std::views::filter([count = 0u, n](auto&&) mutable { return count++ != n; });
 }
 
+auto drop_value(auto& val)
+{
+	return std::views::filter([&](const auto& el){ return el != val; });
+}
+
 inline auto cptr = std::views::transform([]( auto& smart ){ return smart.get(); });
 
 class data_error : public std::exception

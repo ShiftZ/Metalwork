@@ -1,0 +1,260 @@
+
+{
+  "activeScript" : "ttttt",
+  "collisionbitplanes" : 
+  {
+    "names" : 
+    [
+      "bitplane1",
+      "bitplane2",
+      "bitplane3",
+      "bitplane4",
+      "bitplane5",
+      "bitplane6",
+      "bitplane7",
+      "bitplane8",
+      "bitplane9",
+      "bitplane10",
+      "bitplane11",
+      "bitplane12",
+      "bitplane13",
+      "bitplane14",
+      "bitplane15",
+      "bitplane16",
+      "bitplane17",
+      "bitplane18",
+      "bitplane19",
+      "bitplane20",
+      "bitplane21",
+      "bitplane22",
+      "bitplane23",
+      "bitplane24",
+      "bitplane25",
+      "bitplane26",
+      "bitplane27",
+      "bitplane28",
+      "bitplane29",
+      "bitplane30",
+      "bitplane31",
+      "bitplane32"
+    ]
+  },
+  "customPropertyDefs" : 
+  [
+    
+    {
+      "class" : "body",
+      "displayName" : "Model",
+      "name" : "Model",
+      "type" : "string"
+    }
+  ],
+  "excludedJsonExportProperties" : 
+  [
+    "/world/allowSleep",
+    "/world/autoClearForces",
+    "/world/collisionbitplanes",
+    "/world/continuousPhysics",
+    "/world/customProperties",
+    "/world/gravity",
+    "/world/positionIterations",
+    "/world/stepsPerSecond",
+    "/world/subStepping",
+    "/world/velocityIterations",
+    "/world/warmStarting"
+  ],
+  "metaworld" : 
+  {
+    "allowSleep" : false,
+    "autoClearForces" : false,
+    "continuousPhysics" : false,
+    "exportOptions" : 
+    {
+      "compactCommonFloats" : true,
+      "compactZeroVecs" : true,
+      "saveFullPathForImages" : false,
+      "saveFullPathForSamplerOutput" : false,
+      "saveImagePathsRelativeToRUBEFile" : false,
+      "saveSamplerOutputPathsRelativeToRUBEFile" : false,
+      "useGsonFormat" : false,
+      "useHumanReadableFloats" : true,
+      "usePrettyPrint" : true
+    },
+    "gravity" : 
+    {
+      "x" : 0,
+      "y" : -5
+    },
+    "metabody" : 
+    [
+      
+      {
+        "angle" : 0,
+        "angularVelocity" : 0,
+        "awake" : true,
+        "customProperties" : 
+        [
+          
+          {
+            "name" : "Model",
+            "string" : "ball"
+          }
+        ],
+        "fixture" : 
+        [
+          
+          {
+            "density" : 0.6549586057662964,
+            "filter-groupIndex" : -1,
+            "friction" : 0.2,
+            "id" : 1,
+            "name" : "fixture1",
+            "shapes" : 
+            [
+              
+              {
+                "radius" : 0.3777752816677094,
+                "type" : "circle"
+              }
+            ],
+            "vertices" : 
+            {
+              "x" : [ -1.101917668222541e-08 ],
+              "y" : [ 0.0002502553979866207 ]
+            }
+          }
+        ],
+        "id" : 1,
+        "linearVelocity" : 0,
+        "massData-I" : 0.02095406316220760,
+        "massData-center" : 
+        {
+          "x" : -1.101917668222541e-08,
+          "y" : 0.0002502553979866207
+        },
+        "massData-mass" : 0.2936505377292633,
+        "name" : "head",
+        "position" : 
+        {
+          "x" : 0,
+          "y" : -0.7069207429885864
+        },
+        "type" : "dynamic"
+      },
+      
+      {
+        "angle" : 0,
+        "angularVelocity" : 0,
+        "awake" : true,
+        "customProperties" : 
+        [
+          
+          {
+            "name" : "Model",
+            "string" : "bridle"
+          }
+        ],
+        "fixture" : 
+        [
+          
+          {
+            "density" : 1,
+            "filter-categoryBits" : 0,
+            "friction" : 0.2,
+            "id" : 4,
+            "name" : "fixture0",
+            "shapes" : 
+            [
+              
+              {
+                "type" : "polygon"
+              }
+            ],
+            "vertices" : 
+            {
+              "x" : 
+              [
+                -0.06918432563543320,
+                0.06918432563543320,
+                0.06918432563543320,
+                -0.06918432563543320
+              ],
+              "y" : 
+              [
+                -0.442077636718750,
+                -0.442077636718750,
+                0.4126058816909790,
+                0.4126058816909790
+              ]
+            }
+          }
+        ],
+        "id" : 7,
+        "linearVelocity" : 0,
+        "massData-I" : 0.007413369603455067,
+        "massData-center" : 
+        {
+          "x" : 0,
+          "y" : -0.01473587751388550
+        },
+        "massData-mass" : 0.1182614043354988,
+        "name" : "root",
+        "position" : 
+        {
+          "x" : 0,
+          "y" : -0.3994207382202148
+        },
+        "type" : "dynamic"
+      }
+    ],
+    "metajoint" : 
+    [
+      
+      {
+        "anchorA" : 
+        {
+          "x" : 0,
+          "y" : -0.3075000047683716
+        },
+        "anchorB" : 0,
+        "bodyA" : 7,
+        "bodyB" : 1,
+        "collideConnected" : false,
+        "enableMotor" : false,
+        "id" : 7,
+        "localAxisA" : 
+        {
+          "x" : 0,
+          "y" : 1
+        },
+        "maxMotorTorque" : 0,
+        "motorSpeed" : 0,
+        "name" : "joint6",
+        "springDampingRatio" : 0,
+        "springFrequency" : 0.001000000047497451,
+        "type" : "wheel"
+      },
+      
+      {
+        "anchorA" : 
+        {
+          "x" : 0,
+          "y" : -0.1958739757537842
+        },
+        "anchorB" : 0,
+        "bodyA" : 7,
+        "bodyB" : 1,
+        "collideConnected" : false,
+        "id" : 10,
+        "maxLength" : 0.1127226278185844,
+        "name" : "joint7",
+        "type" : "rope"
+      }
+    ],
+    "positionIterations" : 3,
+    "stepsPerSecond" : 60.0,
+    "subStepping" : false,
+    "velocityIterations" : 8,
+    "warmStarting" : false
+  }
+}

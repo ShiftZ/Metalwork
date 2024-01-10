@@ -1,0 +1,153 @@
+
+{
+	"body" : 
+	[
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"customProperties" : 
+			[
+				
+				{
+					"name" : "Model",
+					"string" : "bridle"
+				}
+			],
+			"fixture" : 
+			[
+				
+				{
+					"density" : 1,
+					"filter-categoryBits" : 0,
+					"friction" : 0.2,
+					"name" : "fixture0",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.06918432563543320,
+								0.06918432563543320,
+								-0.06918432563543320,
+								-0.06918432563543320
+							],
+							"y" : 
+							[
+								-0.442077636718750,
+								0.4126058816909790,
+								0.4126058816909790,
+								-0.442077636718750
+							]
+						}
+					}
+				}
+			],
+			"linearVelocity" : 0,
+			"massData-I" : 0.007413369603455067,
+			"massData-center" : 
+			{
+				"x" : 0,
+				"y" : -0.01473587751388550
+			},
+			"massData-mass" : 0.1182614043354988,
+			"name" : "root",
+			"position" : 
+			{
+				"x" : 0,
+				"y" : -0.3994207382202148
+			},
+			"type" : 2
+		},
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"customProperties" : 
+			[
+				
+				{
+					"name" : "Model",
+					"string" : "ball"
+				}
+			],
+			"fixture" : 
+			[
+				
+				{
+					"circle" : 
+					{
+						"center" : 
+						{
+							"x" : -1.101917668222541e-08,
+							"y" : 0.0002502553979866207
+						},
+						"radius" : 0.3777752816677094
+					},
+					"density" : 0.6549586057662964,
+					"filter-groupIndex" : -1,
+					"friction" : 0.2,
+					"name" : "fixture1"
+				}
+			],
+			"linearVelocity" : 0,
+			"massData-I" : 0.02095406316220760,
+			"massData-center" : 
+			{
+				"x" : -1.101917668222541e-08,
+				"y" : 0.0002502553979866207
+			},
+			"massData-mass" : 0.2936505377292633,
+			"name" : "head",
+			"position" : 
+			{
+				"x" : 0,
+				"y" : -0.7069207429885864
+			},
+			"type" : 2
+		}
+	],
+	"joint" : 
+	[
+		
+		{
+			"anchorA" : 
+			{
+				"x" : 0,
+				"y" : -0.1958739757537842
+			},
+			"anchorB" : 0,
+			"bodyA" : 0,
+			"bodyB" : 1,
+			"maxLength" : 0.1127226278185844,
+			"name" : "joint7",
+			"type" : "rope"
+		},
+		
+		{
+			"anchorA" : 
+			{
+				"x" : 0,
+				"y" : -0.3075000047683716
+			},
+			"anchorB" : 0,
+			"bodyA" : 0,
+			"bodyB" : 1,
+			"enableMotor" : false,
+			"localAxisA" : 
+			{
+				"x" : 0,
+				"y" : 1
+			},
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "joint6",
+			"springDampingRatio" : 0,
+			"springFrequency" : 0.001000000047497451,
+			"type" : "wheel"
+		}
+	]
+}

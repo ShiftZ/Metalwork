@@ -12,14 +12,16 @@ protected:
 	RigidObject* Rig = nullptr;
 
 public:
-	AArenaActor() { PrimaryActorTick.bCanEverTick = true; }
-	void OnConstruction(const FTransform& Transform) override;
 	void AttachToRig(RigidObject* Rig);
-	void SyncPose();
-	void Tick(float dt) override;
+	virtual void ArenaTick(float DeltaTime);
+
+protected:
+	void OnConstruction(const FTransform& Transform) override;
 	void Destroyed() override;
 	void PostEditMove(bool bFinished) override;
+
 	void ReleaseRig() override { Rig = nullptr; }
+	void SyncPose();
 };
 
 UCLASS(Transient)

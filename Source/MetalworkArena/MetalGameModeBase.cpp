@@ -52,13 +52,14 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 	{
 		AVesselActor* Actor = GetWorld()->SpawnActor<AVesselActor>();
 		Actor->AttachToRig(Ves);
-		Actors.Emplace(Actor);
 
-		if (Ves->weapon)
+		if (Chain* ChainWeapon = dynamic_cast<Chain*>(Ves->weapon))
 		{
-			AWeaponActor* Actor = GetWorld()->SpawnActor<AWeaponActor>();
-			Actor->AttachToRig(Ves->weapon);
-			Actors.Emplace(Actor);
+			AChainActor* ChainActor = GetWorld()->SpawnActor<AChainActor>();
+			ChainActor->AttachToRig(ChainWeapon);
+
+			AArenaActor* AnchorActor = GetWorld()->SpawnActor<AArenaActor>();
+			AnchorActor->AttachToRig(ChainWeapon->anchor);
 		}
 	}
 
@@ -85,8 +86,9 @@ void AMetalworkArenaGameModeBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	unique_lock lock(Core->arena.step_mtx);
-	for (AArenaActor* Actor : Actors)
-		Actor->SyncPose();
-	
+
+	for (TActorIterator<AArenaActor> ActorIt(GetWorld()); ActorIt; ++ActorIt)
+		ActorIt->ArenaTick(DeltaTime);
+
 	Core->arena.rigid_world->DebugDraw(DebugDrawer(GetWorld(), false));
 }		

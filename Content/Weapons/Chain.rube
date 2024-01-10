@@ -89,57 +89,19 @@
     [
       
       {
+        "active" : false,
         "angle" : 0,
         "angularVelocity" : 0,
         "awake" : true,
-        "customProperties" : 
-        [
-          
-          {
-            "name" : "Model",
-            "string" : "ball"
-          }
-        ],
-        "fixture" : 
-        [
-          
-          {
-            "density" : 0.6549586057662964,
-            "filter-groupIndex" : -1,
-            "friction" : 0.2,
-            "id" : 1,
-            "name" : "fixture1",
-            "shapes" : 
-            [
-              
-              {
-                "radius" : 0.3777752816677094,
-                "type" : "circle"
-              }
-            ],
-            "vertices" : 
-            {
-              "x" : [ -1.101917668222541e-08 ],
-              "y" : [ 0.0002502553979866207 ]
-            }
-          }
-        ],
         "id" : 1,
         "linearVelocity" : 0,
-        "massData-I" : 0.02095406316220760,
-        "massData-center" : 
-        {
-          "x" : -1.101917668222541e-08,
-          "y" : 0.0002502553979866207
-        },
-        "massData-mass" : 0.2936505377292633,
         "name" : "head",
         "position" : 
         {
           "x" : 0,
-          "y" : -2.277539968490601
+          "y" : -1.566506028175354
         },
-        "type" : "dynamic"
+        "type" : "static"
       },
       
       {
@@ -393,7 +355,7 @@
           "y" : -0.002688169479370117
         },
         "massData-mass" : 0.01642753928899765,
-        "name" : "ring5",
+        "name" : "shackle",
         "position" : 
         {
           "x" : 0,
@@ -463,71 +425,6 @@
         {
           "x" : 0,
           "y" : -0.8141078948974609
-        },
-        "type" : "dynamic"
-      },
-      
-      {
-        "angle" : 0,
-        "angularVelocity" : 0,
-        "awake" : true,
-        "customProperties" : 
-        [
-          
-          {
-            "name" : "Model",
-            "string" : "bridle"
-          }
-        ],
-        "fixture" : 
-        [
-          
-          {
-            "density" : 1,
-            "filter-categoryBits" : 0,
-            "friction" : 0.2,
-            "id" : 4,
-            "name" : "fixture0",
-            "shapes" : 
-            [
-              
-              {
-                "type" : "polygon"
-              }
-            ],
-            "vertices" : 
-            {
-              "x" : 
-              [
-                -0.06918432563543320,
-                0.06918432563543320,
-                0.06918432563543320,
-                -0.06918432563543320
-              ],
-              "y" : 
-              [
-                -0.442077636718750,
-                -0.442077636718750,
-                0.4126058816909790,
-                0.4126058816909790
-              ]
-            }
-          }
-        ],
-        "id" : 7,
-        "linearVelocity" : 0,
-        "massData-I" : 0.007413369603455067,
-        "massData-center" : 
-        {
-          "x" : 0,
-          "y" : -0.01473587751388550
-        },
-        "massData-mass" : 0.1182614043354988,
-        "name" : "bridle",
-        "position" : 
-        {
-          "x" : 0,
-          "y" : -1.970039963722229
         },
         "type" : "dynamic"
       },
@@ -702,73 +599,6 @@
         "referenceAngle" : 0,
         "type" : "revolute",
         "upperLimit" : 0
-      },
-      
-      {
-        "anchorA" : 
-        {
-          "x" : 2.980229929505640e-08,
-          "y" : 0.4078190028667450
-        },
-        "anchorB" : 
-        {
-          "x" : 0,
-          "y" : -0.1029900014400482
-        },
-        "bodyA" : 7,
-        "bodyB" : 5,
-        "collideConnected" : false,
-        "enableLimit" : false,
-        "enableMotor" : false,
-        "id" : 5,
-        "lowerLimit" : 0,
-        "maxMotorTorque" : 0,
-        "motorSpeed" : 0,
-        "name" : "joint5",
-        "referenceAngle" : 0,
-        "type" : "revolute",
-        "upperLimit" : 0
-      },
-      
-      {
-        "anchorA" : 
-        {
-          "x" : 0,
-          "y" : -0.3075000047683716
-        },
-        "anchorB" : 0,
-        "bodyA" : 7,
-        "bodyB" : 1,
-        "collideConnected" : false,
-        "enableMotor" : false,
-        "id" : 7,
-        "localAxisA" : 
-        {
-          "x" : 0,
-          "y" : 1
-        },
-        "maxMotorTorque" : 0,
-        "motorSpeed" : 0,
-        "name" : "joint6",
-        "springDampingRatio" : 0,
-        "springFrequency" : 0.001000000047497451,
-        "type" : "wheel"
-      },
-      
-      {
-        "anchorA" : 
-        {
-          "x" : 0,
-          "y" : -0.1958739757537842
-        },
-        "anchorB" : 0,
-        "bodyA" : 7,
-        "bodyB" : 1,
-        "collideConnected" : false,
-        "id" : 10,
-        "maxLength" : 0.1127226278185844,
-        "name" : "joint7",
-        "type" : "rope"
       },
       
       {

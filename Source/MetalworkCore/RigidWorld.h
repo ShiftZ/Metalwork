@@ -1,10 +1,13 @@
 #pragma once
+#pragma warning(disable:4458)
 
 #include "Name.h"
 
 class Body;
 class Joint;
 namespace Json { class Value; }
+
+inline Name root_name = "root";
 
 class RigidWorld
 {
@@ -28,7 +31,8 @@ public:
 	virtual void Restore() = 0;
 	virtual void Step() = 0;
 	virtual shared_ptr<Joint> CreateRevoluteJoint(Body* bodyA, Body* bodyB, vec2 anchorA, optional<vec2> anchorB = nullopt) = 0;
-	virtual shared_ptr<Joint> CreateDistantJoint(Body* bodyA, Body* bodyB, float min, float max) = 0;
+	virtual shared_ptr<Joint> CreateDistantJoint(Body* bodyA, Body* bodyB, float length, 
+												 optional<vec2> anchorA = nullopt, optional<vec2> anchorB = nullopt) = 0;
 	virtual pair<vector<shared_ptr<Body>>, vector<shared_ptr<Joint>>> LoadModel(Json::Value& model) = 0;
 	virtual string SaveToJson() = 0;
 	virtual void LoadFromJson(string_view json) = 0;
@@ -82,12 +86,17 @@ public:
 	RigidObject(Name name, MetalActor* actor = nullptr) : actor(actor), name(name) {}
 
 	METALWORKCORE_API void DrawShapes(IDebugDrawer& drawer);
-	METALWORKCORE_API void LoadModel(Json::Value& jmodel);
+	METALWORKCORE_API virtual void LoadModel(Json::Value& jmodel);
 
 	void AddPart(shared_ptr<Body> body);
-	shared_ptr<Body> RemovePart(Body* part);
 	Body* FindPart(Name part_name);
-	METALWORKCORE_API void SetPosition(vec2 position);
+	shared_ptr<Body> RemovePart(Name part_name);
+	
+	void AddJoint(shared_ptr<Joint> joint, optional<Name> name = nullopt);
+	Joint* FindJoint(Name joint_name);
+	shared_ptr<Joint> RemoveJoint(Name joint_name);
+
+	METALWORKCORE_API virtual void SetPosition(vec2 position);
 	METALWORKCORE_API vec2 GetPosition();
 	float GetMass();
 	METALWORKCORE_API shared_ptr<RigidObject> Release();
@@ -97,6 +106,9 @@ public:
 
 class Joint
 {
+public:
+	Name name;
+
 public:
 	virtual float GetForce() = 0;
 	virtual ~Joint() = default;

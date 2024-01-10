@@ -26,6 +26,7 @@
 #include <Engine/GameInstance.h>
 #include <Engine/LevelScriptActor.h>
 #include <Engine/World.h>
+#include <Sound/SoundCue.h>
 #include <EngineUtils.h>
 #include <GameFramework/Actor.h>
 #include <GameFramework/GameModeBase.h>
@@ -39,6 +40,7 @@
 #include <TimerManager.h>
 #include <UObject/LinkerLoad.h>
 #include <UObject/Package.h>
+#include <Components/AudioComponent.h>
 
 #if WITH_EDITOR
 #	include <IDirectoryWatcher.h>

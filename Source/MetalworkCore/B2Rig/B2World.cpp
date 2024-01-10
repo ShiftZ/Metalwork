@@ -88,12 +88,14 @@ shared_ptr<Joint> B2World::CreateRevoluteJoint(Body* bodyA, Body* bodyB, vec2 an
 	return make_shared<B2Joint>(b2joint);
 }
 
-shared_ptr<Joint> B2World::CreateDistantJoint(Body* bodyA, Body* bodyB, float min, float max)
+shared_ptr<Joint> B2World::CreateDistantJoint(Body* bodyA, Body* bodyB, float length, optional<vec2> anchorA, optional<vec2> anchorB)
 {
 	b2DistanceJointDef def;
-	def.Initialize(GetB2Body(bodyA), GetB2Body(bodyB), bodyA->GetPosition(), bodyB->GetPosition());
-	def.minLength = min;
-	def.maxLength = max;
+	vec2 ancA = anchorA ? *anchorA : bodyA->GetPosition();
+	vec2 ancB = anchorB ? *anchorB : bodyB->GetPosition();
+
+	def.Initialize(GetB2Body(bodyA), GetB2Body(bodyB), ancA, ancB);
+	def.maxLength = length;
 
 	b2Joint* b2joint = b2world->CreateJoint(&def);
 	return make_shared<B2Joint>(b2joint);
