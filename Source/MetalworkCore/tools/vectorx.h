@@ -428,7 +428,7 @@ type projection_tau( const vectorx<type, dim>& of, const vectorx<type, dim>& a, 
 	return dot(of - a, b) / b.sqlen();
 }
 
-using vec2 = vectorx<float, 2>;
+//using vec2 = vectorx<float, 2>;
 using vec2d = vectorx<double, 2>;
 using vec2i = vectorx<int, 2>;
 using vec2f = vectorx<float, 2>;

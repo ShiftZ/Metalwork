@@ -53,7 +53,8 @@
 #include "tools/sol_hash_set.h"
 #include "tools/std.h"
 #include "tools/vector2.h"
-#include "tools/vector3.h"
+
+#include "Vec2.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -63,7 +64,7 @@ namespace views = std::views;
 inline constexpr float ScaleRigToUE = 100.f;
 
 inline struct UEScaler {} UEScale;
-inline float operator*(float F, const UEScaler& S) { return F * ScaleRigToUE; }
-inline float operator/(float F, const UEScaler& S) { return F / ScaleRigToUE; }
+inline float operator*(float F, const UEScaler&) { return F * ScaleRigToUE; }
+inline float operator/(float F, const UEScaler&) { return F / ScaleRigToUE; }
 inline FVector operator*(const vec2& P, const UEScaler& S) { return FVector(P.x * S, 0, P.y * S); }
 inline vec2 operator/(const FVector& P, const UEScaler& S) { return vec2(P.X / S, P.Z / S); }

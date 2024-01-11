@@ -7,7 +7,7 @@ class Arena
 public:
 	struct PlayerInput
 	{
-		vec2 move = nullvec;
+		vec2f move = {0, 0};
 	};
 
 	struct StepInputs
