@@ -30,15 +30,15 @@ public:
 	virtual void Capture() = 0;
 	virtual void Restore() = 0;
 	virtual void Step() = 0;
-	virtual shared_ptr<Joint> CreateRevoluteJoint(Body* bodyA, Body* bodyB, vec2 anchorA, optional<vec2> anchorB = nullopt) = 0;
-	virtual shared_ptr<Joint> CreateDistantJoint(Body* bodyA, Body* bodyB, float length, 
-												 optional<vec2> anchorA = nullopt, optional<vec2> anchorB = nullopt) = 0;
+	virtual shared_ptr<Joint> CreateRevoluteJoint(Body* bodyA, Body* bodyB, Vec2 anchorA, optional<Vec2> anchorB = nullopt) = 0;
+	virtual shared_ptr<Joint> CreateDistantJoint(Body* bodyA, Body* bodyB, Float length, 
+												 optional<Vec2> anchorA = nullopt, optional<Vec2> anchorB = nullopt) = 0;
 	virtual pair<vector<shared_ptr<Body>>, vector<shared_ptr<Joint>>> LoadModel(Json::Value& model) = 0;
 	virtual string SaveToJson() = 0;
 	virtual void LoadFromJson(string_view json) = 0;
 	virtual void DebugDraw(const class IDebugDrawer& drawer) = 0;
 
-	virtual vec2 GetGravity() = 0;
+	virtual Vec2 GetGravity() = 0;
 
 	virtual ~RigidWorld() = default;
 };
@@ -48,24 +48,24 @@ class Body
 public:
 	class RigidObject* object = nullptr;
 	Name name, model;
-	vec2 offset;
+	Vec2 offset;
 
 public:
-	Body(Name name, Name model, vec2 shift) : name(name), model(model), offset(shift) {}
+	Body(Name name, Name model, Vec2 shift) : name(name), model(model), offset(shift) {}
 
-	virtual vec2 GetPosition() = 0;
-	virtual void SetPosition(vec2 position) = 0;
-	virtual float GetAngle() = 0;
-	virtual float GetMass() = 0;
-	virtual float GetInertia() = 0;
-	virtual vec2 GetVelocity() = 0;
-	virtual float GetAngVelocity() = 0;
-	virtual void SetGravityScale(float scale) = 0;
-	virtual void SetAngDamping(float factor) = 0;
-	virtual void SetLinearDamping(float factor) = 0;
-	virtual void ApplyForce(vec2 force) = 0;
-	virtual void ApplyForce(vec2 force, vec2 point) = 0;
-	virtual void ApplyTorque(float torque) = 0;
+	virtual Vec2 GetPosition() = 0;
+	virtual void SetPosition(Vec2 position) = 0;
+	virtual Float GetAngle() = 0;
+	virtual Float GetMass() = 0;
+	virtual Float GetInertia() = 0;
+	virtual Vec2 GetVelocity() = 0;
+	virtual Float GetAngVelocity() = 0;
+	virtual void SetGravityScale(Float scale) = 0;
+	virtual void SetAngDamping(Float factor) = 0;
+	virtual void SetLinearDamping(Float factor) = 0;
+	virtual void ApplyForce(Vec2 force) = 0;
+	virtual void ApplyForce(Vec2 force, Vec2 point) = 0;
+	virtual void ApplyTorque(Float torque) = 0;
 	virtual void DrawShapes(class IDebugDrawer& drawer) = 0;
 
 	virtual ~Body() = default;
@@ -96,8 +96,8 @@ public:
 	Joint* FindJoint(Name joint_name);
 	shared_ptr<Joint> RemoveJoint(Name joint_name);
 
-	METALWORKCORE_API virtual void SetPosition(vec2 position);
-	METALWORKCORE_API vec2 GetPosition();
+	METALWORKCORE_API virtual void SetPosition(Vec2 position);
+	METALWORKCORE_API Vec2 GetPosition();
 	float GetMass();
 	METALWORKCORE_API shared_ptr<RigidObject> Release();
 
@@ -110,7 +110,7 @@ public:
 	Name name;
 
 public:
-	virtual float GetForce() = 0;
+	virtual Float GetForce() = 0;
 	virtual ~Joint() = default;
 };
 

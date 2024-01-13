@@ -10,10 +10,10 @@ class DebugDrawer : public IDebugDrawer
 public:
 	DebugDrawer(UWorld* World, bool bPersistent) : World(World), bPersistent(bPersistent) {}
 
-	void Circle(vec2 Center, float Radius, Color Col) const override;
-	void SolidCircle(vec2 Center, vec2 Axis, float Radius, Color Col) const override;
-	void Poly(span<vec2> Verts, Color Col) const override;
-	void SolidPoly(span<vec2> Verts, Color Col) const override;
-	void Line(vec2 A, vec2 B, Color Col) const override;
-	void Point(vec2 P, float Size, Color Col) const override;
+	void Circle(Vec2 Center, float Radius, Color Col) const override;
+	void SolidCircle(Vec2 Center, Vec2 Axis, float Radius, Color Col) const override;
+	void Poly(span<Vec2> Verts, Color Col) const override;
+	void SolidPoly(span<Vec2> Verts, Color Col) const override;
+	void Line(Vec2 A, Vec2 B, Color Col) const override;
+	void Point(Vec2 P, float Size, Color Col) const override;
 };

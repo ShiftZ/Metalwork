@@ -6,6 +6,7 @@
 #include "VesselActor.h"
 #include "ArenaSettings.h"
 #include "Vessel.h"
+#include "MetalSettings.h"
 
 DEFINE_LOG_CATEGORY(LogNetwork);
 
@@ -55,7 +56,9 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 
 		if (Chain* ChainWeapon = dynamic_cast<Chain*>(Ves->weapon))
 		{
-			AChainActor* ChainActor = GetWorld()->SpawnActor<AChainActor>();
+			auto* Settings = GetDefault<UMetalSettings>();
+
+			AChainActor* ChainActor = GetWorld()->SpawnActor<AChainActor>(Settings->ChainClass.LoadSynchronous());
 			ChainActor->AttachToRig(ChainWeapon);
 
 			AArenaActor* AnchorActor = GetWorld()->SpawnActor<AArenaActor>();

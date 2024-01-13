@@ -20,10 +20,10 @@ void Chain::AttachAnchor(Anchor* anchor)
 	this->anchor = anchor;
 }
 
-void Chain::SetPosition(vec2 position)
+void Chain::SetPosition(Vec2 position)
 {
 	RigidObject::SetPosition(position);
-	if (anchor) anchor->SetPosition(position - vec2{0, length});
+	if (anchor) anchor->SetPosition(position - Vec2{0, length});
 }
 
 void Chain::LoadModel(Json::Value& jmodel)
@@ -35,7 +35,5 @@ void Chain::LoadModel(Json::Value& jmodel)
 void Chain::SetOwner(Vessel* vessel)
 {
 	Weapon::SetOwner(vessel);
-
-	shared_ptr<Joint> rope_joint = world->CreateDistantJoint(vessel->root, anchor->root, length, vec2{0, 0}, vec2{0, -length});
-	AddJoint(move(rope_joint), rope_name);
+	rope_joint = world->CreateDistantJoint(vessel->root, anchor->root, length, Vec2{0, 0}, Vec2{0, -length});
 }

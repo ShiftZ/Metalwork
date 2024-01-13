@@ -16,6 +16,7 @@ public:
 	virtual void ArenaTick(float DeltaTime);
 
 protected:
+	AArenaActor();
 	void OnConstruction(const FTransform& Transform) override;
 	void Destroyed() override;
 	void PostEditMove(bool bFinished) override;

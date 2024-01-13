@@ -29,11 +29,11 @@ void RigidObject::DrawShapes(IDebugDrawer& drawer)
 	if (root) root->DrawShapes(drawer);
 }
 
-void RigidObject::SetPosition(vec2 position)
+void RigidObject::SetPosition(Vec2 position)
 {
 	if (root)
 	{
-		vec2 shift = position - root->GetPosition() + root->offset;
+		Vec2 shift = position - root->GetPosition() + root->offset;
 		for (Body* part : parts | cptr)
 			part->SetPosition(part->GetPosition() + shift);
 	}
@@ -44,7 +44,7 @@ void RigidObject::SetPosition(vec2 position)
 	}
 }
 
-vec2 RigidObject::GetPosition()
+Vec2 RigidObject::GetPosition()
 {
 	Body* body = root ? root : parts.front().get();
 	return body->GetPosition() - body->offset;

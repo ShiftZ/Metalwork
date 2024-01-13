@@ -3,13 +3,13 @@
 
 void B2Draw::DrawPolygon(const b2Vec2* vertices, int32 n_vertices, const b2Color& col)
 {
-	vector<vec2> verts = {vertices, vertices + n_vertices};
+	vector<Vec2> verts = {vertices, vertices + n_vertices};
 	drawer.Poly(verts, col);
 }
 
 void B2Draw::DrawSolidPolygon(const b2Vec2* vertices, int32 n_vertices, const b2Color& col)
 {
-	vector<vec2> verts = {vertices, vertices + n_vertices};
+	vector<Vec2> verts = {vertices, vertices + n_vertices};
 	drawer.SolidPoly(verts, col);
 }
 

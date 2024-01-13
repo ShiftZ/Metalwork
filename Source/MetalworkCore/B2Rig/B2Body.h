@@ -11,19 +11,19 @@ class B2Body final : public Body
 
 public:
 	B2Body(b2Body* b2body, Name name, Name model);
-	vec2 GetPosition() override;
-	void SetPosition(vec2 position) override;
-	float GetAngle() override;
-	float GetMass() override;
-	float GetInertia() override;
-	vec2 GetVelocity() override;
-	float GetAngVelocity() override;
-	void SetGravityScale(float scale) override;
-	void SetAngDamping(float factor) override;
-	void SetLinearDamping(float factor) override;
-	void ApplyForce(vec2 force) override;
-	void ApplyForce(vec2 force, vec2 point) override;
-	void ApplyTorque(float torque) override;
+	Vec2 GetPosition() override;
+	void SetPosition(Vec2 position) override;
+	Float GetAngle() override;
+	Float GetMass() override;
+	Float GetInertia() override;
+	Vec2 GetVelocity() override;
+	Float GetAngVelocity() override;
+	void SetGravityScale(Float scale) override;
+	void SetAngDamping(Float factor) override;
+	void SetLinearDamping(Float factor) override;
+	void ApplyForce(Vec2 force) override;
+	void ApplyForce(Vec2 force, Vec2 point) override;
+	void ApplyTorque(Float torque) override;
 	
 	void DrawShapes(IDebugDrawer& drawer) override;
 	~B2Body();

@@ -10,6 +10,6 @@ public:
 
 public:
 	B2Joint(b2Joint* b2joint, Name name = {});
-	float GetForce() override;
+	Float GetForce() override;
 	~B2Joint();
 };

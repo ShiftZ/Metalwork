@@ -12,13 +12,13 @@ void Vessel::AttachWeapon(Weapon* weapon)
 	this->weapon = weapon;
 }
 
-void Vessel::SetPosition(vec2 position)
+void Vessel::SetPosition(Vec2 position)
 {
 	RigidObject::SetPosition(position);
 	if (weapon) weapon->SetPosition(position);
 }
 
-void Vessel::SetPlayerInput(vec2 move_in)
+void Vessel::SetPlayerInput(Vec2 move_in)
 {
 	const float max_speed = 15;
 
@@ -26,13 +26,13 @@ void Vessel::SetPlayerInput(vec2 move_in)
 	root->SetGravityScale(0);
 
 	float mass = root->GetMass();
-	vec2 velocity = root->GetVelocity();
+	Vec2 velocity = root->GetVelocity();
 	float ang_vel = root->GetAngVelocity();
-	vec2 accel = move_in * 0.1;
+	Vec2 accel = move_in * 0.1;
 	float angle = remainderf(root->GetAngle(), 2*pi);
 	
-	vec2 add_velocity = accel * frame_time;
-	vec2 new_velocity = velocity + add_velocity;
+	Vec2 add_velocity = accel * frame_time;
+	Vec2 new_velocity = velocity + add_velocity;
 
 	float sq_speed = sqlen(new_velocity);
 	if (sq_speed > sqr(max_speed))
@@ -49,7 +49,7 @@ void Vessel::SetPlayerInput(vec2 move_in)
 
 	float move_magnitude;
 
-	vec2 move_dir = normalized(move_in, move_magnitude);
+	Vec2 move_dir = normalized(move_in, move_magnitude);
 
 	if (move_dir != 0)
 	{

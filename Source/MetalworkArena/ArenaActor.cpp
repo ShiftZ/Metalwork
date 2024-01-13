@@ -3,6 +3,11 @@
 #include "ArenaActor.h"
 #include "ArenaSettings.h"
 
+AArenaActor::AArenaActor()
+{
+	RootComponent = CreateDefaultSubobject<USceneComponent>(L"DefaultSceneRoot");
+}
+
 void AArenaActor::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
@@ -46,10 +51,7 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 		return Component;
 	};
 
-	USceneComponent* Root = MakeComponent(Rig->root);
-	SetRootComponent(Root);
-
-	for (Body* Part : Rig->parts | cptr | drop_value(Rig->root))
+	for (Body* Part : Rig->parts | cptr)
 		if (Part->model) MakeComponent(Part);
 
 	SyncPose();
@@ -82,7 +84,7 @@ void ATestActor::PostEditChangeProperty(FPropertyChangedEvent& Event)
 		{
 			auto LoadModel = [&]
 			{
-				vec2 Position = GetActorLocation() / UEScale;
+				Vec2 Position = GetActorLocation() / UEScale;
 
 				if (Rig)
 				{

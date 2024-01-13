@@ -5,7 +5,7 @@
 #include "CoreDefinitions.h"
 #include "b2dJson/b2dJson.h"
 
-B2World::B2World(float gravity)
+B2World::B2World(Float gravity)
 {
 	b2world = make_unique<b2World>(b2Vec2(0, gravity));
 }
@@ -71,7 +71,7 @@ void B2World::Step()
 	++step;
 }
 
-shared_ptr<Joint> B2World::CreateRevoluteJoint(Body* bodyA, Body* bodyB, vec2 anchorA, optional<vec2> anchorB)
+shared_ptr<Joint> B2World::CreateRevoluteJoint(Body* bodyA, Body* bodyB, Vec2 anchorA, optional<Vec2> anchorB)
 {
 	b2RevoluteJointDef def;
 	if (!anchorB)
@@ -88,11 +88,11 @@ shared_ptr<Joint> B2World::CreateRevoluteJoint(Body* bodyA, Body* bodyB, vec2 an
 	return make_shared<B2Joint>(b2joint);
 }
 
-shared_ptr<Joint> B2World::CreateDistantJoint(Body* bodyA, Body* bodyB, float length, optional<vec2> anchorA, optional<vec2> anchorB)
+shared_ptr<Joint> B2World::CreateDistantJoint(Body* bodyA, Body* bodyB, float length, optional<Vec2> anchorA, optional<Vec2> anchorB)
 {
 	b2DistanceJointDef def;
-	vec2 ancA = anchorA ? *anchorA : bodyA->GetPosition();
-	vec2 ancB = anchorB ? *anchorB : bodyB->GetPosition();
+	Vec2 ancA = anchorA ? *anchorA : bodyA->GetPosition();
+	Vec2 ancB = anchorB ? *anchorB : bodyB->GetPosition();
 
 	def.Initialize(GetB2Body(bodyA), GetB2Body(bodyB), ancA, ancB);
 	def.minLength = 0;
@@ -176,7 +176,7 @@ void B2World::DebugDraw(const IDebugDrawer& drawer)
 	b2world->DebugDraw();
 }
 
-vec2 B2World::GetGravity()
+Vec2 B2World::GetGravity()
 {
 	return b2world->GetGravity();
 }

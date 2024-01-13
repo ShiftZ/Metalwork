@@ -7,4 +7,4 @@
 #endif
 
 inline constexpr int fps = 60;
-inline constexpr float frame_time = 1.f / fps;
+inline constexpr Float frame_time = 1.f / fps;

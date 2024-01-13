@@ -1,19 +1,30 @@
 #include "VesselActor.h"
 
 #include "CoreInterface.h"
-#include "Vessel.h"
-
-AVesselActor::AVesselActor()
-{
-	//Audio = CreateDefaultSubobject<UAudioComponent>("Audio");
-}
+#include "Weapon.h"
 
 void AVesselActor::ArenaTick(float DeltaTime)
 {
 	Super::ArenaTick(DeltaTime);
+}
 
-	if (GetRig()->weapon)
-	{
-		//log(DisplayLog(1), "joint force = {}", GetRig()->head_joint->GetForce());
-	}
+AChainActor::AChainActor()
+{
+	Audio = CreateDefaultSubobject<UAudioComponent>("Audio");
+	Audio->SetupAttachment(RootComponent);
+}
+
+void AChainActor::BeginPlay()
+{
+	Super::BeginPlay();
+	Audio->SetSound(ChainSound);
+}
+
+void AChainActor::ArenaTick(float DeltaTime)
+{
+	Super::ArenaTick(DeltaTime);
+
+	Float NewRopeForce = GetRig()->rope_joint->GetForce();
+	if (!Audio->IsPlaying() && LastRopeForce == 0 && NewRopeForce > 0) Audio->Play();
+	LastRopeForce = NewRopeForce;
 }
