@@ -34,7 +34,7 @@ void Vessel::SetPlayerInput(Vec2 move_in)
 	Vec2 add_velocity = accel * frame_time;
 	Vec2 new_velocity = velocity + add_velocity;
 
-	float sq_speed = sqlen(new_velocity);
+	float sq_speed = SqLen(new_velocity);
 	if (sq_speed > sqr(max_speed))
 	{
 		new_velocity *= max_speed / sqrt(sq_speed);
@@ -49,11 +49,11 @@ void Vessel::SetPlayerInput(Vec2 move_in)
 
 	float move_magnitude;
 
-	Vec2 move_dir = normalized(move_in, move_magnitude);
+	Vec2 move_dir = Normalized(move_in, move_magnitude);
 
 	if (move_dir != 0)
 	{
-		float move_angle = ::angle(rotated90cw(move_dir));
+		float move_angle = Angle(Rotated90CW(move_dir));
 
 		float k = min(move_magnitude / 600, 1.f);
 		move_angle *= k;

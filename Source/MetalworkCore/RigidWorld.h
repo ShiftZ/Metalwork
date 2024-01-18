@@ -56,6 +56,7 @@ public:
 	virtual Vec2 GetPosition() = 0;
 	virtual void SetPosition(Vec2 position) = 0;
 	virtual Float GetAngle() = 0;
+	virtual Float GetAngleMod() = 0;
 	virtual Float GetMass() = 0;
 	virtual Float GetInertia() = 0;
 	virtual Vec2 GetVelocity() = 0;
@@ -110,6 +111,8 @@ public:
 	Name name;
 
 public:
+	virtual Body* GetBodyA() = 0;
+	virtual Body* GetBodyB() = 0;
 	virtual Float GetForce() = 0;
 	virtual ~Joint() = default;
 };

@@ -7,6 +7,7 @@
 #include "ArenaSettings.h"
 #include "Vessel.h"
 #include "MetalSettings.h"
+#include "Camera.h"
 
 DEFINE_LOG_CATEGORY(LogNetwork);
 
@@ -17,10 +18,7 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 	FString PlayerStr;
 	FParse::Value(FCommandLine::Get(), L"player", PlayerStr);
 
-	int Player = 1, Players = 1;
-
-	swscanf(*PlayerStr, L"%d/%d", &Player, &Players);
-	--Player;
+	if (swscanf(*PlayerStr, L"%d/%d", &Player, &Players) == 2) --Player;
 
 	unique_ptr<INetwork> Network;
 
@@ -49,7 +47,7 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 	
 	Core = MakeUnique<MetalCore>(Player, move(RigWorld), move(Network));
 
-	for (Vessel* Ves : Core->Arena().Vessels())
+	for (Vessel* Ves : Core->arena.vessels)
 	{
 		AVesselActor* Actor = GetWorld()->SpawnActor<AVesselActor>();
 		Actor->AttachToRig(Ves);
@@ -69,6 +67,13 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 	Core->Ready();
 	//Core->Start();
     
+}
+
+void AMetalworkArenaGameModeBase::RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot)
+{
+	Super::RestartPlayerAtPlayerStart(NewPlayer, StartSpot);
+	ACamera* Camera = NewPlayer->GetPawn<ACamera>();
+	Camera->SetTarget(Core->arena.vessels[Player]);
 }
 
 void AMetalworkArenaGameModeBase::BeginPlay()

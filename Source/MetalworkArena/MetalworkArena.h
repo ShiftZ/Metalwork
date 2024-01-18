@@ -18,6 +18,7 @@
 #include <string>
 #include <typeindex>
 #include <unordered_map>
+#include <numbers>
 
 #include <Components/InputComponent.h>
 #include <DrawDebugHelpers.h>
@@ -55,12 +56,13 @@
 #include "tools/std.h"
 #include "tools/vector2.h"
 
-#include "Vec2.h"
-
 using namespace std;
 using namespace std::chrono;
 using namespace std::filesystem;
+using namespace std::numbers;
 namespace views = std::views;
+
+#include "Vec2.h"
 
 inline constexpr float ScaleRigToUE = 100.f;
 

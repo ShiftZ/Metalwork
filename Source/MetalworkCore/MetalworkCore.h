@@ -55,8 +55,6 @@
 #include "tools/sol_hash_set.h"
 #include "tools/vector2.h"
 
-#include "Vec2.h"
-
 using namespace std;
 namespace views = std::ranges::views;
 using namespace std::chrono;
@@ -71,3 +69,5 @@ using namespace asio::experimental;
 using namespace asio::experimental::awaitable_operators;
 
 using std::numbers::pi;
+
+#include "Vec2.h"

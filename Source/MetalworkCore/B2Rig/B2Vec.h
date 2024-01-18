@@ -5,15 +5,15 @@
 using Vec2 = b2Vec2;
 using Float = float; 
 
-inline Float length( const Vec2& v ) { return v.Length(); }
-inline Float sqlen( const Vec2& v ) { return v.LengthSquared(); }
-inline Vec2 rotated90cw( Vec2& v ) { return {v.y, -v.x}; }
-inline Float angle( const Vec2& v ) { return atan2(v.y, v.x); }
+inline Float Length(const Vec2& V) { return V.Length(); }
+inline Float SqLen(const Vec2& V) { return V.LengthSquared(); }
+inline Vec2 Rotated90CW(Vec2& V) { return {V.y, -V.x}; }
+inline Float Angle(const Vec2& V) { return atan2(V.y, V.x); }
 
 template< typename length_t = Float >
-b2Vec2 normalized( const Vec2& v, length_t&& len = Float() )
+b2Vec2 Normalized( const Vec2& v, length_t&& len = Float() )
 {
-	len = length(v);
+	len = Length(v);
 	Float k = 1 / len;
 	return {v.x * k, v.y * k};
 }

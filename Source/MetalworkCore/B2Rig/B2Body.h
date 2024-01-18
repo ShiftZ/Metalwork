@@ -14,6 +14,7 @@ public:
 	Vec2 GetPosition() override;
 	void SetPosition(Vec2 position) override;
 	Float GetAngle() override;
+	Float GetAngleMod() override;
 	Float GetMass() override;
 	Float GetInertia() override;
 	Vec2 GetVelocity() override;

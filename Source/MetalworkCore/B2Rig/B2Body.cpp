@@ -23,6 +23,11 @@ Float B2Body::GetAngle()
 	return b2body->GetAngle();
 }
 
+Float B2Body::GetAngleMod()
+{
+	return remainderf(b2body->GetAngle(), 2*pi);
+}
+
 Float B2Body::GetMass()
 {
 	return b2body->GetMass();

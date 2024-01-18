@@ -22,6 +22,7 @@ class Chain : public Weapon
 public:
 	class Anchor* anchor = nullptr;
 	shared_ptr<Joint> rope_joint;
+	shared_ptr<Joint> shackle_joint;
 	Float length;
 
 public:

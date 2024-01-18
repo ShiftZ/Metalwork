@@ -25,9 +25,11 @@ public:
 	TObjectPtr<USoundCue> ChainSound;
 
 	Float LastRopeForce = 0;
+	Float ChainAngle = 0;
+	Float AngleChangeSpeed = 0;
+	bool Charged = false;
 
 public:
-	AChainActor();
 	void BeginPlay() override;
 	class Chain* GetRig() { return (Chain*)Rig; }
 	void ArenaTick(float DeltaTime) override;

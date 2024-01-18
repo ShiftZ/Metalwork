@@ -99,11 +99,15 @@ void MetalCore::GetReady(stop_token st)
 
 void MetalCore::MainLoop(stop_token st)
 {
+	scope_exit _([]{ log("Core thread stopped"); });
+
 	input->Start();
 	arena.Start();
 
 	arena_thread = jthread([&](stop_token st)
 	{
+		scope_exit _([]{ log("Arena thread stopped.");});
+
 		for (;;)
 		{
 			vector<Arena::StepInputs> input;
@@ -115,6 +119,7 @@ void MetalCore::MainLoop(stop_token st)
 				input = move(arena_inputs);
 				return true;
 			});
+
 			if (st.stop_requested()) return;
 
 			unique_lock step_lock(arena_step_mtx);
@@ -226,4 +231,7 @@ MetalCore::~MetalCore()
 {
 	thread.request_stop();
 	arena_thread.request_stop();
+
+	thread.join();
+	arena_thread.join();
 }

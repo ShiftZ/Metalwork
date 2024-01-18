@@ -26,7 +26,5 @@ public:
 	void Start();
 	void Step(StepInputs inputs);
 
-	span<Vessel*> Vessels() { return vessels; }
-
 	static METALWORKCORE_API unique_ptr<RigidWorld> MakeWorld();
 };

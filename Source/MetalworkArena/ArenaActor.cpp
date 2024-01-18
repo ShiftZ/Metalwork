@@ -5,7 +5,7 @@
 
 AArenaActor::AArenaActor()
 {
-	RootComponent = CreateDefaultSubobject<USceneComponent>(L"DefaultSceneRoot");
+	//RootComponent = CreateDefaultSubobject<USceneComponent>(L"DefaultSceneRoot");
 }
 
 void AArenaActor::OnConstruction(const FTransform& Transform)
@@ -20,6 +20,7 @@ void AArenaActor::OnConstruction(const FTransform& Transform)
 void AArenaActor::Destroyed()
 {
 	Super::Destroyed();
+
 	if (Rig && Rig->world)
 		Rig->world->RemoveObject(Rig);
 }
@@ -44,14 +45,20 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 	{
 		FVehicleModelPartRow* ModelRow = Models->FindRow<FVehicleModelPartRow>(*Body->model, nullptr);
 		USceneComponent* Component = NewObject<USceneComponent>(this, ModelRow->ComponentClass.Get());
-		Component->SetupAttachment(GetRootComponent());
+		if (RootComponent) Component->SetupAttachment(RootComponent);
 		Component->RegisterComponent();
 		Component->SetAbsolute(true, true, true);
 		Cast<IComponentPocket>(Component)->Body = Body;
 		return Component;
 	};
 
-	for (Body* Part : Rig->parts | cptr)
+	if (Rig->root)
+	{
+		if (RootComponent) RootComponent->DestroyComponent();
+		SetRootComponent(MakeComponent(Rig->root));
+	}
+
+	for (Body* Part : Rig->parts | cptr | drop_value(Rig->root))
 		if (Part->model) MakeComponent(Part);
 
 	SyncPose();

@@ -14,8 +14,8 @@ void Chain::AttachAnchor(Anchor* anchor)
 
 	anchor->SetPosition({0, -length});
 
-	shared_ptr<Joint> shackle_joint = world->CreateRevoluteJoint(shackle, anchor->root, {0, -length});
-	AddJoint(move(shackle_joint), shackle_name);
+	shackle_joint = world->CreateRevoluteJoint(shackle, anchor->root, {0, -length});
+	shackle_joint->name = shackle_name;
 
 	this->anchor = anchor;
 }
@@ -29,7 +29,7 @@ void Chain::SetPosition(Vec2 position)
 void Chain::LoadModel(Json::Value& jmodel)
 {
 	RigidObject::LoadModel(jmodel);
-	length = ::length(RemovePart(anchor_name)->GetPosition());
+	length = Length(RemovePart(anchor_name)->GetPosition());
 }
 
 void Chain::SetOwner(Vessel* vessel)

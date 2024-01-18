@@ -65,6 +65,16 @@ public:
 
 constexpr auto sqr(auto value) { return value * value; }
 
+template< typename exitfunc_type >
+class scope_exit
+{
+	exitfunc_type func;
+
+public:
+	scope_exit( exitfunc_type&& func ) : func(std::move(func)) {}
+	~scope_exit() { func(); }
+};
+
 /*namespace std::ranges::views
 {
 	template< range range_t >

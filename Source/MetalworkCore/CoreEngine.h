@@ -52,7 +52,6 @@ public:
 	MetalCore(int player, unique_ptr<RigidWorld> world, unique_ptr<INetwork> net);
 	~MetalCore() override;
 
-	Arena& Arena() { return arena; }
 	void Pause() { step_mode = StepMode::Paused; }
 	void SingleStep() { step_mode = StepMode::SingleStep; }
 
