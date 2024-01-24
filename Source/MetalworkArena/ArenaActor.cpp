@@ -13,8 +13,8 @@ void AArenaActor::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 
 	FVector Location = GetActorLocation();
-    Location.Y = 0;
-    SetActorLocation(Location);
+	Location.Y = 0;
+	SetActorLocation(Location);
 }
 
 void AArenaActor::Destroyed()
@@ -29,10 +29,11 @@ void AArenaActor::PostEditMove(bool bFinished)
 {
 	Super::PostEditMove(bFinished);
 
-    FVector Location = GetActorLocation();
-    Location.Y = 0;
-    SetActorLocation(Location);
-	if (Rig) Rig->SetPosition(Location / UEScale);
+	FVector Location = GetActorLocation();
+	Location.Y = 0;
+	SetActorLocation(Location);
+	if (Rig)
+		Rig->SetPosition(Location / UEScale);
 }
 
 void AArenaActor::AttachToRig(RigidObject* Rig)
@@ -45,7 +46,8 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 	{
 		FVehicleModelPartRow* ModelRow = Models->FindRow<FVehicleModelPartRow>(*Body->model, nullptr);
 		USceneComponent* Component = NewObject<USceneComponent>(this, ModelRow->ComponentClass.Get());
-		if (RootComponent) Component->SetupAttachment(RootComponent);
+		if (RootComponent)
+			Component->SetupAttachment(RootComponent);
 		Component->RegisterComponent();
 		Component->SetAbsolute(true, true, true);
 		Cast<IComponentPocket>(Component)->Body = Body;
@@ -54,7 +56,8 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 
 	if (Rig->root)
 	{
-		if (RootComponent) RootComponent->DestroyComponent();
+		if (RootComponent)
+			RootComponent->DestroyComponent();
 		SetRootComponent(MakeComponent(Rig->root));
 	}
 
@@ -98,7 +101,7 @@ void ATestActor::PostEditChangeProperty(FPropertyChangedEvent& Event)
 					Position = Rig->GetPosition();
 					Rig->Release();
 				}
-				
+
 				TSet<UActorComponent*> Components = GetComponents();
 				for (UActorComponent* Component : Components)
 					Component->DestroyComponent();
@@ -115,10 +118,10 @@ void ATestActor::PostEditChangeProperty(FPropertyChangedEvent& Event)
 			LoadModel();
 
 			auto OnFileChanged = IDirectoryWatcher::FDirectoryChanged::CreateLambda([=](const TArray<FFileChangeData>& Files)
-		    {
-				auto IsModelFile = [&](FFileChangeData& File){ return File.Filename.Contains(RigModel + L".json"); };
+			{
+				auto IsModelFile = [&](FFileChangeData& File) { return File.Filename.Contains(RigModel + L".json"); };
 				if (Files.ContainsByPredicate(IsModelFile)) LoadModel();
-		    });
+			});
 
 			IDirectoryWatcher* Watcher = FModuleManager::LoadModuleChecked<FDirectoryWatcherModule>(L"DirectoryWatcher").Get();
 
@@ -126,7 +129,7 @@ void ATestActor::PostEditChangeProperty(FPropertyChangedEvent& Event)
 				Watcher->UnregisterDirectoryChangedCallback_Handle(WatchPath, WatchHandle);
 
 			WatchPath = FPaths::GetPath(FPaths::ProjectContentDir() + RigModel);
-		    Watcher->RegisterDirectoryChangedCallback_Handle(WatchPath, OnFileChanged, WatchHandle);
+			Watcher->RegisterDirectoryChangedCallback_Handle(WatchPath, OnFileChanged, WatchHandle);
 		}
 	}
 }
@@ -149,7 +152,7 @@ TArray<FName> APropActor::GetRigs()
 	FString Folder = FPaths::ProjectContentDir() + L"Props";
 	TArray<FString> Files;
 	IFileManager::Get().FindFiles(Files, *Folder, L"json");
-    for (FString& File : Files)
+	for (FString& File : Files)
 		Rigs.Add(*FPaths::GetBaseFilename(*File));
 
 	return Rigs;

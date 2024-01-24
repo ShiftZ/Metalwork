@@ -10,6 +10,7 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <numbers>
 #include <ranges>
 #include <shared_mutex>
 #include <source_location>
@@ -18,18 +19,20 @@
 #include <string>
 #include <typeindex>
 #include <unordered_map>
-#include <numbers>
 
-#include <Components/InputComponent.h>
 #include <DrawDebugHelpers.h>
+#include <EngineUtils.h>
+#include <PaperFlipbookComponent.h>
+#include <PaperSpriteComponent.h>
+#include <TimerManager.h>
+#include <Components/AudioComponent.h>
+#include <Components/InputComponent.h>
 #include <Engine/DataTable.h>
+#include <Engine/DeveloperSettings.h>
 #include <Engine/Engine.h>
 #include <Engine/GameInstance.h>
 #include <Engine/LevelScriptActor.h>
 #include <Engine/World.h>
-#include <Engine/DeveloperSettings.h>
-#include <Sound/SoundCue.h>
-#include <EngineUtils.h>
 #include <GameFramework/Actor.h>
 #include <GameFramework/GameModeBase.h>
 #include <GameFramework/PlayerInput.h>
@@ -37,16 +40,20 @@
 #include <Misc/FileHelper.h>
 #include <Misc/Paths.h>
 #include <Modules/ModuleManager.h>
-#include <PaperFlipbookComponent.h>
-#include <PaperSpriteComponent.h>
-#include <TimerManager.h>
+#include <Sound/SoundCue.h>
 #include <UObject/LinkerLoad.h>
 #include <UObject/Package.h>
-#include <Components/AudioComponent.h>
 
 #if WITH_EDITOR
-#	include <IDirectoryWatcher.h>
-#	include <DirectoryWatcherModule.h>
+#include <DirectoryWatcherModule.h>
+#include <IDirectoryWatcher.h>
+
+#include <MetasoundExecutableOperator.h>
+#include <MetasoundFacade.h>
+#include <MetasoundNodeRegistrationMacro.h>
+#include <MetasoundParamHelper.h>
+#include <MetasoundPrimitives.h>
+#include <MetasoundVertex.h>
 #endif
 
 #include "tools/flat_map.h"

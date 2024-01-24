@@ -1,8 +1,8 @@
 #pragma once
 
-#include <tuple>
 #include <memory>
 #include <ranges>
+#include <tuple>
 
 template< typename type, int N = 1 >
 struct value
@@ -74,6 +74,14 @@ public:
 	scope_exit( exitfunc_type&& func ) : func(std::move(func)) {}
 	~scope_exit() { func(); }
 };
+
+template< typename arr_type, std::size_t... indices >
+auto as_tuple( const arr_type& arr, std::index_sequence<indices...> ) { return std::make_tuple(arr[indices]...); }
+
+template< typename type, std::size_t len >
+auto as_tuple( const type (&arr)[len] ) { return as_tuple(arr, std::make_index_sequence<len>()); }
+
+
 
 /*namespace std::ranges::views
 {

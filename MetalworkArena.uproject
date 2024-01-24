@@ -370,10 +370,6 @@
 			"Enabled": false
 		},
 		{
-			"Name": "Metasound",
-			"Enabled": false
-		},
-		{
 			"Name": "AutomationUtils",
 			"Enabled": false
 		},

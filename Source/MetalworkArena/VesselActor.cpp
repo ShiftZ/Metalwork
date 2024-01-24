@@ -1,14 +1,7 @@
 #include "VesselActor.h"
 
 #include "CoreDefinitions.h"
-#include "CoreInterface.h"
 #include "Weapon.h"
-#include "Kismet/GameplayStatics.h"
-
-void AVesselActor::ArenaTick(float DeltaTime)
-{
-	Super::ArenaTick(DeltaTime);
-}
 
 void AChainActor::BeginPlay()
 {
@@ -18,6 +11,7 @@ void AChainActor::BeginPlay()
 	Audio->bAllowSpatialization = false;
 	Audio->bAutoActivate = false;
 	Audio->SetSound(ChainSound);
+	Audio->SetFloatParameter("Stretch", 1);
 	Audio->RegisterComponent();
 }
 
@@ -27,32 +21,28 @@ void AChainActor::ArenaTick(float DeltaTime)
 
 	Float NewRopeForce = GetRig()->rope_joint->GetForce();
 
-	Float AccAngle = ranges::fold_left(GetRig()->joints | cptr, 0., [&](Float Acc, Joint* J) {
+	/*Float AccAngle = ranges::fold_left(GetRig()->joints | cptr, 0., [&](Float Acc, Joint* J) {
 		return Acc + abs(Unwind(J->GetBodyA()->GetAngle() - J->GetBodyB()->GetAngle()));
-	});
+	});*/
 
-	Float AccForce = ranges::fold_left(GetRig()->joints | cptr, 0., [&](Float Acc, Joint* J) {
-		return Acc + J->GetForce();
-	});
+	Float AccImpulse = frame_time * ranges::fold_left(GetRig()->joints | cptr,
+	                                                  GetRig()->rope_joint->GetForce(),
+	                                                  [&](Float Acc, Joint* J) { return Acc + J->GetForce(); });
 
-	float Speed = abs(ChainAngle - AccAngle) * fps;
-	ChainAngle = AccAngle;
+	Loose |= AccImpulse < 0.1;
 
-	AngleChangeSpeed = lerp(AngleChangeSpeed, Speed, 1.0);
+	float Stretch = (AccImpulse - 0.5) * 2;
+	static const FName StretchParamName = "Stretch";
 
-	if (AngleChangeSpeed > 25)
+	if (Audio->IsPlaying())
 	{
-		if (!Audio->IsPlaying())
-		{
-			Audio->Play();
-			Audio->SetPitchMultiplier(AngleChangeSpeed / 25.f);
-			Audio->SetVolumeMultiplier(pow(AngleChangeSpeed / 100, 0.1));
-		}
+		if (Stretch > Audio->GetInstanceParameters().Last().FloatParam)
+			Audio->SetFloatParameter(StretchParamName, Stretch);
 	}
-
-	log(DisplayLog(0), "AngleChangeSpeed = {}", AngleChangeSpeed);
-
-	//if (!Audio->IsPlaying() && LastRopeForce == 0 && NewRopeForce > 0) 
-	//	Audio->Play();
-	LastRopeForce = NewRopeForce;
+	else if (Loose && AccImpulse > 0)
+	{
+		Audio->SetFloatParameter(StretchParamName, Stretch);
+		Audio->Play();
+		Loose = false;
+	}
 }

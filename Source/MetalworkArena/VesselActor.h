@@ -10,7 +10,6 @@ class METALWORKARENA_API AVesselActor : public AArenaActor
 
 protected:
 	class Vessel* GetRig() { return (Vessel*)Rig; }
-	void ArenaTick(float DeltaTime) override;
 };
 
 UCLASS()
@@ -22,12 +21,9 @@ public:
 	TObjectPtr<UAudioComponent> Audio;
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<USoundCue> ChainSound;
+	TObjectPtr<USoundBase> ChainSound;
 
-	Float LastRopeForce = 0;
-	Float ChainAngle = 0;
-	Float AngleChangeSpeed = 0;
-	bool Charged = false;
+	bool Loose = false;
 
 public:
 	void BeginPlay() override;

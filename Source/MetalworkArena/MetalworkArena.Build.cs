@@ -14,11 +14,16 @@ public class MetalworkArena : ModuleRules
         bUseRTTI = true;
 
         PrivatePCHHeaderFile = "MetalworkArena.h";
+        
         PrivateDependencyModuleNames.AddRange(new string[] 
-            { "Core", "CoreUObject", "Engine", "Paper2D", "InputCore", "DeveloperSettings", "MetalworkCore" });
-
+            { "Core", "CoreUObject", "Engine", "Paper2D", "InputCore", "DeveloperSettings" });
+        
+        PrivateDependencyModuleNames.AddRange(new string[] 
+            { "MetasoundFrontend", "MetasoundStandardNodes", "MetasoundGraphCore" });
+        
+        PrivateDependencyModuleNames.Add("MetalworkCore");
         PrivateDependencyModuleNames.Add("Box2D");
-
+        
         PrivateDefinitions.Add("_CRT_SECURE_NO_WARNINGS");
         if (Target.Type == TargetType.Editor)
         {
