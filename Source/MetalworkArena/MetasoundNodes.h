@@ -14,11 +14,12 @@ public:
 	FDataReferenceCollection GetInputs() const override;
 	FDataReferenceCollection GetOutputs() const override;
 
-	static TUniquePtr<IOperator> CreateOperator(const FCreateOperatorParams& InParams, FBuildErrorArray& OutErrors);
-
 	void Execute();
 
+	static TUniquePtr<IOperator> CreateOperator(const FCreateOperatorParams& InParams, FBuildErrorArray& OutErrors);
+
 private:
+	inline static const TOutputDataVertex<float> OutputVertex = {L"Result", {INVTEXT("Result"), {}}};
 	inline static const TInputDataVertex<float> InputVerts[] =
 	{
 		{L"X", {INVTEXT("X"), {}}},
@@ -27,11 +28,6 @@ private:
 		{L"Midpoint", {INVTEXT("Midpoint"), {}}, 1.f},
 	};
 
-	inline static const TOutputDataVertex<float> OutputVertex = {L"Result", {INVTEXT("Result"), {}}};
-
-	FFloatReadRef InputX;
-	FFloatReadRef InputCeiling;
-	FFloatReadRef InputFloor;
-	FFloatReadRef InputMidpoint;
+	FFloatReadRef InputX, InputCeiling, InputFloor, InputMidpoint;
 	FFloatWriteRef Result;
 };

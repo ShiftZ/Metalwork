@@ -1,6 +1,7 @@
 #include "VesselActor.h"
 
 #include "CoreDefinitions.h"
+#include "CoreInterface.h"
 #include "Weapon.h"
 
 void AChainActor::BeginPlay()
@@ -31,17 +32,14 @@ void AChainActor::ArenaTick(float DeltaTime)
 
 	Loose |= AccImpulse < 0.1;
 
-	float Stretch = (AccImpulse - 0.5) * 2;
-	static const FName StretchParamName = "Stretch";
-
 	if (Audio->IsPlaying())
 	{
-		if (Stretch > Audio->GetInstanceParameters().Last().FloatParam)
-			Audio->SetFloatParameter(StretchParamName, Stretch);
+		if (AccImpulse > Audio->GetInstanceParameters().Last().FloatParam)
+			Audio->SetFloatParameter(StretchName, AccImpulse);
 	}
-	else if (Loose && AccImpulse > 0)
+	else if (Loose && AccImpulse > 0.33)
 	{
-		Audio->SetFloatParameter(StretchParamName, Stretch);
+		Audio->SetFloatParameter(StretchName, AccImpulse - 0.33);
 		Audio->Play();
 		Loose = false;
 	}

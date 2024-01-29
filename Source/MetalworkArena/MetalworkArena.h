@@ -71,6 +71,11 @@ namespace views = std::views;
 
 #include "Vec2.h"
 
+inline const FName StretchName = "Stretch";
+inline const FName CeilingName = "Ceiling";
+inline const FName FloorName = "Floor";
+inline const FName MidpointName = "Midpoint";
+
 inline constexpr float ScaleRigToUE = 100.f;
 
 inline struct UEScaler {} UEScale;
