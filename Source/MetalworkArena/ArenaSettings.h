@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RigidWorld.h"
-#include "DebugDrawer.h"
 #include "EditorTicker.h"
 #include "ArenaSettings.generated.h"
 

@@ -1,6 +1,5 @@
 #include "Camera.h"
 
-#include "CoreInterface.h"
 #include "RigidWorld.h"
 
 void ACamera::SetTarget(RigidObject* Target)

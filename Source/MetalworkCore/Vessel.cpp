@@ -28,21 +28,22 @@ void Vessel::SetPlayerInput(Vec2 move_in)
 	float mass = root->GetMass();
 	Vec2 velocity = root->GetVelocity();
 	float ang_vel = root->GetAngVelocity();
-	Vec2 accel = move_in * 0.1;
+	desired_accel = move_in * 0.1;
 	float angle = remainderf(root->GetAngle(), 2*pi);
-	
-	Vec2 add_velocity = accel * frame_time;
+
+	Vec2 add_velocity = desired_accel * frame_time;
 	Vec2 new_velocity = velocity + add_velocity;
+	Vec2 real_accel = desired_accel;
 
 	float sq_speed = SqLen(new_velocity);
 	if (sq_speed > sqr(max_speed))
 	{
 		new_velocity *= max_speed / sqrt(sq_speed);
 		add_velocity = new_velocity - velocity;
-		accel = add_velocity * fps;
+		real_accel = add_velocity * fps;
 	}
 
-	root->ApplyForce(accel * mass);
+	root->ApplyForce(real_accel * mass);
 
 	float desired_ang_accel = 0;
 	float rolypoly_angle = angle;

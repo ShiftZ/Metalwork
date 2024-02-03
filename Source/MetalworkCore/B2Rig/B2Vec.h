@@ -3,7 +3,7 @@
 #include "box2d/b2_math.h"
 
 using Vec2 = b2Vec2;
-using Float = float; 
+using Float = float;
 
 inline Float Length(const Vec2& V) { return V.Length(); }
 inline Float SqLen(const Vec2& V) { return V.LengthSquared(); }

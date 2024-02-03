@@ -51,9 +51,10 @@ TUniquePtr<IOperator> FSigmoidOperator::CreateOperator(const FCreateOperatorPara
 
 void FSigmoidOperator::Execute()
 {
-	float K = *InputX * 0.57735 / *InputMidpoint; // To match the 0.5 midpoint with x = 1
-	K /= sqrt(1 + sqr(K));
-	*Result = K * (*InputX > 0 ? *InputCeiling : *InputFloor);
+	if (*InputFloor != 0)
+		*Result = sigmoid(*InputX, *InputCeiling, *InputFloor, *InputMidpoint);
+	else
+		*Result = sigmoid(*InputX, *InputMidpoint) * *InputCeiling;
 }
 
 class FTutorialNode final : public FNodeFacade

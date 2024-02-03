@@ -1,5 +1,6 @@
 #include "ArenaSettings.h"
 #include "ArenaActor.h"
+#include "DebugDrawer.h"
 #include "Arena.h"
 
 void AArenaSettings::PostInitProperties()

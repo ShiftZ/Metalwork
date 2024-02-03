@@ -63,8 +63,6 @@ public:
 	const char* what() const override { return msg.c_str(); }
 };
 
-constexpr auto sqr(auto value) { return value * value; }
-
 template< typename exitfunc_type >
 class scope_exit
 {

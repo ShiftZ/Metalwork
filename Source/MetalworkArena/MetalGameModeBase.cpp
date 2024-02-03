@@ -2,12 +2,13 @@
 
 #include "MetalGameModeBase.h"
 
-#include "CoreInterface.h"
-#include "VesselActor.h"
 #include "ArenaSettings.h"
-#include "Vessel.h"
-#include "MetalSettings.h"
 #include "Camera.h"
+#include "CoreInterface.h"
+#include "DebugDrawer.h"
+#include "MetalSettings.h"
+#include "Vessel.h"
+#include "VesselActor.h"
 
 DEFINE_LOG_CATEGORY(LogNetwork);
 
@@ -42,24 +43,21 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 		}
 	}
 
-	AArenaSettings* Settings = CastChecked<AArenaSettings>(GetWorldSettings());
-	unique_ptr<RigidWorld> RigWorld(Settings->RigWorld.Release());
-	
-	Core = MakeUnique<MetalCore>(Player, move(RigWorld), move(Network));
+	RigidWorld* RigWorld = CastChecked<AArenaSettings>(GetWorldSettings())->RigWorld.Release();
+	Core = MakeUnique<MetalCore>(Player, unique_ptr<RigidWorld>(RigWorld), move(Network));
+	const UMetalSettings* Settings = GetDefault<UMetalSettings>();
 
 	for (Vessel* Ves : Core->arena.vessels)
 	{
-		AVesselActor* Actor = GetWorld()->SpawnActor<AVesselActor>();
+		AVesselActor* Actor = GetWorld()->SpawnActor<AVesselActor>(Settings->VesselClass.LoadSynchronous());
 		Actor->AttachToRig(Ves);
 
 		if (Chain* ChainWeapon = dynamic_cast<Chain*>(Ves->weapon))
 		{
-			auto* Settings = GetDefault<UMetalSettings>();
-
 			AChainActor* ChainActor = GetWorld()->SpawnActor<AChainActor>(Settings->ChainClass.LoadSynchronous());
 			ChainActor->AttachToRig(ChainWeapon);
 
-			AArenaActor* AnchorActor = GetWorld()->SpawnActor<AArenaActor>();
+			AAnchorActor* AnchorActor = GetWorld()->SpawnActor<AAnchorActor>(Settings->AnchorClass.LoadSynchronous());
 			AnchorActor->AttachToRig(ChainWeapon->anchor);
 		}
 	}

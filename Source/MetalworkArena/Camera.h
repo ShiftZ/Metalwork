@@ -7,6 +7,7 @@ class ACamera : public APawn
 {
 	GENERATED_BODY()
 
+public:
 	class RigidObject* Target = nullptr;
 
 public:

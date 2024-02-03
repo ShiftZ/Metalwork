@@ -62,6 +62,7 @@
 #include "tools/sol_hash_set.h"
 #include "tools/std.h"
 #include "tools/vector2.h"
+#include "tools/math.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -71,10 +72,9 @@ namespace views = std::views;
 
 #include "Vec2.h"
 
-inline const FName StretchName = "Stretch";
-inline const FName CeilingName = "Ceiling";
-inline const FName FloorName = "Floor";
-inline const FName MidpointName = "Midpoint";
+inline const FName SpeedName = "Speed";
+inline const FName ImpulseName = "Impulse";
+inline const FName AccelName = "Acceleration";
 
 inline constexpr float ScaleRigToUE = 100.f;
 

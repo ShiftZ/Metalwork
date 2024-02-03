@@ -2,4 +2,4 @@
 
 #include "B2Rig/B2Vec.h"
 
-inline Float Unwind(Float Angle) { return remainder(Angle, 2*pi); }
+inline Float Unwind(Float angle) { return remainder(angle, 2*pi); }

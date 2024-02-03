@@ -2,6 +2,7 @@
 
 #include "ArenaActor.h"
 #include "ArenaSettings.h"
+#include "CoreInterface.h"
 
 AArenaActor::AArenaActor()
 {
@@ -32,8 +33,7 @@ void AArenaActor::PostEditMove(bool bFinished)
 	FVector Location = GetActorLocation();
 	Location.Y = 0;
 	SetActorLocation(Location);
-	if (Rig)
-		Rig->SetPosition(Location / UEScale);
+	if (Rig) Rig->SetPosition(Location / UEScale);
 }
 
 void AArenaActor::AttachToRig(RigidObject* Rig)
@@ -56,8 +56,7 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 
 	if (Rig->root)
 	{
-		if (RootComponent)
-			RootComponent->DestroyComponent();
+		if (RootComponent) RootComponent->DestroyComponent();
 		SetRootComponent(MakeComponent(Rig->root));
 	}
 
@@ -82,6 +81,9 @@ void AArenaActor::SyncPose()
 			Comp->SetWorldRotation(FRotator(FMath::RadiansToDegrees(Pocket->Body->GetAngle()), 0, 0));
 		}
 	});
+
+	if (Rig->root)
+		GetRootComponent()->SetWorldLocation(Rig->root->GetPosition() * UEScale);
 }
 
 void ATestActor::PostEditChangeProperty(FPropertyChangedEvent& Event)
