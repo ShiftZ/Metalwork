@@ -2,6 +2,8 @@
 
 #include "Weapon.h"
 #include "Vessel.h"
+#include "Joint.h"
+#include "Body.h"
 
 void Weapon::SetOwner(Vessel* vessel)
 {

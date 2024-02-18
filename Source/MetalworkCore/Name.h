@@ -34,18 +34,12 @@ public:
 	template< typename Type > requires is_convertible_v<Type, string_view>
 	Name& operator=(const Type& src) { str = &*names.insert(string_view(src)).first; return *this; }
 
-	bool operator==(const Name& other) const { return str == other.str; }
-
-	template< typename StrType > requires requires (StrType str) { *str == str; }
-	bool operator==(const StrType& rh) const { return str ? *str == rh : ""sv == rh; }
+	bool operator==(const std::same_as<Name> auto& other) const { return str == other.str; }
+	bool operator==(string_view rstr) const { return str ? *str == rstr : rstr.empty(); }
+	bool operator==(wstring_view wstr) const
+		{ return str ? str->size() == wstr.size() && std::equal(wstr.begin(), wstr.end(), str->begin()) : wstr.empty(); }
 
 	const char* operator*() const { return str ? str->c_str() : ""; }
-
-	operator const wchar_t*() const
-	{
-		static wstring wstr;
-		return str ? wstr.assign(str->begin(), str->end()).c_str() : L"";
-	}
 
 	operator bool() const { return str != nullptr || str->empty(); }
 };

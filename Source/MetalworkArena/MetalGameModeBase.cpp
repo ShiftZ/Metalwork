@@ -10,6 +10,8 @@
 #include "Vessel.h"
 #include "VesselActor.h"
 
+FAutoConsoleVariable CVarDebugDraw(L".DebugDraw", false, L"");
+
 DEFINE_LOG_CATEGORY(LogNetwork);
 
 void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& Error)
@@ -52,6 +54,12 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 		AVesselActor* Actor = GetWorld()->SpawnActor<AVesselActor>(Settings->VesselClass.LoadSynchronous());
 		Actor->AttachToRig(Ves);
 
+		if (Ves->player == 0)
+		{
+			AActor* Flag = GetWorld()->SpawnActor<AActor>(Settings->FlagClass.LoadSynchronous());
+			Flag->AttachToActor(Actor, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		}
+
 		if (Chain* ChainWeapon = dynamic_cast<Chain*>(Ves->weapon))
 		{
 			AChainActor* ChainActor = GetWorld()->SpawnActor<AChainActor>(Settings->ChainClass.LoadSynchronous());
@@ -64,7 +72,6 @@ void AMetalworkArenaGameModeBase::InitGame(const FString& MapName, const FString
 
 	Core->Ready();
 	//Core->Start();
-    
 }
 
 void AMetalworkArenaGameModeBase::RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot)
@@ -96,5 +103,6 @@ void AMetalworkArenaGameModeBase::Tick(float DeltaTime)
 	for (TActorIterator<AArenaActor> ActorIt(GetWorld()); ActorIt; ++ActorIt)
 		ActorIt->ArenaTick(DeltaTime);
 
-	Core->arena.rigid_world->DebugDraw(DebugDrawer(GetWorld(), false));
+	if (CVarDebugDraw->GetBool())
+		Core->arena.rigid_world->DebugDraw(DebugDrawer(GetWorld(), false));
 }		

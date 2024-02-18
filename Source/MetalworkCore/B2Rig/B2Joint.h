@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RigidWorld.h"
+#include "Joint.h"
 
 class B2Joint : public Joint
 {

@@ -1,9 +1,10 @@
 #include "VesselActor.h"
 
 #include "CoreDefinitions.h"
-#include "CoreInterface.h"
 #include "Vessel.h"
 #include "Weapon.h"
+#include "Joint.h"
+#include "Body.h"
 
 void AVesselActor::BeginPlay()
 {

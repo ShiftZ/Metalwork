@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RigidWorld.h"
+#include "RigidObject.h"
 
 inline const Name anchor_name = "anchor";
 inline const Name shackle_name = "shackle";

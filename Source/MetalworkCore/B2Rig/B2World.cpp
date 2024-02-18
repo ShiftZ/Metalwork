@@ -2,6 +2,7 @@
 #include "B2Body.h"
 #include "B2Joint.h"
 #include "B2Draw.h"
+#include "RigidObject.h"
 #include "CoreDefinitions.h"
 #include "b2dJson/b2dJson.h"
 

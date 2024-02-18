@@ -1,9 +1,10 @@
 #include "Arena.h"
 
 #include "Vessel.h"
+#include "Weapon.h"
+#include "Body.h"
 #include "B2Rig/B2World.h"
 #include "CoreInterface.h"
-#include "Weapon.h"
 
 Arena::Arena(unique_ptr<RigidWorld> rigid_world)
 {

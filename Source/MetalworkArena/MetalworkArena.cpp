@@ -2,7 +2,6 @@
 
 #include "MetalworkArena.h"
 #include "CoreInterface.h"
-
 #include "MetasoundFrontendRegistries.h"
 
 class FMetalworkArenaModule : public FDefaultGameModuleImpl
@@ -11,8 +10,9 @@ class FMetalworkArenaModule : public FDefaultGameModuleImpl
 	{
 		SetContentPath(*FPaths::ProjectContentDir(), WITH_EDITOR);
 
-		FCoreUObjectDelegates::ReloadCompleteDelegate.AddLambda([](EReloadCompleteReason)
-			{ SetContentPath(*FPaths::ProjectContentDir(), WITH_EDITOR); });
+		FCoreUObjectDelegates::ReloadCompleteDelegate.AddLambda([](EReloadCompleteReason) {
+			SetContentPath(*FPaths::ProjectContentDir(), WITH_EDITOR);
+		});
 		FMetasoundFrontendRegistryContainer::Get()->RegisterPendingNodes();
 	}
 };

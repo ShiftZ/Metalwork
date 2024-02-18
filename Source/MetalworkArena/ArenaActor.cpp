@@ -3,11 +3,8 @@
 #include "ArenaActor.h"
 #include "ArenaSettings.h"
 #include "CoreInterface.h"
-
-AArenaActor::AArenaActor()
-{
-	//RootComponent = CreateDefaultSubobject<USceneComponent>(L"DefaultSceneRoot");
-}
+#include "RigidObject.h"
+#include "Body.h"
 
 void AArenaActor::OnConstruction(const FTransform& Transform)
 {
@@ -50,7 +47,7 @@ void AArenaActor::AttachToRig(RigidObject* Rig)
 			Component->SetupAttachment(RootComponent);
 		Component->RegisterComponent();
 		Component->SetAbsolute(true, true, true);
-		Cast<IComponentPocket>(Component)->Body = Body;
+		Cast<IModelPart>(Component)->Body = Body;
 		return Component;
 	};
 
@@ -75,7 +72,7 @@ void AArenaActor::SyncPose()
 {
 	ForEachComponent<USceneComponent>(false, [](USceneComponent* Comp)
 	{
-		if (IComponentPocket* Pocket = Cast<IComponentPocket>(Comp))
+		if (IModelPart* Pocket = Cast<IModelPart>(Comp))
 		{
 			Comp->SetWorldLocation(Pocket->Body->GetPosition() * UEScale);
 			Comp->SetWorldRotation(FRotator(FMath::RadiansToDegrees(Pocket->Body->GetAngle()), 0, 0));
@@ -147,7 +144,7 @@ void ATestActor::Destroyed()
 	}
 }
 
-TArray<FName> APropActor::GetRigs()
+TArray<FName> APropActor::GetPropModels()
 {
 	TArray<FName> Rigs;
 
@@ -163,7 +160,7 @@ TArray<FName> APropActor::GetRigs()
 void APropActor::PostEditChangeProperty(FPropertyChangedEvent& Event)
 {
 	Super::PostEditChangeProperty(Event);
-	if (Event.GetPropertyName() == GET_MEMBER_NAME_CHECKED(APropActor, RigModel))
+	if (Event.GetPropertyName() == GET_MEMBER_NAME_CHECKED(APropActor, RigModel) && !HasAnyFlags(RF_ClassDefaultObject))
 		SetModel(RigModel);
 }
 
@@ -188,6 +185,16 @@ void APropActor::SetModel(FName ModelName)
 		FString PropName = L"Props/" + RigModel.ToString();
 		Rig->LoadModel(GetJson(*PropName));
 		Rig->SetPosition(GetActorLocation() / UEScale);
+
+		for (UActorComponent* Component : GetComponentsByInterface(UModelPart::StaticClass()))
+		{
+			Body* Part = Rig->FindPart(*Component->GetName());
+			if (auto* PartComponent = Cast<IModelPart>(Component))
+				PartComponent->Body = Part;
+		}
+	
+		if (auto* PartComponent = Cast<IModelPart>(GetRootComponent()))
+			PartComponent->Body = Rig->root;
 	}
 
 	if (ModelName == NAME_None && Rig)

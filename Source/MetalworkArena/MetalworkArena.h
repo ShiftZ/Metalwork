@@ -43,6 +43,7 @@
 #include <Sound/SoundCue.h>
 #include <UObject/LinkerLoad.h>
 #include <UObject/Package.h>
+#include <UObject/UObjectIterator.h>
 
 #if WITH_EDITOR
 #include <DirectoryWatcherModule.h>
@@ -71,6 +72,7 @@ using namespace std::numbers;
 namespace views = std::views;
 
 #include "Vec2.h"
+#include "Name.h"
 
 inline const FName SpeedName = "Speed";
 inline const FName ImpulseName = "Impulse";

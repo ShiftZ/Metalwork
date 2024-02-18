@@ -11,74 +11,53 @@ void AArenaSettings::PostInitProperties()
 	RigWorld.Reset(Arena::MakeWorld().release());
 }
 
-void AArenaSettings::Serialize(FArchive& Ar)
-{
-	AInfo::Serialize(Ar);
-	if (GetFlags() & RF_ClassDefaultObject) return;
-
-	/*if (Ar.IsSaving())
-	{
-		for (RigidObject* Obj : RigWorld->GetObjects())
-		{
-			AArenaActor* Actor = static_cast<AArenaActor*>(Obj->actor);
-			Obj->name = StringCast<char>(*Actor->GetName()).Get();
-		}
-
-		if (Ar.GetLinker())
-		{
-			string JsonWorld = RigWorld->SaveToJson();
-			FString FilePath = FPaths::ProjectContentDir() + L"Maps/" + GetWorld()->GetMapName() + L".json";
-			FFileHelper::SaveArrayToFile(MakeArrayView((uint8*)JsonWorld.data(), JsonWorld.size()), *FilePath);
-		}
-		else
-		{
-			string JsonWorld = RigWorld->SaveToJson();
-			int Size = JsonWorld.size();
-			Ar << Size;
-			Ar.Serialize(JsonWorld.data(), Size);
-		}
-	}
-	else if (Ar.IsLoading())
-	{
-		if (Ar.GetLinker())
-		{
-			UPackage* Pkg = Ar.GetLinker()->LinkerRoot;
-			FString Name = FPaths::GetBaseFilename(Pkg->GetLoadedPath().GetPackageName());
-
-			FString FilePath = FPaths::ProjectContentDir() + L"Maps/" + Name + L".json";
-			TUniquePtr<FArchive> Reader(IFileManager::Get().CreateFileReader(*FilePath));
-			if (!Reader) return;
-
-			string Json(Reader->TotalSize(), 0);
-			Reader->Serialize(Json.data(), Json.size());
-			RigWorld->LoadFromJson(Json);
-		}
-		else
-		{
-			int Size;
-			Ar << Size;
-			string Json(Size, 0);
-			Ar.Serialize(Json.data(), Size);
-			RigWorld->LoadFromJson(Json);
-		}
-	}*/
-}
-
 void AArenaSettings::PostLoad()
 {
 	Super::PostLoad();
 	if (GetFlags() & RF_ClassDefaultObject) return;
 
-	if constexpr (WITH_EDITOR)
+#	if WITH_EDITOR
 	{
 		UChildActorComponent* ActorComponent = NewObject<UChildActorComponent>(this);
 		ActorComponent->SetChildActorClass(AEditorTicker::StaticClass());
 		ActorComponent->RegisterComponent();
+
+		auto OnFileChanged = IDirectoryWatcher::FDirectoryChanged::CreateLambda([this](const TArray<FFileChangeData>& Files)
+		{
+			auto OnlyJson = [](const FFileChangeData& Change){ return FPaths::GetExtension(Change.Filename) == L"json"; };
+			for (const FFileChangeData& Change : Files.FilterByPredicate(OnlyJson))
+			{
+				FName ModelName = *FPaths::GetBaseFilename(Change.Filename);
+				for (TActorIterator<APropActor> It(GetWorld()); It; ++It)
+				{
+					if ((*It)->RigModel == ModelName)
+					{
+						(*It)->SetModel(ModelName);
+					}
+				}
+			}
+		});
+
+		IDirectoryWatcher* Watcher = FModuleManager::LoadModuleChecked<FDirectoryWatcherModule>(L"DirectoryWatcher").Get();
+		Watcher->RegisterDirectoryChangedCallback_Handle(WatchDirectory, OnFileChanged, WatchHandle);
 	}
+#	endif
 }
 
 void AArenaSettings::EditorTick()
 {
 	FlushPersistentDebugLines(GetWorld());
 	RigWorld->DebugDraw(DebugDrawer(GetWorld(), true));
+}
+
+void AArenaSettings::Destroyed()
+{
+	Super::Destroyed();
+
+#	if WITH_EDITOR
+	{
+		IDirectoryWatcher* Watcher = FModuleManager::LoadModuleChecked<FDirectoryWatcherModule>(L"DirectoryWatcher").Get();
+		Watcher->UnregisterDirectoryChangedCallback_Handle(WatchDirectory, WatchHandle);
+	}
+#	endif
 }

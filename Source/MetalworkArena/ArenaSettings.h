@@ -9,14 +9,17 @@ class AArenaSettings : public AWorldSettings, public IEditorTickable
 {
 	GENERATED_BODY()
 
+	static inline FString WatchDirectory = FPaths::ProjectContentDir() + L"Props";
+
 public:
 	TUniquePtr<RigidWorld> RigWorld;
+	FDelegateHandle WatchHandle;
 
 protected:
 	void PostInitProperties() override;
-	void Serialize(FArchive& Ar) override;
 	void PostLoad() override;
 	void EditorTick() override;
+	void Destroyed() override;
 };
 
 UCLASS()

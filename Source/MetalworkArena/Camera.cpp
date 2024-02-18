@@ -1,6 +1,8 @@
+#pragma warning(disable:4458)
+
 #include "Camera.h"
 
-#include "RigidWorld.h"
+#include "RigidObject.h"
 
 void ACamera::SetTarget(RigidObject* Target)
 {

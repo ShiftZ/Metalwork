@@ -89,10 +89,6 @@
 			"Enabled": false
 		},
 		{
-			"Name": "CableComponent",
-			"Enabled": false
-		},
-		{
 			"Name": "CharacterAI",
 			"Enabled": false
 		},
@@ -390,14 +386,6 @@
 			"Enabled": false
 		},
 		{
-			"Name": "ChaosClothEditor",
-			"Enabled": false
-		},
-		{
-			"Name": "ChaosCloth",
-			"Enabled": false
-		},
-		{
 			"Name": "ChaosNiagara",
 			"Enabled": false
 		},
@@ -638,6 +626,18 @@
 		},
 		{
 			"Name": "ConsoleVariables",
+			"Enabled": true
+		},
+		{
+			"Name": "ChaosClothAssetEditor",
+			"Enabled": true
+		},
+		{
+			"Name": "ChaosClothAsset",
+			"Enabled": true
+		},
+		{
+			"Name": "ModelingToolsEditorMode",
 			"Enabled": true
 		}
 	]

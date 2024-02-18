@@ -16,7 +16,6 @@ public:
 	virtual void ArenaTick(float DeltaTime);
 
 protected:
-	AArenaActor();
 	void OnConstruction(const FTransform& Transform) override;
 	void Destroyed() override;
 	void PostEditMove(bool bFinished) override;
@@ -47,11 +46,11 @@ class METALWORKARENA_API APropActor : public AArenaActor
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, meta=(GetOptions="GetRigs"))
+	UPROPERTY(EditAnywhere, meta=(GetOptions="GetPropModels"))
 	FName RigModel;
 
 	UFUNCTION()
-	TArray<FName> GetRigs();
+	TArray<FName> GetPropModels();
 
 	void PostEditChangeProperty(FPropertyChangedEvent& Event) override;
 	void PostRegisterAllComponents() override;
@@ -59,27 +58,27 @@ public:
 };
 
 UINTERFACE(MinimalAPI)
-class UComponentPocket : public UInterface
+class UModelPart : public UInterface
 {
     GENERATED_BODY()
 };
 
-class IComponentPocket
+class IModelPart
 {
     GENERATED_BODY()
 
 public:
-	class Body* Body;
+	class Body* Body = nullptr;
 };
 
 UCLASS(Blueprintable)
-class METALWORKARENA_API UMyFlipbookComponent : public UPaperFlipbookComponent, public IComponentPocket
+class METALWORKARENA_API UMyFlipbookComponent : public UPaperFlipbookComponent, public IModelPart
 {
 	GENERATED_BODY()
 };
 
-UCLASS(Blueprintable)
-class METALWORKARENA_API UMySpriteComponent : public UPaperSpriteComponent, public IComponentPocket
+UCLASS(Blueprintable, meta=(BlueprintSpawnableComponent))
+class METALWORKARENA_API UMySpriteComponent : public UPaperSpriteComponent, public IModelPart
 {
 	GENERATED_BODY()
 };

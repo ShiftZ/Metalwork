@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RigidWorld.h"
+#include "Body.h"
 
 class B2Body final : public Body
 {

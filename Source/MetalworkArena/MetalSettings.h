@@ -16,4 +16,7 @@ public:
 
 	UPROPERTY(config, EditAnywhere)
 	TSoftClassPtr<class AAnchorActor> AnchorClass;
+
+	UPROPERTY(config, EditAnywhere)
+	TSoftClassPtr<AActor> FlagClass;
 };
