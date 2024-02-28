@@ -118,6 +118,13 @@ pair<vector<shared_ptr<Body>>, vector<shared_ptr<Joint>>> B2World::LoadModel(Jso
 	{
 		Name name = json.getBodyName(b2body);
 		Name model = json.getCustomString(b2body, "Model");
+		shared_ptr<B2Body> body = make_shared<B2Body>(b2body, name, model);
+
+		if (b2dJsonCustomProperties* properties = json.getCustomPropertiesForItem(b2body))
+		{
+			
+		}
+
 		bodies.emplace_back(make_shared<B2Body>(b2body, name, model));
 	}
 
@@ -180,6 +187,12 @@ void B2World::DebugDraw(const IDebugDrawer& drawer)
 Vec2 B2World::GetGravity()
 {
 	return b2world->GetGravity();
+}
+
+void B2World::SetContactListener(unique_ptr<b2ContactListener> new_listenter)
+{
+	b2world->SetContactListener(contact_listener.get());
+	contact_listener = move(new_listenter);
 }
 
 B2World::~B2World()

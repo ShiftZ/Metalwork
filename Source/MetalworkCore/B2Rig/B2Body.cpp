@@ -1,6 +1,5 @@
 #include "B2Body.h"
 
-#include "B2World.h"
 #include "CoreInterface.h"
 
 B2Body::B2Body(b2Body* b2body, Name name, Name model) : Body(name, model, b2body->GetPosition()), b2body(b2body)

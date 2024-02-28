@@ -1,6 +1,6 @@
+#include "RigidObject.h"
 #include "Body.h"
 #include "Joint.h"
-#include "RigidObject.h"
 #include "RigidWorld.h"
 
 void RigidObject::DrawShapes(IDebugDrawer& drawer)

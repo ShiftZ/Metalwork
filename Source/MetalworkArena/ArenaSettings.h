@@ -19,7 +19,7 @@ protected:
 	void PostInitProperties() override;
 	void PostLoad() override;
 	void EditorTick() override;
-	void Destroyed() override;
+	~AArenaSettings();
 };
 
 UCLASS()

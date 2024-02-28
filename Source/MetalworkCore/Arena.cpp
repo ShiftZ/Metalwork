@@ -4,6 +4,8 @@
 #include "Weapon.h"
 #include "Body.h"
 #include "B2Rig/B2World.h"
+#include "B2Rig/B2Contact.h"
+#include "Contact.h"
 #include "CoreInterface.h"
 
 Arena::Arena(unique_ptr<RigidWorld> rigid_world)
@@ -71,7 +73,43 @@ void Arena::Step(StepInputs inputs)
 	}
 }
 
+bool Arena::BeginContact(Contact* contact, cpSpace* space, Arena* arena)
+{
+	Body* bodyA = GetBodyA(contact);
+	Body* bodyB = GetBodyB(contact);
+
+
+	return true;
+}
+
+void Arena::EndContact(Contact* contact, cpSpace* space, Arena* arena)
+{
+}
+
+bool Arena::PreSolve(Contact* contact, cpSpace* space, Arena* arena)
+{
+	return true;
+}
+
+void Arena::PostSolve(Contact* contact, cpSpace* space, Arena* arena)
+{
+}
+
 unique_ptr<RigidWorld> Arena::MakeWorld()
 {
-	return make_unique<B2World>(-1);
+	unique_ptr b2world = make_unique<B2World>(-1);
+
+	class B2ContactListener : public b2ContactListener
+	{
+		Arena* arena;
+
+	public:
+		B2ContactListener(Arena* arena) : arena(arena) {}
+		void BeginContact(b2Contact* contact) override { Arena::BeginContact(contact, nullptr, arena); }
+		void EndContact(b2Contact* contact) override { Arena::EndContact(contact, nullptr, arena); }
+		void PreSolve(b2Contact* contact, const b2Manifold* old_manifold) override { Arena::PreSolve(contact, nullptr, arena); }
+		void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override { Arena::PostSolve(contact, nullptr, arena); }
+	};
+
+	return b2world;
 }

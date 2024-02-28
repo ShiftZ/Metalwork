@@ -74,3 +74,4 @@ using std::numbers::pi;
 #include "Vec2.h"
 #include "CoreInterface.h"
 #include "Name.h"
+#include "Mirror.h"

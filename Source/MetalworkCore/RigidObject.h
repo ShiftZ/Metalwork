@@ -4,6 +4,7 @@
 #include "Joint.h"
 
 namespace Json { class Value; }
+inline Name root_name = "root";
 
 class RigidObject
 {

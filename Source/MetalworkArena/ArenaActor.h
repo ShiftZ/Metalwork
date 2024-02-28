@@ -24,43 +24,10 @@ protected:
 	void SyncPose();
 };
 
-UCLASS(Transient)
-class METALWORKARENA_API ATestActor : public AArenaActor
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere)
-	FString RigModel;
-
-	FString WatchPath;
-	FDelegateHandle WatchHandle;
-
-	void PostEditChangeProperty(FPropertyChangedEvent& Event) override;
-	void Destroyed() override;
-};
-
-UCLASS()
-class METALWORKARENA_API APropActor : public AArenaActor
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, meta=(GetOptions="GetPropModels"))
-	FName RigModel;
-
-	UFUNCTION()
-	TArray<FName> GetPropModels();
-
-	void PostEditChangeProperty(FPropertyChangedEvent& Event) override;
-	void PostRegisterAllComponents() override;
-	void SetModel(FName ModelName);
-};
-
 UINTERFACE(MinimalAPI)
 class UModelPart : public UInterface
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 };
 
 class IModelPart

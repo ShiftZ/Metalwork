@@ -1,0 +1,124 @@
+
+{
+	"allowSleep" : true,
+	"autoClearForces" : true,
+	"body" : 
+	[
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"customProperties" : 
+			[
+				
+				{
+					"name" : "type",
+					"string" : "Prop"
+				},
+				
+				{
+					"float" : 10,
+					"name" : "SnapImpulse"
+				}
+			],
+			"fixture" : 
+			[
+				
+				{
+					"customProperties" : 
+					[
+						
+						{
+							"name" : "Model",
+							"string" : "StoneBrick"
+						}
+					],
+					"density" : 1,
+					"friction" : 0.2,
+					"name" : "fixture0",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.3264220356941223,
+								0.3264220356941223,
+								-0.3535880148410797,
+								-0.3535880148410797
+							],
+							"y" : 
+							[
+								-0.1815530061721802,
+								0.1815530061721802,
+								0.1815530061721802,
+								-0.1815530061721802
+							]
+						}
+					}
+				}
+			],
+			"linearVelocity" : 0,
+			"massData-I" : 0.01227322872728109,
+			"massData-center" : 
+			{
+				"x" : -0.01358298957347870,
+				"y" : 0
+			},
+			"massData-mass" : 0.2469157427549362,
+			"name" : "body0",
+			"position" : 0,
+			"type" : 2
+		}
+	],
+	"collisionbitplanes" : 
+	{
+		"names" : 
+		[
+			"bitplane1",
+			"bitplane2",
+			"bitplane3",
+			"bitplane4",
+			"bitplane5",
+			"bitplane6",
+			"bitplane7",
+			"bitplane8",
+			"bitplane9",
+			"bitplane10",
+			"bitplane11",
+			"bitplane12",
+			"bitplane13",
+			"bitplane14",
+			"bitplane15",
+			"bitplane16",
+			"bitplane17",
+			"bitplane18",
+			"bitplane19",
+			"bitplane20",
+			"bitplane21",
+			"bitplane22",
+			"bitplane23",
+			"bitplane24",
+			"bitplane25",
+			"bitplane26",
+			"bitplane27",
+			"bitplane28",
+			"bitplane29",
+			"bitplane30",
+			"bitplane31",
+			"bitplane32"
+		]
+	},
+	"continuousPhysics" : true,
+	"gravity" : 
+	{
+		"x" : 0,
+		"y" : -10
+	},
+	"positionIterations" : 3,
+	"stepsPerSecond" : 60.0,
+	"subStepping" : false,
+	"velocityIterations" : 8,
+	"warmStarting" : true
+}

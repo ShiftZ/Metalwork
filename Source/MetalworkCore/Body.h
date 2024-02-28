@@ -1,11 +1,20 @@
 #pragma once
 
+#include "Mirror.h"
+
 class Body
 {
+	CLASS(Body)
+
+public:
+	enum Type { ENUM(Type, None, Prop) };
+
 public:
 	class RigidObject* object = nullptr;
 	Name name, model;
 	Vec2 offset;
+
+	Type PROPERTY(type) = None;
 
 public:
 	Body(Name name, Name model, Vec2 shift) : name(name), model(model), offset(shift) {}

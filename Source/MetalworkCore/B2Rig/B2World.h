@@ -5,6 +5,7 @@
 class B2World : public RigidWorld
 {
 	unique_ptr<b2World> b2world;
+	unique_ptr<b2ContactListener> contact_listener;
 	vector<char> data;
 	unordered_map<void*, int> allocs;
 
@@ -24,6 +25,8 @@ public:
 	void DebugDraw(const IDebugDrawer& drawer) override;
 
 	Vec2 GetGravity() override;
+
+	void SetContactListener(unique_ptr<b2ContactListener> new_listenter);
 
 	~B2World();
 };

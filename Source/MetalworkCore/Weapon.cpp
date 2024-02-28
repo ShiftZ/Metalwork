@@ -4,6 +4,7 @@
 #include "Vessel.h"
 #include "Joint.h"
 #include "Body.h"
+#include "RigidWorld.h"
 
 void Weapon::SetOwner(Vessel* vessel)
 {

@@ -7,8 +7,6 @@ class Body;
 class Joint;
 namespace Json { class Value; }
 
-inline Name root_name = "root";
-
 class RigidWorld
 {
 	vector<shared_ptr<class RigidObject>> objects;
@@ -32,7 +30,7 @@ public:
 	virtual void Step() = 0;
 	virtual shared_ptr<Joint> CreateRevoluteJoint(Body* bodyA, Body* bodyB, Vec2 anchorA, optional<Vec2> anchorB = nullopt) = 0;
 	virtual shared_ptr<Joint> CreateDistantJoint(Body* bodyA, Body* bodyB, Float length, 
-												 optional<Vec2> anchorA = nullopt, optional<Vec2> anchorB = nullopt) = 0;
+																optional<Vec2> anchorA = nullopt, optional<Vec2> anchorB = nullopt) = 0;
 	virtual pair<vector<shared_ptr<Body>>, vector<shared_ptr<Joint>>> LoadModel(Json::Value& model) = 0;
 	virtual string SaveToJson() = 0;
 	virtual void LoadFromJson(string_view json) = 0;

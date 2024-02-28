@@ -1,6 +1,5 @@
 #include "CoreInterface.h"
 #include "Network.h"
-#include "CoreEngine.h"
 
 METALWORKCORE_API path content_dir;
 METALWORKCORE_API bool reload_modified;

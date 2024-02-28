@@ -41,7 +41,7 @@ b2dJson::~b2dJson()
 {
     for (int i = 0; i < (int)m_images.size(); i++)
         delete m_images[i];
-    for (std::map<void*,b2dJsonCustomProperties*>::iterator it = m_customPropertiesMap.begin(); it != m_customPropertiesMap.end(); ++it)
+    for (auto it = m_customPropertiesMap.begin(); it != m_customPropertiesMap.end(); ++it)
         delete it->second;
 }
 
@@ -125,8 +125,8 @@ Json::Value b2dJson::b2j(b2World* world)
 
     i = 0;
     {
-        std::map<b2dJsonImage*,string>::iterator it = m_imageToNameMap.begin();
-        std::map<b2dJsonImage*,string>::iterator end = m_imageToNameMap.end();
+        auto it = m_imageToNameMap.begin();
+        auto end = m_imageToNameMap.end();
         while (it != end) {
             b2dJsonImage* image = it->first;
             worldValue["image"][i] =  b2j(image);
@@ -587,7 +587,7 @@ void b2dJson::setImagePath(b2dJsonImage* image, const char* path)
 
 b2dJsonCustomProperties *b2dJson::getCustomPropertiesForItem(void *item, bool createIfNotExisting)
 {
-    std::map<void*,b2dJsonCustomProperties*>::iterator it = m_customPropertiesMap.find(item);
+    auto it = m_customPropertiesMap.find(item);
     if ( it != m_customPropertiesMap.end() )
         return it->second;
 
@@ -851,7 +851,7 @@ int b2dJson::getCustomInt(void *item, string propertyName, int defaultVal)
     b2dJsonCustomProperties* props = getCustomPropertiesForItem(item, false);
     if ( !props )
         return defaultVal;
-    std::map<string,int>::iterator it = props->m_customPropertyMap_int.find(propertyName);
+    auto it = props->m_customPropertyMap_int.find(propertyName);
     if ( it != props->m_customPropertyMap_int.end() )
         return it->second;
     return defaultVal;
@@ -862,7 +862,7 @@ float b2dJson::getCustomFloat(void *item, string propertyName, float defaultVal)
     b2dJsonCustomProperties* props = getCustomPropertiesForItem(item, false);
     if ( !props )
         return defaultVal;
-    std::map<string,float>::iterator it = props->m_customPropertyMap_float.find(propertyName);
+    auto it = props->m_customPropertyMap_float.find(propertyName);
     if ( it != props->m_customPropertyMap_float.end() )
         return it->second;
     return defaultVal;
@@ -873,7 +873,7 @@ string b2dJson::getCustomString(void *item, string propertyName, string defaultV
     b2dJsonCustomProperties* props = getCustomPropertiesForItem(item, false);
     if ( !props )
         return defaultVal;
-    std::map<string,string>::iterator it = props->m_customPropertyMap_string.find(propertyName);
+    auto it = props->m_customPropertyMap_string.find(propertyName);
     if ( it != props->m_customPropertyMap_string.end() )
         return it->second;
     return defaultVal;
@@ -884,7 +884,7 @@ b2Vec2 b2dJson::getCustomVector(void *item, string propertyName, b2Vec2 defaultV
     b2dJsonCustomProperties* props = getCustomPropertiesForItem(item, false);
     if ( !props )
         return defaultVal;
-    std::map<string,b2Vec2>::iterator it = props->m_customPropertyMap_b2Vec2.find(propertyName);
+    auto it = props->m_customPropertyMap_b2Vec2.find(propertyName);
     if ( it != props->m_customPropertyMap_b2Vec2.end() )
         return it->second;
     return defaultVal;
@@ -895,7 +895,7 @@ bool b2dJson::getCustomBool(void *item, string propertyName, bool defaultVal)
     b2dJsonCustomProperties* props = getCustomPropertiesForItem(item, false);
     if ( !props )
         return defaultVal;
-    std::map<string,bool>::iterator it = props->m_customPropertyMap_bool.find(propertyName);
+    auto it = props->m_customPropertyMap_bool.find(propertyName);
     if ( it != props->m_customPropertyMap_bool.end() )
         return it->second;
     return defaultVal;
@@ -906,7 +906,7 @@ b2dJsonColor4 b2dJson::getCustomColor(void *item, string propertyName, b2dJsonCo
     b2dJsonCustomProperties* props = getCustomPropertiesForItem(item, false);
     if ( !props )
         return defaultVal;
-    std::map<string,b2dJsonColor4>::iterator it = props->m_customPropertyMap_color.find(propertyName);
+    auto it = props->m_customPropertyMap_color.find(propertyName);
     if ( it != props->m_customPropertyMap_color.end() )
         return it->second;
     return defaultVal;
@@ -916,8 +916,8 @@ b2dJsonColor4 b2dJson::getCustomColor(void *item, string propertyName, b2dJsonCo
 #define IMPLEMENT_GET_BY_CUSTOM_PROPERTY_FUNCTIONS_VECTOR(b2Type, ucName, lcName, ucValType, lcValType)\
     int b2dJson::get##ucName##ByCustom##ucValType( std::string propertyName, lcValType valueToMatch, std::vector<b2Type*>& items )\
     {\
-        set<b2Type*>::iterator it = m_##lcName##WithCustomProperties.begin();\
-        set<b2Type*>::iterator end = m_##lcName##WithCustomProperties.end();\
+        auto it = m_##lcName##WithCustomProperties.begin();\
+        auto end = m_##lcName##WithCustomProperties.end();\
         while (it != end)\
         {\
             b2Type* item = *it;\
@@ -930,9 +930,16 @@ b2dJsonColor4 b2dJson::getCustomColor(void *item, string propertyName, b2dJsonCo
 
 int b2dJson::getBodiesByCustomInt( std::string propertyName, int valueToMatch, std::vector<b2Body*>& items )
 {
-	set<b2Body*>::iterator it = m_bodiesWithCustomProperties.begin();
-	set<b2Body*>::iterator end = m_bodiesWithCustomProperties.end();
-	while (it != end) { b2Body* item = *it; if ( hasCustomInt( item, propertyName ) && getCustomInt( item, propertyName ) == valueToMatch ) items.push_back( item ); ++it; } return (int)items.size();
+	auto it = m_bodiesWithCustomProperties.begin();
+	auto end = m_bodiesWithCustomProperties.end();
+	while (it != end)
+	{
+		b2Body* item = *it;
+		if (hasCustomInt( item, propertyName ) && getCustomInt( item, propertyName ) == valueToMatch)
+         items.push_back( item );
+		++it;
+	}
+	return (int)items.size();
 }
 
 IMPLEMENT_GET_BY_CUSTOM_PROPERTY_FUNCTIONS_VECTOR(b2Body, Bodies, bodies, Float, float)
@@ -962,8 +969,8 @@ IMPLEMENT_GET_BY_CUSTOM_PROPERTY_FUNCTIONS_VECTOR(b2dJsonImage, Images, images, 
 #define IMPLEMENT_GET_BY_CUSTOM_PROPERTY_FUNCTIONS_SINGLE(b2Type, ucName, lcName, ucValType, lcValType)\
     b2Type* b2dJson::get##ucName##ByCustom##ucValType( std::string propertyName, lcValType valueToMatch )\
     {\
-        set<b2Type*>::iterator it = m_##lcName##WithCustomProperties.begin();\
-        set<b2Type*>::iterator end = m_##lcName##WithCustomProperties.end();\
+        auto it = m_##lcName##WithCustomProperties.begin();\
+        auto end = m_##lcName##WithCustomProperties.end();\
         while (it != end)\
         {\
             b2Type* item = *it;\
@@ -1009,7 +1016,7 @@ Json::Value b2dJson::writeCustomPropertiesToJson(void* item)
     int i = 0;
 
 #define FILL_CUSTOM_PROPERTY_JSON_VALUE(theName,theType)\
-    for (std::map<string,theType>::iterator it = props->m_customPropertyMap_##theType.begin(); it != props->m_customPropertyMap_##theType.end(); ++it) {\
+    for (auto it = props->m_customPropertyMap_##theType.begin(); it != props->m_customPropertyMap_##theType.end(); ++it) {\
         Json::Value propValue;\
         propValue["name"] = it->first;\
         propValue[""#theName] = it->second;\
@@ -1022,21 +1029,21 @@ Json::Value b2dJson::writeCustomPropertiesToJson(void* item)
     //FILL_CUSTOM_PROPERTY_JSON_VALUE(vec2,b2Vec2) handled separately below
     FILL_CUSTOM_PROPERTY_JSON_VALUE(bool,bool)
 
-    for (std::map<string,float>::iterator it = props->m_customPropertyMap_float.begin(); it != props->m_customPropertyMap_float.end(); ++it) {
+    for (auto it = props->m_customPropertyMap_float.begin(); it != props->m_customPropertyMap_float.end(); ++it) {
         Json::Value propValue;
         propValue["name"] = it->first;
         floatToJson("float", it->second, propValue);
         customPropertiesValue[i++] = propValue;
     }
 
-    for (std::map<string,b2Vec2>::iterator it = props->m_customPropertyMap_b2Vec2.begin(); it != props->m_customPropertyMap_b2Vec2.end(); ++it) {
+    for (auto it = props->m_customPropertyMap_b2Vec2.begin(); it != props->m_customPropertyMap_b2Vec2.end(); ++it) {
         Json::Value propValue;
         propValue["name"] = it->first;
         vecToJson("vec2", it->second, propValue);
         customPropertiesValue[i++] = propValue;
     }
 
-    for (std::map<string,b2dJsonColor4>::iterator it = props->m_customPropertyMap_color.begin(); it != props->m_customPropertyMap_color.end(); ++it) {
+    for (auto it = props->m_customPropertyMap_color.begin(); it != props->m_customPropertyMap_color.end(); ++it) {
         Json::Value propValue;
         propValue["name"] = it->first;
         //vecToJson("color", it->second, propValue);
@@ -1816,7 +1823,7 @@ float b2dJson::hexToFloat(std::string str)
 
 b2Body* b2dJson::lookupBodyFromIndex( unsigned int index )
 {
-    std::map<int,b2Body*>::iterator it = m_indexToBodyMap.find(index);
+    auto it = m_indexToBodyMap.find(index);
     if ( it != m_indexToBodyMap.end() )
         return it->second;
     else
@@ -1825,7 +1832,7 @@ b2Body* b2dJson::lookupBodyFromIndex( unsigned int index )
 
 int b2dJson::lookupBodyIndex( b2Body* body )
 {
-    std::map<b2Body*,int>::iterator it = m_bodyToIndexMap.find(body);
+    auto it = m_bodyToIndexMap.find(body);
     if ( it != m_bodyToIndexMap.end() )
         return it->second;
     else
@@ -1834,7 +1841,7 @@ int b2dJson::lookupBodyIndex( b2Body* body )
 
 int b2dJson::lookupJointIndex( b2Joint* joint )
 {
-    std::map<b2Joint*,int>::iterator it = m_jointToIndexMap.find(joint);
+    auto it = m_jointToIndexMap.find(joint);
     if ( it != m_jointToIndexMap.end() )
         return it->second;
     else
@@ -1845,7 +1852,7 @@ int b2dJson::lookupJointIndex( b2Joint* joint )
 #define GETXXXNAME(theType,lc,lcPlural,uc,ucPlural)\
 string b2dJson::get##uc##Name(theType lc)\
 {\
-    map<theType,string>::iterator it = m_##lc##ToNameMap.find( lc );\
+    auto it = m_##lc##ToNameMap.find( lc );\
     if ( it == m_##lc##ToNameMap.end() )\
         return "";\
     return it->second;\
@@ -1861,7 +1868,7 @@ GETXXXNAME(b2dJsonImage*,image,images,Image,Images)
 #define GETXXXPATH(theType,lc,lcPlural,uc,ucPlural)\
 string b2dJson::get##uc##Path(theType lc)\
 {\
-    map<theType,string>::iterator it = m_##lc##ToPathMap.find( lc );\
+    auto it = m_##lc##ToPathMap.find( lc );\
     if ( it == m_##lc##ToPathMap.end() )\
         return "";\
     return it->second;\
@@ -1877,8 +1884,8 @@ GETXXXPATH(b2dJsonImage*,image,images,Image,Images)
 #define GETXXXESBYNAME(theType,lc,lcPlural,uc,ucPlural)\
 int b2dJson::get##ucPlural##ByName(string name, vector<theType>& lcPlural)\
 {\
-    map<theType,string>::iterator it = m_##lc##ToNameMap.begin();\
-    map<theType,string>::iterator end = m_##lc##ToNameMap.end();\
+    auto it = m_##lc##ToNameMap.begin();\
+    auto end = m_##lc##ToNameMap.end();\
     while (it != end) {\
         if ( it->second == name )\
             lcPlural.push_back(it->first);\
@@ -1895,8 +1902,8 @@ GETXXXESBYNAME(b2dJsonImage*,image,images,Image,Images)
 #define GETXXXESBYPATH(theType,lc,lcPlural,uc,ucPlural)\
 int b2dJson::get##ucPlural##ByPath(string path, vector<theType>& lcPlural)\
 {\
-    map<theType,string>::iterator it = m_##lc##ToPathMap.begin();\
-    map<theType,string>::iterator end = m_##lc##ToPathMap.end();\
+    auto it = m_##lc##ToPathMap.begin();\
+    auto end = m_##lc##ToPathMap.end();\
     while (it != end) {\
         if ( it->second == path )\
             lcPlural.push_back(it->first);\
@@ -1942,8 +1949,8 @@ int b2dJson::getAllImages(vector<b2dJsonImage*> &images)
 #define GETXXXBYNAME(theType,lc,lcPlural,uc,ucPlural)\
 theType b2dJson::get##uc##ByName(string name)\
 {\
-    map<theType,string>::iterator it = m_##lc##ToNameMap.begin();\
-    map<theType,string>::iterator end = m_##lc##ToNameMap.end();\
+    auto it = m_##lc##ToNameMap.begin();\
+    auto end = m_##lc##ToNameMap.end();\
     while (it != end) {\
         if ( it->second == name )\
             return it->first;\
@@ -1960,8 +1967,8 @@ GETXXXBYNAME(b2dJsonImage*,image,images,Image,Images)
 #define GETXXXBYPATHANDNAME(theType,lc,lcPlural,uc,ucPlural)\
 theType b2dJson::get##uc##ByPathAndName(string path, string name)\
 {\
-    map<theType,string>::iterator it = m_##lc##ToNameMap.begin();\
-    map<theType,string>::iterator end = m_##lc##ToNameMap.end();\
+    auto it = m_##lc##ToNameMap.begin();\
+    auto end = m_##lc##ToNameMap.end();\
     while (it != end) {\
         if ( it->second == name ) {\
             if ( get##uc##Path(it->first) == path )\

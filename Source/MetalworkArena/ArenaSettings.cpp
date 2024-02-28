@@ -2,6 +2,7 @@
 #include "ArenaActor.h"
 #include "DebugDrawer.h"
 #include "Arena.h"
+#include "PropActor.h"
 
 void AArenaSettings::PostInitProperties()
 {
@@ -24,17 +25,18 @@ void AArenaSettings::PostLoad()
 
 		auto OnFileChanged = IDirectoryWatcher::FDirectoryChanged::CreateLambda([this](const TArray<FFileChangeData>& Files)
 		{
-			auto OnlyJson = [](const FFileChangeData& Change){ return FPaths::GetExtension(Change.Filename) == L"json"; };
-			for (const FFileChangeData& Change : Files.FilterByPredicate(OnlyJson))
+			TSet<FName> Models;
+			for (const FFileChangeData& Change : Files)
 			{
-				FName ModelName = *FPaths::GetBaseFilename(Change.Filename);
-				for (TActorIterator<APropActor> It(GetWorld()); It; ++It)
-				{
-					if ((*It)->RigModel == ModelName)
-					{
-						(*It)->SetModel(ModelName);
-					}
-				}
+				if (FPaths::GetExtension(Change.Filename) == L"json")
+					Models.Add(*FPaths::GetBaseFilename(Change.Filename));
+			}
+
+			for (FName& ModelName : Models)
+			for (TActorIterator<APropActor> It(GetWorld()); It; ++It)
+			{
+				if ((*It)->RigModel == ModelName)
+					(*It)->SetModel(ModelName);
 			}
 		});
 
@@ -50,10 +52,8 @@ void AArenaSettings::EditorTick()
 	RigWorld->DebugDraw(DebugDrawer(GetWorld(), true));
 }
 
-void AArenaSettings::Destroyed()
+AArenaSettings::~AArenaSettings()
 {
-	Super::Destroyed();
-
 #	if WITH_EDITOR
 	{
 		IDirectoryWatcher* Watcher = FModuleManager::LoadModuleChecked<FDirectoryWatcherModule>(L"DirectoryWatcher").Get();

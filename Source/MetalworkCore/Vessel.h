@@ -1,6 +1,5 @@
 #pragma once
 
-#include "RigidWorld.h"
 #include "Weapon.h"
 
 class Vessel : public RigidObject
