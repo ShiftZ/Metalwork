@@ -2,15 +2,16 @@
 
 #include "RigidWorld.h"
 
-class B2World : public RigidWorld
+class B2World : public RigidWorld, public b2ContactListener
 {
 	unique_ptr<b2World> b2world;
-	unique_ptr<b2ContactListener> contact_listener;
 	vector<char> data;
 	unordered_map<void*, int> allocs;
 
 public:
 	B2World(Float gravity);
+	~B2World();
+
 	void Capture() override;
 	void Restore() override;
 	void Step() override;
@@ -26,7 +27,9 @@ public:
 
 	Vec2 GetGravity() override;
 
-	void SetContactListener(unique_ptr<b2ContactListener> new_listenter);
-
-	~B2World();
+private:
+	void BeginContact(b2Contact* contact) override;
+	void EndContact(b2Contact* contact) override;
+	void PreSolve(b2Contact* contact, const b2Manifold* old_manifold) override;
+	void PostSolve(Contact* contact, const b2ContactImpulse* impulse) override;
 };

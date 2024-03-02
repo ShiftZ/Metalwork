@@ -1,6 +1,7 @@
 #pragma once
 #pragma warning(disable:4458)
 
+#include "Contact.h"
 #include "Name.h"
 
 class Body;
@@ -14,6 +15,11 @@ class RigidWorld
 public:
 	int step = 0;
 	int captured_step = -1;
+
+	function<bool(Contact*)> begin_contact;
+	function<void(Contact*)> end_contact;
+	function<bool(Contact*, const void*)> pre_solve;
+	function<void(Contact*, const void*)> post_solve;
 
 public:
 	template<typename ObjectType>

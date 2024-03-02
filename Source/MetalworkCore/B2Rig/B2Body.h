@@ -4,13 +4,11 @@
 
 class B2Body final : public Body
 {
-	class b2Body* b2body;
-
-	friend b2Body* GetB2Body(Body*);
-	friend class B2World;
+public:
+	b2Body* b2body;
 
 public:
-	B2Body(b2Body* b2body, Name name, Name model);
+	B2Body(b2Body* b2body, Name name);
 	Vec2 GetPosition() override;
 	void SetPosition(Vec2 position) override;
 	Float GetAngle() override;

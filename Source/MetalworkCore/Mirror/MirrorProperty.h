@@ -7,11 +7,11 @@
 
 #include "MirrorTools.h"
 
-#define MIRROR_PROPERTY(_Property_, ...) \
-	MIRROR_PROPERTY_DATA(_Property_, __VA_ARGS__); \
+#define MIRROR_PROPERTY(_Property_, _Storage_, ...) \
+	MIRROR_PROPERTY_DATA(_Property_, _Storage_, __VA_ARGS__); \
 	decltype(Mirror::GetReturnType(&Class::Type::xproperty_##_Property_##_type)) _Property_
 
-#define MIRROR_PROPERTY_DATA(_Property_, ...) \
+#define MIRROR_PROPERTY_DATA(_Property_, _Storage_, ...) \
 	xproperty_##_Property_##_type(); \
 	struct xproperty_##_Property_##_meta \
 	{ \
@@ -26,17 +26,14 @@
 			static std::string_view Text() { return {}; } \
 		}; \
 		struct Access : BasicAccess<Class::Type> { __VA_ARGS__ }; \
-		std::string_view Name() { using namespace std::literals; return #_Property_##sv; } \
-		MIRROR_FORCEDSPEC static void* Register() \
-		{ \
-			xproperty_##_Property_##_meta meta; \
-			Class::Construct()->AddProperty(new Class::PropertyType(&meta)); \
-			return &Mirror::StaticInstance<Mirror::Executor<&Register>>::instance; \
-		} \
+		static std::string_view Name() { using namespace std::literals; return #_Property_##sv; } \
+		_Storage_ static inline const Mirror::Constructor constructor = +[] \
+			{ Class::Construct()->AddProperty(new Class::PropertyType((xproperty_##_Property_##_meta*)nullptr)); }; \
 	}; \
+	static MIRROR_FORCEDSPEC auto xmirror_##_Property_##_register() { return &xproperty_##_Property_##_meta::constructor; } \
 	friend struct xproperty_##_Property_##_meta
 
-#define MIRROR_VIRTUAL_PROPERTY(_Property_, ...) \
+#define MIRROR_VIRTUAL_PROPERTY(_Property_, _Storage_, ...) \
 	xproperty_##_Property_##_type(); \
 	struct xproperty_##_Property_##_meta \
 	{ \
@@ -50,14 +47,11 @@
 			static std::string_view Text() { return {}; } \
 		}; \
 		struct Access : public InvalidAccess { __VA_ARGS__ }; \
-		std::string_view Name() { using namespace std::literals; return #_Property_##sv; } \
-		MIRROR_FORCEDSPEC static void* Register() \
-		{ \
-			xproperty_##_Property_##_meta meta; \
-			Class::Construct()->AddProperty(new Class::PropertyType(&meta)); \
-			return &Mirror::StaticInstance<Mirror::Executor<&Register>>::instance; \
-		} \
-	}
+		static std::string_view Name() { using namespace std::literals; return #_Property_##sv; } \
+		_Storage_ static inline const Mirror::Constructor constructor = +[] \
+			{ Class::Construct()->AddProperty(new Class::PropertyType((xproperty_##_Property_##_meta*)nullptr)); }; \
+	}; \
+	static MIRROR_FORCEDSPEC auto xmirror_##_Property_##_register() { return &xproperty_##_Property_##_meta::constructor; } \
 
 #define MIRROR_GETTER(getter) \
 	static void* Get(void* ptr) { return Gett((Class::Type*)ptr, &Class::Type::getter); } \
@@ -79,6 +73,8 @@
 namespace Mirror
 {
 	using namespace std;
+
+	enum { IntegralType = 1<<1, FloatingType = 1<<2, EnumType = 1<<3, ClassType = 1<<4 };
 
 	using Getter = void* (*)(void*);
 	using Setter = void (*)(void*, void*);

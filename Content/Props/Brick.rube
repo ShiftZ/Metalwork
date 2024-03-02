@@ -43,8 +43,8 @@
     
     {
       "class" : "body",
-      "displayName" : "SnapImpulse",
-      "name" : "SnapImpulse",
+      "displayName" : "snap_impulse",
+      "name" : "snap_impulse",
       "type" : "float"
     },
     
@@ -68,8 +68,8 @@
           "entry" : "Prop"
         }
       ],
-      "displayName" : "Type",
-      "name" : "Type",
+      "displayName" : "role",
+      "name" : "role",
       "type" : "string"
     }
   ],
@@ -107,11 +107,11 @@
           
           {
             "float" : 10,
-            "name" : "SnapImpulse"
+            "name" : "snap_impulse"
           },
           
           {
-            "name" : "Type",
+            "name" : "type",
             "string" : "Prop"
           }
         ],

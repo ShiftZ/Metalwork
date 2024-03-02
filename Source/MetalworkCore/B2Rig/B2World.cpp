@@ -9,6 +9,7 @@
 B2World::B2World(Float gravity)
 {
 	b2world = make_unique<b2World>(b2Vec2(0, gravity));
+	b2world->SetContactListener(this);
 }
 
 void B2World::Capture()
@@ -117,15 +118,23 @@ pair<vector<shared_ptr<Body>>, vector<shared_ptr<Joint>>> B2World::LoadModel(Jso
 	for (b2Body* b2body : b2bodies)
 	{
 		Name name = json.getBodyName(b2body);
-		Name model = json.getCustomString(b2body, "Model");
-		shared_ptr<B2Body> body = make_shared<B2Body>(b2body, name, model);
+		shared_ptr<B2Body> body = make_shared<B2Body>(b2body, name);
 
 		if (b2dJsonCustomProperties* properties = json.getCustomPropertiesForItem(b2body))
 		{
-			
+			auto read = [&](auto& properties)
+			{
+				for (auto& [prop_name, value] : properties)
+					Body::Class::GetProperty(prop_name)->SetValue(*body, value);
+			};
+
+			read(properties->m_customPropertyMap_string);
+			read(properties->m_customPropertyMap_int);
+			read(properties->m_customPropertyMap_float);
+			read(properties->m_customPropertyMap_bool);
 		}
 
-		bodies.emplace_back(make_shared<B2Body>(b2body, name, model));
+		bodies.emplace_back(move(body));
 	}
 
 	vector<b2Joint*> b2joints;
@@ -158,7 +167,7 @@ void B2World::LoadFromJson(string_view json)
 	b2dJson b2json;
 
 	Json::Value jval;
-    Json::Reader reader;
+	Json::Reader reader;
 	reader.parse(json.data(), json.data() + json.size(), jval);
 
 	b2json.readFromValue(jval, b2world.get());
@@ -172,8 +181,7 @@ void B2World::LoadFromJson(string_view json)
 		RigidObject* obj = FindObject(obj_name);
 		if (!obj) obj = AddObject(make_shared<RigidObject>(obj_name));
 		Name body_name = b2json.getBodyName(b2body);
-		Name model = b2json.getCustomString(b2body, "Model"s);
-		obj->AddPart(make_shared<B2Body>(b2body, body_name, model));
+		obj->AddPart(make_shared<B2Body>(b2body, body_name));
 	}
 }
 
@@ -189,10 +197,24 @@ Vec2 B2World::GetGravity()
 	return b2world->GetGravity();
 }
 
-void B2World::SetContactListener(unique_ptr<b2ContactListener> new_listenter)
+void B2World::BeginContact(b2Contact* contact)
 {
-	b2world->SetContactListener(contact_listener.get());
-	contact_listener = move(new_listenter);
+	if (!begin_contact(contact)) contact->SetEnabled(false);
+}
+
+void B2World::EndContact(b2Contact* contact)
+{
+	end_contact(contact);
+}
+
+void B2World::PreSolve(b2Contact* contact, const b2Manifold* old_manifold)
+{
+	if (!pre_solve(contact, old_manifold)) contact->SetEnabled(false);
+}
+
+void B2World::PostSolve(Contact* contact, const b2ContactImpulse* impulse)
+{
+	post_solve(contact, impulse);
 }
 
 B2World::~B2World()

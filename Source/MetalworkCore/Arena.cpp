@@ -32,8 +32,13 @@ Arena::Arena(unique_ptr<RigidWorld> rigid_world)
 	weapon2->LoadModel(GetJson("weapons/chain-ball"));
 	player2->AttachWeapon(weapon2); */
 	player2->SetPosition({2, 0});
-
+	
 	vessels.push_back(player2);
+
+	rigid_world->begin_contact = bind(&Arena::BeginContact, this, placeholders::_1);
+	rigid_world->end_contact = bind(&Arena::EndContact, this, placeholders::_1);
+	rigid_world->pre_solve = bind(&Arena::PreSolve, this, placeholders::_1, placeholders::_2);
+	rigid_world->post_solve = bind(&Arena::PostSolve, this, placeholders::_1, placeholders::_2);
 
 	this->rigid_world = move(rigid_world);
 }
@@ -73,43 +78,38 @@ void Arena::Step(StepInputs inputs)
 	}
 }
 
-bool Arena::BeginContact(Contact* contact, cpSpace* space, Arena* arena)
+bool Arena::BeginContact(Contact* contact)
 {
 	Body* bodyA = GetBodyA(contact);
 	Body* bodyB = GetBodyB(contact);
 
+	if (bodyA->role == Body::Prop || bodyB->role == Body::Prop)
+		return false;
 
 	return true;
 }
 
-void Arena::EndContact(Contact* contact, cpSpace* space, Arena* arena)
+void Arena::EndContact(Contact* contact)
 {
+
 }
 
-bool Arena::PreSolve(Contact* contact, cpSpace* space, Arena* arena)
+bool Arena::PreSolve(Contact* contact, const void* data)
 {
+	Body* bodyA = GetBodyA(contact);
+	Body* bodyB = GetBodyB(contact);
+
+	if (bodyA->role == Body::Prop || bodyB->role == Body::Prop)
+		return false;
+
 	return true;
 }
 
-void Arena::PostSolve(Contact* contact, cpSpace* space, Arena* arena)
+void Arena::PostSolve(Contact* contact, const void* data)
 {
 }
 
 unique_ptr<RigidWorld> Arena::MakeWorld()
 {
-	unique_ptr b2world = make_unique<B2World>(-1);
-
-	class B2ContactListener : public b2ContactListener
-	{
-		Arena* arena;
-
-	public:
-		B2ContactListener(Arena* arena) : arena(arena) {}
-		void BeginContact(b2Contact* contact) override { Arena::BeginContact(contact, nullptr, arena); }
-		void EndContact(b2Contact* contact) override { Arena::EndContact(contact, nullptr, arena); }
-		void PreSolve(b2Contact* contact, const b2Manifold* old_manifold) override { Arena::PreSolve(contact, nullptr, arena); }
-		void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override { Arena::PostSolve(contact, nullptr, arena); }
-	};
-
-	return b2world;
+	return make_unique<B2World>(-1);
 }

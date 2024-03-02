@@ -43,8 +43,8 @@
     
     {
       "class" : "body",
-      "displayName" : "Model",
-      "name" : "Model",
+      "displayName" : "model",
+      "name" : "model",
       "type" : "string"
     }
   ],
@@ -92,7 +92,7 @@
         [
           
           {
-            "name" : "Model",
+            "name" : "model",
             "string" : "copter1"
           }
         ],

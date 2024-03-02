@@ -2,22 +2,27 @@
 
 #include "Mirror.h"
 
+enum class BodyType { Static, Kinematic, Dynamic };
+
 class Body
 {
 	CLASS(Body)
 
 public:
-	enum Type { ENUM(Type, None, Prop) };
+	enum Role { ENUM(Role, None, Prop) };
 
 public:
 	class RigidObject* object = nullptr;
-	Name name, model;
+	Name name;
 	Vec2 offset;
 
-	Type PROPERTY(type) = None;
+	Role PROPERTY(role, SETTER(SetRole)) = None;
+	float PROPERTY(snap_impulse) = 0;
+	Name PROPERTY(model);
 
 public:
-	Body(Name name, Name model, Vec2 shift) : name(name), model(model), offset(shift) {}
+	Body(Name name, Vec2 shift) : name(name), offset(shift) {}
+	virtual ~Body() = default;
 
 	virtual Vec2 GetPosition() = 0;
 	virtual void SetPosition(Vec2 position) = 0;
@@ -35,5 +40,8 @@ public:
 	virtual void ApplyTorque(Float torque) = 0;
 	virtual void DrawShapes(class IDebugDrawer& drawer) = 0;
 
-	virtual ~Body() = default;
+	void SetRole(Role role);
 };
+
+void SetType(Body* body, BodyType type);
+void SetGravityScale(Body* body, Float scale);

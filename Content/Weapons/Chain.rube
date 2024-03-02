@@ -44,8 +44,8 @@
     
     {
       "class" : "body",
-      "displayName" : "Model",
-      "name" : "Model",
+      "displayName" : "model",
+      "name" : "model",
       "type" : "string"
     }
   ],
@@ -95,7 +95,7 @@
         "awake" : true,
         "id" : 1,
         "linearVelocity" : 0,
-        "name" : "head",
+        "name" : "anchor",
         "position" : 
         {
           "x" : 0,
@@ -112,7 +112,7 @@
         [
           
           {
-            "name" : "Model",
+            "name" : "model",
             "string" : "chain1"
           }
         ],
@@ -177,7 +177,7 @@
         [
           
           {
-            "name" : "Model",
+            "name" : "model",
             "string" : "chain2"
           }
         ],
@@ -242,7 +242,7 @@
         [
           
           {
-            "name" : "Model",
+            "name" : "model",
             "string" : "chain2"
           }
         ],
@@ -307,7 +307,7 @@
         [
           
           {
-            "name" : "Model",
+            "name" : "model",
             "string" : "chain2"
           }
         ],
@@ -372,7 +372,7 @@
         [
           
           {
-            "name" : "Model",
+            "name" : "model",
             "string" : "chain1"
           }
         ],
@@ -437,7 +437,7 @@
         [
           
           {
-            "name" : "Model",
+            "name" : "model",
             "string" : "chain1"
           }
         ],

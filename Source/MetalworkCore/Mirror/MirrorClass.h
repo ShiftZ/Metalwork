@@ -34,15 +34,16 @@
 		static const char* RawName() { return #_Type_; } \
 		static std::string_view Name() { return cls->Name(); } \
 		static int PropertiesNum() { return cls->PropertiesNum(); } \
+		static int MethodsNum() { return cls->MethodsNum(); } \
 		static auto Properties() { return cls->Properties<PropertyType>(); } \
 		static auto Methods() { return cls->Methods<MethodType>(); } \
-		static const PropertyType* GetProperty(const std::string& name) { return cls->GetProperty<PropertyType>(name); } \
+		static const PropertyType* GetProperty(std::string_view name) { return cls->GetProperty<PropertyType>(name); } \
 		static const PropertyType* GetProperty(std::type_index t) { return cls->GetProperty<PropertyType>(t); } \
 		static const PropertyType* GetProperty(int index) { return cls->GetProperty<PropertyType>(index); } \
 		static std::vector<const Mirror::Property*> Resolve(const std::string& path) { return cls->Resolve(path); } \
 		template<typename PropertyType> \
-		static std::vector<const PropertyType*> Resolve(const std::string& path) { return cls->Resolve<PropertyType>(path); } \
-		static const MethodType* GetMethod(const std::string& name) { return cls->GetMethod<const MethodType>(name); } \
+		static std::vector<const PropertyType*> Resolve(std::string_view path) { return cls->Resolve<PropertyType>(path); } \
+		static const MethodType* GetMethod(const std::string_view name) { return cls->GetMethod<const MethodType>(name); } \
 		static auto GetHeirs() { return cls->GetHeirs(); } \
 		static auto GetBases() { return cls->GetBases(); } \
 		static Mirror::Class* GetClass() { return &cls.value(); } \
@@ -301,13 +302,13 @@ namespace Mirror
 				PropertyType* copy = new PropertyType(*property);
 				copy->caster = casters[*heir];
 
-				auto& heir_props = (*heir)->properties;
-				auto place = ranges::find_if(heir_props.rbegin(), heir_props.rend(), [&](auto& p){ return p->scope.type == type; }).base();
-				if (place == heir_props.begin())
+				auto& _properties = (*heir)->properties;
+				auto place = ranges::find_if(_properties.rbegin(), _properties.rend(), [&](auto& p){ return p->scope.type == type; }).base();
+				if (place == _properties.begin())
 				{
-					place = heir_props.end();
-					for (auto it = heirs.begin(); place == heir_props.end() && it != heir + 1; ++it)
-						place = ranges::find_if(heir_props, [&](auto& p){ return p->scope.type == (*it)->type; });
+					place = _properties.end();
+					for (auto it = heirs.begin(); place == _properties.end() && it != heir + 1; ++it)
+						place = ranges::find_if(_properties, [&](auto& p){ return p->scope.type == (*it)->type; });
 				}
 
 				(*heir)->prop_map.emplace(copy->name, copy);
@@ -328,13 +329,13 @@ namespace Mirror
 				MethodType* copy = new MethodType(*method);
 				copy->caster = casters[*heir];
 
-				auto& methods = (*heir)->methods;
-				auto place = ranges::find_if(methods.rbegin(), methods.rend(), [&](auto& p){ return p->scope.type == type; }).base();
-				if (place == methods.begin())
+				auto& _methods = (*heir)->methods;
+				auto place = ranges::find_if(_methods.rbegin(), _methods.rend(), [&](auto& p){ return p->scope.type == type; }).base();
+				if (place == _methods.begin())
 				{
-					place = methods.end();
-					for (auto it = heirs.begin(); place == methods.end() && it != heir + 1; ++it)
-						place = find_if(methods.begin(), methods.end(), [&](auto& p){ return p->scope.type == (*it)->type; });
+					place = _methods.end();
+					for (auto it = heirs.begin(); place == _methods.end() && it != heir + 1; ++it)
+						place = find_if(_methods.begin(), _methods.end(), [&](auto& p){ return p->scope.type == (*it)->type; });
 				}
 
 				(*heir)->meth_map.emplace(copy->name, copy);

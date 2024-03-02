@@ -11,7 +11,7 @@
 			[
 				
 				{
-					"name" : "Model",
+					"name" : "model",
 					"string" : "chain1"
 				}
 			],
@@ -70,7 +70,7 @@
 			[
 				
 				{
-					"name" : "Model",
+					"name" : "model",
 					"string" : "chain1"
 				}
 			],
@@ -129,7 +129,7 @@
 			[
 				
 				{
-					"name" : "Model",
+					"name" : "model",
 					"string" : "chain2"
 				}
 			],
@@ -188,7 +188,7 @@
 			[
 				
 				{
-					"name" : "Model",
+					"name" : "model",
 					"string" : "chain2"
 				}
 			],
@@ -247,7 +247,7 @@
 			[
 				
 				{
-					"name" : "Model",
+					"name" : "model",
 					"string" : "chain2"
 				}
 			],
@@ -306,7 +306,7 @@
 			[
 				
 				{
-					"name" : "Model",
+					"name" : "model",
 					"string" : "chain1"
 				}
 			],

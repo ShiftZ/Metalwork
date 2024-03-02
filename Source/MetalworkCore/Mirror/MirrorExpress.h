@@ -12,12 +12,12 @@
 
 #define MULTIBASE(...) MIRROR_MULTIBASE(__VA_ARGS__)
 
-#define PROPERTY(name, ...) MIRROR_PROPERTY(name, __VA_ARGS__)
-#define XPROPERTY(name, ...) decltype(name) MIRROR_PROPERTY_DATA(name, __VA_ARGS__)
-#define VPROPERTY(name, ...) MIRROR_VIRTUAL_PROPERTY(name, __VA_ARGS__)
-#define METHOD(name) MIRROR_METHOD(name)
-#define VMETHOD(name) MIRROR_VIRTUAL_METHOD(name)
-#define IMETHOD(name) MIRROR_IMAGINARY_METHOD(name)
+#define PROPERTY(name, ...) MIRROR_PROPERTY(name,, __VA_ARGS__)
+#define XPROPERTY(name, ...) decltype(name) MIRROR_PROPERTY_DATA(name,, __VA_ARGS__)
+#define VPROPERTY(name, ...) MIRROR_VIRTUAL_PROPERTY(name,, __VA_ARGS__)
+#define METHOD(name) MIRROR_METHOD(name,)
+#define VMETHOD(name) MIRROR_VIRTUAL_METHOD(name,)
+#define IMETHOD(name) MIRROR_IMAGINARY_METHOD(name,)
 
 #define GETTER(getter) MIRROR_GETTER(getter)
 #define SETTER(setter) MIRROR_SETTER(setter)

@@ -30,10 +30,10 @@ public:
 	static METALWORKCORE_API unique_ptr<RigidWorld> MakeWorld();
 
 private:
-	static bool BeginContact(Contact* contact, struct cpSpace* space, Arena* arena);
-	static void EndContact(Contact* contact, struct cpSpace* space, Arena* arena);
-	static bool PreSolve(Contact* contact, struct cpSpace* space, Arena* arena);
-	static void PostSolve(Contact* contact, struct cpSpace* space, Arena* arena);
+	bool BeginContact(Contact* contact);
+	void EndContact(Contact* contact);
+	bool PreSolve(Contact* contact, const void* data);
+	void PostSolve(Contact* contact, const void* data);
 
 	friend class B2ContactListener;
 };

@@ -11,7 +11,7 @@
 			[
 				
 				{
-					"name" : "Model",
+					"name" : "model",
 					"string" : "bridle"
 				}
 			],
@@ -70,7 +70,7 @@
 			[
 				
 				{
-					"name" : "Model",
+					"name" : "model",
 					"string" : "ball"
 				}
 			],

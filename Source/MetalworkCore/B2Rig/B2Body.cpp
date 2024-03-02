@@ -2,7 +2,7 @@
 
 #include "CoreInterface.h"
 
-B2Body::B2Body(b2Body* b2body, Name name, Name model) : Body(name, model, b2body->GetPosition()), b2body(b2body)
+B2Body::B2Body(b2Body* b2body, Name name) : Body(name, b2body->GetPosition()), b2body(b2body)
 {
 	b2body->GetUserData() = this;
 }
@@ -112,4 +112,14 @@ void B2Body::DrawShapes(IDebugDrawer& drawer)
 B2Body::~B2Body()
 {
 	if (b2body) b2body->GetWorld()->DestroyBody(b2body);
+}
+
+void SetType(Body* body, BodyType type)
+{
+	GetB2Body(body)->SetType(b2BodyType(type));
+}
+
+void SetGravityScale(Body* body, Float scale)
+{
+	GetB2Body(body)->SetGravityScale(scale);
 }
