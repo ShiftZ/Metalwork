@@ -7,83 +7,103 @@ B2Body::B2Body(b2Body* b2body, Name name) : Body(name, b2body->GetPosition()), b
 	b2body->GetUserData() = this;
 }
 
-Vec2 B2Body::GetPosition()
+B2Body::~B2Body()
 {
-	return b2body->GetPosition();
+	if (b2body) b2body->GetWorld()->DestroyBody(b2body);
 }
 
-void B2Body::SetPosition(Vec2 position)
+Vec2 Body::GetPosition()
 {
-	b2body->SetTransform(position, b2body->GetAngle());
+	return GetB2Body(this)->GetPosition();
 }
 
-Float B2Body::GetAngle()
+void Body::SetPosition(Vec2 position)
 {
-	return b2body->GetAngle();
+	GetB2Body(this)->SetTransform(position, GetB2Body(this)->GetAngle());
 }
 
-Float B2Body::GetAngleMod()
+Float Body::GetAngle()
 {
-	return remainderf(b2body->GetAngle(), 2*pi);
+	return GetB2Body(this)->GetAngle();
 }
 
-Float B2Body::GetMass()
+Float Body::GetAngleMod()
 {
-	return b2body->GetMass();
+	return remainderf(GetB2Body(this)->GetAngle(), 2*pi);
 }
 
-Float B2Body::GetInertia()
+Float Body::GetMass()
 {
-	return b2body->GetInertia();
+	return GetB2Body(this)->GetMass();
 }
 
-Vec2 B2Body::GetVelocity()
+Float Body::GetInertia()
 {
-	return b2body->GetLinearVelocity();
+	return GetB2Body(this)->GetInertia();
 }
 
-Float B2Body::GetAngVelocity()
+Vec2 Body::GetVelocity()
 {
-	return b2body->GetAngularVelocity();
+	return GetB2Body(this)->GetLinearVelocity();
 }
 
-void B2Body::SetGravityScale(Float scale)
+Float Body::GetAngVelocity()
 {
-	b2body->SetGravityScale(scale);
+	return GetB2Body(this)->GetAngularVelocity();
 }
 
-void B2Body::SetAngDamping(Float factor)
+void Body::SetGravityScale(Float scale)
 {
-	b2body->SetAngularDamping(factor);
+	GetB2Body(this)->SetGravityScale(scale);
 }
 
-void B2Body::SetLinearDamping(Float factor)
+void Body::SetAngDamping(Float factor)
 {
-	b2body->SetLinearDamping(factor);
+	GetB2Body(this)->SetAngularDamping(factor);
 }
 
-void B2Body::ApplyForce(Vec2 force)
+void Body::SetLinearDamping(Float factor)
 {
-	b2body->ApplyForceToCenter(force, false);
+	GetB2Body(this)->SetLinearDamping(factor);
 }
 
-void B2Body::ApplyForce(Vec2 force, Vec2 point)
+void Body::ApplyForce(Vec2 force)
 {
-	b2body->ApplyForce(force, point, false);
+	GetB2Body(this)->ApplyForceToCenter(force, false);
 }
 
-void B2Body::ApplyTorque(Float torque)
+void Body::ApplyForce(Vec2 force, Vec2 point)
 {
-	b2body->ApplyTorque(torque, false);
+	GetB2Body(this)->ApplyForce(force, point, false);
 }
 
-void B2Body::DrawShapes(IDebugDrawer& drawer)
+void Body::ApplyImpulse(Vec2 impulse, Vec2 point)
 {
-	const b2Transform& transform = b2body->GetTransform();
+	GetB2Body(this)->ApplyLinearImpulse(impulse, point, true);
+}
+
+void Body::ApplyTorque(Float torque)
+{
+	GetB2Body(this)->ApplyTorque(torque, false);
+}
+
+void Body::SetMovablity(Movability movability)
+{
+	GetB2Body(this)->SetType(b2BodyType(movability));
+}
+
+Movability Body::GetMovability()
+{
+	return (Movability)GetB2Body(this)->GetType();
+}
+
+void Body::DrawShapes(IDebugDrawer& drawer)
+{
+	const b2Transform& transform = GetB2Body(this)->GetTransform();
 
 	Color color(0, 1, 1, 1);
 
-	for (b2Fixture* fixture = b2body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	for (b2Fixture* fixture = GetB2Body(this)->GetFixtureList(); fixture; fixture = fixture->GetNext())
 	{
 		switch (fixture->GetType())
 		{
@@ -107,19 +127,4 @@ void B2Body::DrawShapes(IDebugDrawer& drawer)
 		}
 		}
 	}
-}
-
-B2Body::~B2Body()
-{
-	if (b2body) b2body->GetWorld()->DestroyBody(b2body);
-}
-
-void SetType(Body* body, BodyType type)
-{
-	GetB2Body(body)->SetType(b2BodyType(type));
-}
-
-void SetGravityScale(Body* body, Float scale)
-{
-	GetB2Body(body)->SetGravityScale(scale);
 }

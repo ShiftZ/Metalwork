@@ -2,7 +2,7 @@
 
 #include "Mirror.h"
 
-enum class BodyType { Static, Kinematic, Dynamic };
+enum class Movability { Static, Kinematic, Dynamic };
 
 class Body
 {
@@ -24,24 +24,25 @@ public:
 	Body(Name name, Vec2 shift) : name(name), offset(shift) {}
 	virtual ~Body() = default;
 
-	virtual Vec2 GetPosition() = 0;
-	virtual void SetPosition(Vec2 position) = 0;
-	virtual Float GetAngle() = 0;
-	virtual Float GetAngleMod() = 0;
-	virtual Float GetMass() = 0;
-	virtual Float GetInertia() = 0;
-	virtual Vec2 GetVelocity() = 0;
-	virtual Float GetAngVelocity() = 0;
-	virtual void SetGravityScale(Float scale) = 0;
-	virtual void SetAngDamping(Float factor) = 0;
-	virtual void SetLinearDamping(Float factor) = 0;
-	virtual void ApplyForce(Vec2 force) = 0;
-	virtual void ApplyForce(Vec2 force, Vec2 point) = 0;
-	virtual void ApplyTorque(Float torque) = 0;
-	virtual void DrawShapes(class IDebugDrawer& drawer) = 0;
+	METALWORKCORE_API Vec2 GetPosition();
+	void SetPosition(Vec2 position);
+	METALWORKCORE_API Float GetAngle();
+	Float GetAngleMod();
+	Float GetMass();
+	Float GetInertia();
+	METALWORKCORE_API Vec2 GetVelocity();
+	Float GetAngVelocity();
+	void SetGravityScale(Float scale);
+	void SetAngDamping(Float factor);
+	void SetLinearDamping(Float factor);
+	void ApplyForce(Vec2 force);
+	void ApplyForce(Vec2 force, Vec2 point);
+	void ApplyTorque(Float torque);
+	void ApplyImpulse(Vec2 impulse, Vec2 point);
+	Movability GetMovability();
+	void SetMovablity(Movability movability);
+
+	void DrawShapes(class IDebugDrawer& drawer);
 
 	void SetRole(Role role);
 };
-
-void SetType(Body* body, BodyType type);
-void SetGravityScale(Body* body, Float scale);

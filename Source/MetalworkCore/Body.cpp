@@ -5,5 +5,5 @@
 void Body::SetRole(Role role)
 {
 	this->role = role;
-	if (role == Prop) SetGravityScale(0);
+	if (role == Prop) SetMovablity(Movability::Static);
 }

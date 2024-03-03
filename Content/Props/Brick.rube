@@ -43,20 +43,6 @@
     
     {
       "class" : "body",
-      "displayName" : "snap_impulse",
-      "name" : "snap_impulse",
-      "type" : "float"
-    },
-    
-    {
-      "class" : "fixture",
-      "displayName" : "Model",
-      "name" : "Model",
-      "type" : "string"
-    },
-    
-    {
-      "class" : "body",
       "comboboxEntries" : 
       [
         
@@ -70,6 +56,20 @@
       ],
       "displayName" : "role",
       "name" : "role",
+      "type" : "string"
+    },
+    
+    {
+      "class" : "body",
+      "displayName" : "snap_impulse",
+      "name" : "snap_impulse",
+      "type" : "float"
+    },
+    
+    {
+      "class" : "fixture",
+      "displayName" : "Model",
+      "name" : "Model",
       "type" : "string"
     }
   ],
@@ -106,12 +106,12 @@
         [
           
           {
-            "float" : 10,
+            "float" : 3,
             "name" : "snap_impulse"
           },
           
           {
-            "name" : "type",
+            "name" : "role",
             "string" : "Prop"
           }
         ],

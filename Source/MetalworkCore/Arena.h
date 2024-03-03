@@ -30,6 +30,15 @@ public:
 	static METALWORKCORE_API unique_ptr<RigidWorld> MakeWorld();
 
 private:
+	struct Snapped
+	{
+		Body* body;
+		vector<pair<Vec2, Vec2>> impulses;
+	};
+
+	vector<Snapped> snapped_bodies;
+
+private:
 	bool BeginContact(Contact* contact);
 	void EndContact(Contact* contact);
 	bool PreSolve(Contact* contact, const void* data);

@@ -54,16 +54,30 @@ void Arena::Step(StepInputs inputs)
 
 	unique_lock lock(step_mtx);
 
+	auto one_step = [&]
+	{
+		rigid_world->Step();
+
+		for (auto& [body, impulses] : snapped_bodies)
+		for (auto& [impulse, point] : impulses)
+		{
+			body->SetMovablity(Movability::Dynamic);
+			body->ApplyImpulse(impulse, point);
+			body->role = Body::None;
+		}
+
+		snapped_bodies.resize(0);
+	};
+
 	// clean step
-	for (int substep = 0; flat_map<int, PlayerInput>& players_input : inputs.clean)
+	for (flat_map<int, PlayerInput>& players_input : inputs.clean)
 	{
 		for (auto& [player, input] : players_input)
 		{
 			vessels[player]->SetPlayerInput(input.move);
 		}
 
-		rigid_world->Step();
-		++substep;
+		one_step();
 	}
 
 	rigid_world->Capture();
@@ -74,39 +88,43 @@ void Arena::Step(StepInputs inputs)
 		for (auto& [player, input] : players_input)
 			vessels[player]->root->ApplyForce(input.move);
 
-		rigid_world->Step();
+		one_step();
 	}
 }
 
 bool Arena::BeginContact(Contact* contact)
 {
-	Body* bodyA = GetBodyA(contact);
-	Body* bodyB = GetBodyB(contact);
-
-	if (bodyA->role == Body::Prop || bodyB->role == Body::Prop)
-		return false;
+	auto [bodyA, bodyB] = GetBodies(contact);
 
 	return true;
 }
 
 void Arena::EndContact(Contact* contact)
 {
-
 }
 
 bool Arena::PreSolve(Contact* contact, const void* data)
 {
-	Body* bodyA = GetBodyA(contact);
-	Body* bodyB = GetBodyB(contact);
-
-	if (bodyA->role == Body::Prop || bodyB->role == Body::Prop)
-		return false;
+	auto [bodyA, bodyB] = GetBodies(contact);
 
 	return true;
 }
 
 void Arena::PostSolve(Contact* contact, const void* data)
 {
+	auto [bodyA, bodyB] = GetBodies(contact);
+
+	auto do_body = [&](Body* body)
+	{
+		if (body->role == Body::Prop)
+		{
+			Float mag = GetNormalImpulseMag(contact, data);
+			if (mag > body->snap_impulse)
+				snapped_bodies.emplace_back(body, GetImpulses(contact, data, body));
+		}
+	};
+
+	do_body(bodyA), do_body(bodyB);
 }
 
 unique_ptr<RigidWorld> Arena::MakeWorld()
