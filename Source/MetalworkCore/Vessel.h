@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Weapon.h"
+#include "RigidObject.h"
 
 class Vessel : public RigidObject
 {
 public:
-	Weapon* weapon = nullptr;
+	class Weapon* weapon = nullptr;
 	Vec2 desired_accel = {0, 0};
 	int player;
 

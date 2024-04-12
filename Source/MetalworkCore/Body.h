@@ -10,6 +10,7 @@ class Body
 
 public:
 	enum Role { ENUM(Role, None, Prop) };
+	enum Material { ENUM(Material, Void, Wood, Stone, Metal) };
 
 public:
 	class RigidObject* object = nullptr;
@@ -17,6 +18,7 @@ public:
 	Vec2 offset;
 
 	Role PROPERTY(role, SETTER(SetRole)) = None;
+	Material PROPERTY(material) = Void;
 	float PROPERTY(snap_impulse) = 0;
 	Name PROPERTY(model);
 

@@ -16,10 +16,13 @@ public class MetalworkArena : ModuleRules
         PrivatePCHHeaderFile = "MetalworkArena.h";
         
         PrivateDependencyModuleNames.AddRange(new string[] 
-            { "Core", "CoreUObject", "Engine", "Paper2D", "InputCore", "DeveloperSettings" });
+            { "Core", "CoreUObject", "Engine", "Paper2D", "InputCore", "DeveloperSettings", "Niagara" });
         
         PrivateDependencyModuleNames.AddRange(new string[] 
-            { "MetasoundFrontend", "MetasoundStandardNodes", "MetasoundGraphCore" });
+            { "MetasoundFrontend", "MetasoundStandardNodes", "MetasoundGraphCore", "MetasoundEngine" });
+        
+        PrivateDependencyModuleNames.AddRange(new string[] 
+            { "ChaosCaching", "ChaosClothAssetEngine", "ClothingSystemRuntimeCommon", "ChaosCloth" });
         
         PrivateDependencyModuleNames.Add("MetalworkCore");
         PrivateDependencyModuleNames.Add("Box2D");

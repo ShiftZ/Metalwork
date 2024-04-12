@@ -11,12 +11,12 @@ public:
 	static const FVertexInterface& DeclareVertexInterface();
 	static const FNodeClassMetadata& GetNodeInfo();
 
-	FDataReferenceCollection GetInputs() const override;
-	FDataReferenceCollection GetOutputs() const override;
+	void BindInputs(FInputVertexInterfaceData& InVertexData) override;
+	void BindOutputs(FOutputVertexInterfaceData& InVertexData) override;
 
 	void Execute();
 
-	static TUniquePtr<IOperator> CreateOperator(const FCreateOperatorParams& InParams, FBuildErrorArray& OutErrors);
+	static TUniquePtr<IOperator> CreateOperator(const FBuildOperatorParams& InParams, FBuildResults& OutResults);
 
 private:
 	inline static const TOutputDataVertex<float> OutputVertex = {L"Result", {INVTEXT("Result"), {}}};

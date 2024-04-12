@@ -18,6 +18,9 @@ b2Vec2 Normalized( const Vec2& v, length_t&& len = Float() )
 	return {v.x * k, v.y * k};
 }
 
-inline b2Vec2 operator*( const Vec2& v, Float s ) { return {s * v.x, s * v.y}; }
-inline bool operator!=( const Vec2& v, nullptr_t ) { return v.x != 0 || v.y != 0; }
-inline bool operator==( const Vec2& v, nullptr_t ) { return v.x == 0 && v.y == 0; }
+inline Vec2 operator*(const Vec2& v, Float s) { return {v.x * s, v.y * s}; }
+inline Vec2 operator/(const Vec2& v, Float s) { return {v.x / s, v.y / s}; }
+void operator*=(Vec2& v, convertible_to<Float> auto s) { v.x *= Float(s), v.y *= Float(s); }
+void operator/=(Vec2& v, convertible_to<Float> auto s) { v.x /= Float(s), v.y /= Float(s); }
+inline bool operator!=(const Vec2& v, nullptr_t) { return v.x != 0 || v.y != 0; }
+inline bool operator==(const Vec2& v, nullptr_t) { return v.x == 0 && v.y == 0; }

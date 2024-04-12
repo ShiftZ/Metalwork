@@ -3,6 +3,7 @@
 #include "Vessel.h"
 #include "Arena.h"
 #include "Body.h"
+#include "Weapon.h"
 #include "CoreDefinitions.h"
 
 void Vessel::AttachWeapon(Weapon* weapon)

@@ -11,8 +11,8 @@ class RigidObject
 public:
 	class MetalActor* actor = nullptr;
 	class RigidWorld* world = nullptr;
-	vector<shared_ptr<class Joint>> joints;
-	vector<shared_ptr<class Body>> parts;
+	vector<shared_ptr<Joint>> joints;
+	vector<shared_ptr<Body>> parts;
 	Body* root = nullptr;
 	Name name;
 

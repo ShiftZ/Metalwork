@@ -13,6 +13,11 @@
 			[
 				
 				{
+					"name" : "material",
+					"string" : "Stone"
+				},
+				
+				{
 					"name" : "role",
 					"string" : "Prop"
 				},

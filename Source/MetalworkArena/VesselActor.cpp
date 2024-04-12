@@ -6,6 +6,8 @@
 #include "Joint.h"
 #include "Body.h"
 
+using namespace Chaos;
+
 void AVesselActor::BeginPlay()
 {
 	Super::BeginPlay();
@@ -84,4 +86,16 @@ void AAnchorActor::ArenaTick(float DeltaTime)
 {
 	Super::ArenaTick(DeltaTime);
 	Audio->SetFloatParameter(SpeedName, Length(GetRig()->root->GetVelocity()));
+}
+
+void AClothActor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	TArray<UChaosClothComponent*> ClothsComponents;
+	GetComponents<UChaosClothComponent>(ClothsComponents);
+
+	for (UChaosClothComponent* Cloth : ClothsComponents)
+	for (int i = 0; i < 40; i++)
+		((UActorComponent*)Cloth)->TickComponent(1.f, LEVELTICK_All, nullptr);
 }

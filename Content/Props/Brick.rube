@@ -47,6 +47,32 @@
       [
         
         {
+          "entry" : "Void"
+        },
+        
+        {
+          "entry" : "Wood"
+        },
+        
+        {
+          "entry" : "Stone"
+        },
+        
+        {
+          "entry" : "Metal"
+        }
+      ],
+      "displayName" : "material",
+      "name" : "material",
+      "type" : "string"
+    },
+    
+    {
+      "class" : "body",
+      "comboboxEntries" : 
+      [
+        
+        {
           "entry" : "None"
         },
         
@@ -60,17 +86,17 @@
     },
     
     {
-      "class" : "body",
-      "displayName" : "snap_impulse",
-      "name" : "snap_impulse",
-      "type" : "float"
-    },
-    
-    {
       "class" : "fixture",
       "displayName" : "Model",
       "name" : "Model",
       "type" : "string"
+    },
+    
+    {
+      "class" : "body",
+      "displayName" : "snap_impulse",
+      "name" : "snap_impulse",
+      "type" : "float"
     }
   ],
   "metaworld" : 
@@ -108,6 +134,11 @@
           {
             "float" : 3,
             "name" : "snap_impulse"
+          },
+          
+          {
+            "name" : "material",
+            "string" : "Stone"
           },
           
           {

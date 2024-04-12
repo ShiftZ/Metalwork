@@ -55,3 +55,12 @@ public:
 	class Anchor* GetRig() { return (Anchor*)Rig; }
 	void ArenaTick(float DeltaTime) override;
 };
+
+UCLASS()
+class AClothActor : public AActor
+{
+	GENERATED_BODY()
+
+public:
+	void BeginPlay() override;
+};

@@ -69,6 +69,9 @@ void Arena::Step(StepInputs inputs)
 		snapped_bodies.resize(0);
 	};
 
+	for (ArenaEvent* event : events | cptr)
+		event->step = numeric_limits<int>::max();
+
 	// clean step
 	for (flat_map<int, PlayerInput>& players_input : inputs.clean)
 	{
@@ -80,6 +83,13 @@ void Arena::Step(StepInputs inputs)
 		one_step();
 	}
 
+	// commit clean events
+	for (unique_ptr<ArenaEvent>& event : events)
+		if (event->step <= rigid_world->step)
+			events_confirmed.push_back(move(event));
+
+	erase(events, nullptr);
+
 	rigid_world->Capture();
 
 	// dirty step
@@ -90,6 +100,35 @@ void Arena::Step(StepInputs inputs)
 
 		one_step();
 	}
+
+	// deny unconfirmed events
+	for (unique_ptr<ArenaEvent>& event : events)
+		if (event->step == numeric_limits<int>::max()) 
+			events_denied.push_back(move(event));
+
+	erase(events, nullptr);
+}
+
+bool Arena::CheckOutEvent(Contact* contact, const type_info* type)
+{
+	auto event = ranges::find_if(events, [&](unique_ptr<ArenaEvent>& event){ return event->contact == contact && &typeid(*event) == type; });
+	if (event == events.end()) return false;
+	(*event)->step = rigid_world->step;
+	return true;
+}
+
+template <typename EventType, typename... ArgTypes>
+EventType* Arena::MakeEvent(Contact* contact, ArgTypes&&... args)
+{
+	const type_info* type = &typeid(EventType);
+	auto found = ranges::find_if(events, [&](unique_ptr<ArenaEvent>& event){ return event->contact == contact && &typeid(*event) == type; });
+	if (found == events.end())
+	{
+		unique_ptr event = make_unique<EventType>(rigid_world->step, contact, forward<ArgTypes>(args)...);
+		return (EventType*)events.emplace_back(move(event)).get();
+	}
+	(*found)->step = rigid_world->step;
+	return nullptr;
 }
 
 bool Arena::BeginContact(Contact* contact)
@@ -114,17 +153,26 @@ void Arena::PostSolve(Contact* contact, const void* data)
 {
 	auto [bodyA, bodyB] = GetBodies(contact);
 
-	auto do_body = [&](Body* body)
+	Float impulse = GetNormalImpulseMag(contact, data);
+
+	auto do_body = [&](Body* body, Body* other)
 	{
 		if (body->role == Body::Prop)
 		{
-			Float mag = GetNormalImpulseMag(contact, data);
-			if (mag > body->snap_impulse)
+			if (impulse > body->snap_impulse)
 				snapped_bodies.emplace_back(body, GetImpulses(contact, data, body));
+		}
+
+		if (body->role == Body::Prop && &typeid(*other->object) == &typeid(Anchor) && impulse > 1.0f)
+		{
+			if (auto* event = MakeEvent<ImpactEvent>(contact, impulse))
+			{
+				events_begun.push_back(event);
+			}
 		}
 	};
 
-	do_body(bodyA), do_body(bodyB);
+	do_body(bodyA, bodyB), do_body(bodyB, bodyA);
 }
 
 unique_ptr<RigidWorld> Arena::MakeWorld()

@@ -1,4 +1,4 @@
-#include "MetasoundNodes.h"
+﻿#include "MetasoundNodes.h"
 
 using namespace Metasound;
 
@@ -17,35 +17,27 @@ const FNodeClassMetadata& FSigmoidOperator::GetNodeInfo()
 	static const FNodeClassMetadata Metadata =
 	{
 		.ClassName = FNodeClassName{"UE", "Sigmoid", "Audio"},
-		.DisplayName = INVTEXT("Sigmoid: x / sqrt(1 + x^2)"),
+		.DisplayName = INVTEXT("Sigmoid: 2π * arctan(x / midpoint)"),
 		.DefaultInterface = DeclareVertexInterface(),
 	};
 	return Metadata;
 }
 
-FDataReferenceCollection FSigmoidOperator::GetInputs() const
+void FSigmoidOperator::BindInputs(FInputVertexInterfaceData& InVertexData)
 {
-	FDataReferenceCollection InputDataReferences;
 	for (const FFloatReadRef* ReadRef = &InputX; const TInputDataVertex<float>& InVert : InputVerts)
-		InputDataReferences.AddDataReadReference(InVert.VertexName, *(ReadRef++));
-	return InputDataReferences;
+		InVertexData.BindReadVertex(InVert.VertexName, *(ReadRef++));
 }
 
-FDataReferenceCollection FSigmoidOperator::GetOutputs() const
+void FSigmoidOperator::BindOutputs(FOutputVertexInterfaceData& InVertexData)
 {
-	FDataReferenceCollection OutputDataReferences;
-	OutputDataReferences.AddDataReadReference(OutputVertex.VertexName, Result);
-	return OutputDataReferences;
+	InVertexData.BindWriteVertex(OutputVertex.VertexName, Result);
 }
 
-TUniquePtr<IOperator> FSigmoidOperator::CreateOperator(const FCreateOperatorParams& InParams, FBuildErrorArray& OutErrors)
+TUniquePtr<IOperator> FSigmoidOperator::CreateOperator(const FBuildOperatorParams& InParams, FBuildResults& OutResults)
 {
 	auto Inputs = views::transform(InputVerts, [&](const TInputDataVertex<float>& InputVertex) 
-	{
-		return InParams.InputDataReferences.GetDataReadReferenceOrConstructWithVertexDefault<float>
-			(DeclareVertexInterface().GetInputInterface(), InputVertex.VertexName, InParams.OperatorSettings);
-	});
-
+		{ return InParams.InputData.GetOrCreateDefaultDataReadReference<float>(InputVertex.VertexName, InParams.OperatorSettings); });
 	return MakeUnique<FSigmoidOperator>(begin(Inputs));
 }
 
@@ -57,12 +49,11 @@ void FSigmoidOperator::Execute()
 		*Result = sigmoid(*InputX, *InputMidpoint) * *InputCeiling;
 }
 
-class FTutorialNode final : public FNodeFacade
+class FSigmoidNode final : public FNodeFacade
 {
 public:
-	FTutorialNode(const FNodeInitData& InitData)
+	FSigmoidNode(const FNodeInitData& InitData)
 		: FNodeFacade(InitData.InstanceName, InitData.InstanceID, TFacadeOperatorClass<FSigmoidOperator>()) {}
 };
 
-METASOUND_REGISTER_NODE(FTutorialNode);
-
+METASOUND_REGISTER_NODE(FSigmoidNode);
