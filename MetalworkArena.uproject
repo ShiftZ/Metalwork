@@ -601,10 +601,6 @@
 			"Enabled": false
 		},
 		{
-			"Name": "TraceUtilities",
-			"Enabled": false
-		},
-		{
 			"Name": "UObjectPlugin",
 			"Enabled": false
 		},
@@ -647,6 +643,10 @@
 		{
 			"Name": "Optimus",
 			"Enabled": true
+		},
+		{
+			"Name": "RenderGraphInsights",
+			"Enabled": false
 		}
 	]
 }

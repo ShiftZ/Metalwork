@@ -33,36 +33,3 @@ public:
 	void ProcessEvents();
 };
 
-UCLASS()
-class UArenaEvent : public UObject
-{
-	GENERATED_BODY()
-
-public:
-	ArenaEvent* CoreEvent;
-
-public:
-	virtual void Confirmed() {}
-	virtual void Denied() {}
-	virtual ~UArenaEvent() = default;
-};
-
-UCLASS()
-class USoundEvent : public UArenaEvent
-{
-	GENERATED_BODY()
-
-public:
-	TWeakObjectPtr<UAudioComponent> Component;
-	void Denied() override { if (Component.IsValid()) Component->DestroyComponent(); }
-};
-
-UCLASS()
-class UEffectEvent : public UArenaEvent
-{
-	GENERATED_BODY()
-
-public:
-	TWeakObjectPtr<UNiagaraComponent> Component;
-	void Denied() override { if (Component.IsValid()) Component->DestroyComponent(); }
-};

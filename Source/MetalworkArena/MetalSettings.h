@@ -59,11 +59,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<FImpactSound> Impacts;
 
-	UMetaSoundSource* GetImpactSound(Body::Material MatA, Body::Material MatB)
+	TSoftObjectPtr<UMetaSoundSource> GetImpactSound(Body::Material MatA, Body::Material MatB)
 	{
 		int32 Materials = (1 << MatA) | (1 << MatB) & ~1;
 		FImpactSound* Impact = Impacts.FindByPredicate([&](FImpactSound& Impact){ return Impact.Materials == Materials; });
-		return Impact ? Impact->Sound.LoadSynchronous() : nullptr;
+		return Impact ? Impact->Sound : nullptr;
 	}
 };
 
@@ -89,10 +89,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<FImpactEffect> Impacts;
 
-	UNiagaraSystem* GetImpactEffect(Body::Material MatA, Body::Material MatB)
+	TSoftObjectPtr<UNiagaraSystem> GetImpactEffect(Body::Material MatA, Body::Material MatB)
 	{
 		int32 Materials = (1 << MatA) | (1 << MatB) & ~1;
 		FImpactEffect* Impact = Impacts.FindByPredicate([&](FImpactEffect& Impact){ return Impact.Materials == Materials; });
-		return Impact ? Impact->Effect.LoadSynchronous() : nullptr;
+		return Impact ? Impact->Effect : nullptr;
 	}
 };

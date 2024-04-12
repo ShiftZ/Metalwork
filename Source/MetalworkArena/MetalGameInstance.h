@@ -7,6 +7,9 @@ class UMetalGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
+	UPROPERTY()
+	TArray<UObject*> PreloadedAssets;
+
 private:
 	void Init() override;
 };

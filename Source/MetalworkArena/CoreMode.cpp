@@ -6,8 +6,8 @@
 #include "Camera.h"
 #include "CoreInterface.h"
 #include "DebugDrawer.h"
+#include "ArenaEvents.h"
 #include "MetalSettings.h"
-#include "NiagaraFunctionLibrary.h"
 #include "Vessel.h"
 #include "Weapon.h"
 #include "VesselActor.h"
@@ -125,23 +125,18 @@ void ACoreMode::ProcessEvents()
 
 		const UMetalSettings* Settings = GetDefault<UMetalSettings>();
 
-		if (UMetaSoundSource* SoundSource = Settings->Sound->GetImpactSound(BodyA->material, BodyB->material))
+		TSoftObjectPtr<UMetaSoundSource> Sound = Settings->Sound->GetImpactSound(BodyA->material, BodyB->material);
+		if (!Sound.IsNull())
 		{
-			USoundEvent* SoundEvent = NewObject<USoundEvent>();
-			UAudioComponent* Component = UGameplayStatics::SpawnSoundAtLocation(World, SoundSource, Location);
-			Component->SetFloatParameter(ImpulseName, Event->impulse);
-			Component->Play();
-
-			SoundEvent->Component = Component;
+			UEffectEvent* SoundEvent = UEffectEvent::MakeSound(World, Sound, Location, MakeTuple(ImpulseName, Event->impulse));
 			Events.Add(SoundEvent);
 		}
 
-		if (UNiagaraSystem* EffectTemplate = Settings->Effects->GetImpactEffect(BodyA->material, BodyB->material))
+		TSoftObjectPtr<UNiagaraSystem> Template = Settings->Effects->GetImpactEffect(BodyA->material, BodyB->material);
+		if (!Template.IsNull())
 		{
-			UNiagaraComponent* Component = UNiagaraFunctionLibrary::SpawnSystemAtLocation(World, EffectTemplate, Location);
-			UEffectEvent* EffectEvent = NewObject<UEffectEvent>();
-			EffectEvent->Component = Component;
-			Events.Add(EffectEvent);
+			UEffectEvent* VFXEvent = UEffectEvent::MakeVFX(World, Template, Location);
+			Events.Add(VFXEvent);
 		}
 
 		return Events;

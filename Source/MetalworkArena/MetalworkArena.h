@@ -20,10 +20,14 @@
 #include <typeindex>
 #include <unordered_map>
 
+#include <Algo/FindLast.h>
+#include <Algo/RemoveIf.h>
+#include <AssetRegistry/ARFilter.h>
+#include <AssetRegistry/AssetRegistryModule.h>
 #include <Chaos/Adapters/CacheAdapter.h>
 #include <Chaos/CacheCollection.h>
-#include <ChaosClothAsset/ClothComponent.h>
 #include <Chaos/ChaosCache.h>
+#include <ChaosClothAsset/ClothComponent.h>
 #include <Components/AudioComponent.h>
 #include <Components/InputComponent.h>
 #include <DrawDebugHelpers.h>
@@ -32,8 +36,11 @@
 #include <Engine/DeveloperSettings.h>
 #include <Engine/Engine.h>
 #include <Engine/GameInstance.h>
+#include <Engine/GameViewportClient.h>
 #include <Engine/LevelScriptActor.h>
 #include <Engine/World.h>
+#include <Engine/StreamableManager.h>
+#include <Engine/AssetManager.h>
 #include <EngineUtils.h>
 #include <Features/IModularFeature.h>
 #include <GameFramework/Actor.h>
@@ -41,6 +48,7 @@
 #include <GameFramework/PlayerInput.h>
 #include <HAL/FileManager.h>
 #include <Kismet/GameplayStatics.h>
+#include <Logging/MessageLog.h>
 #include <MetasoundExecutableOperator.h>
 #include <MetasoundFacade.h>
 #include <MetasoundNodeRegistrationMacro.h>
@@ -50,8 +58,11 @@
 #include <MetasoundVertex.h>
 #include <MetasoundWave.h>
 #include <Misc/FileHelper.h>
+#include <Misc/MessageDialog.h>
 #include <Misc/Paths.h>
 #include <Modules/ModuleManager.h>
+#include <NiagaraComponent.h>
+#include <NiagaraSystem.h>
 #include <PaperFlipbookComponent.h>
 #include <PaperSpriteComponent.h>
 #include <Sound/SoundCue.h>
@@ -59,13 +70,7 @@
 #include <UObject/LinkerLoad.h>
 #include <UObject/Package.h>
 #include <UObject/UObjectIterator.h>
-#include <Misc/MessageDialog.h>
-#include <Algo/FindLast.h>
-#include <Logging/MessageLog.h>
-#include <Engine/GameViewportClient.h>
-#include <Algo/RemoveIf.h>
-#include <NiagaraSystem.h>
-#include <NiagaraComponent.h>
+#include <NiagaraFunctionLibrary.h>
 
 #if WITH_EDITOR
 #include <DirectoryWatcherModule.h>
